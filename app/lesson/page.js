@@ -41,7 +41,7 @@ function Lesson() {
                             <h1 className="mx-3 font-semibold">{a} Lessons</h1>
                             <div className="flex flex-col p-1 mx-3 border-2 border-black rounded-md bg-slate-300">
                                 {lessonsData.filter((item) => item.Category === plan && item.row === a)
-                                    .map((b) => <Link href={`/lesson/${b._id}`} className={`flex items-center justify-between p-2 mx-2 my-1 border-2 border-black rounded-md hover:mx-1 ${b.accuracy ? "bg-green-200" : "bg-slate-200"}`}>
+                                    .map((b) => <Link href={`/lesson/${b.id}`} className={`flex items-center justify-between p-2 mx-2 my-1 border-2 border-black rounded-md hover:mx-1 ${b.accuracy ? "bg-green-200" : "bg-slate-200"}`}>
                                         <p className='text-xl'>{b.title}</p>
                                         <div className="flex items-center justify-center text-3xl">
                                             <p>{b.accuracy >= 40 ? "⭐" : "☆"}</p>

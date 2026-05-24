@@ -17,7 +17,6 @@ function Result({ params }) {
     },[params.id]);
 
     console.log(data)
-    console.log(data._id)
 
     const { speed , accuracy } = data
     return (
@@ -34,12 +33,12 @@ function Result({ params }) {
             <div className="flex justify-between w-3/4">
             
             
-            <Link href={`/lesson/${data._id}`} className="w-1/4 text-center border-2 border-black rounded-md bg-gradient-to-tr from-sky-400 via-sky-200 to-sky-400">
+            <Link href={`/lesson/${data.id}`} className="w-1/4 text-center border-2 border-black rounded-md bg-gradient-to-tr from-sky-400 via-sky-200 to-sky-400">
                 Again
             </Link>
    
                 
-            <Link href={`/lesson/${data._id}nextlesson`} className={`bg-gradient-to-tr from-sky-400 via-sky-200 to-sky-400 border-2 border-black rounded-md w-1/4 text-center`} >
+            <Link href={`/lesson/${data.id}nextlesson`} className={`bg-gradient-to-tr from-sky-400 via-sky-200 to-sky-400 border-2 border-black rounded-md w-1/4 text-center`} >
                 Next
             </Link>
                 
