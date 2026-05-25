@@ -18,18 +18,21 @@ function Result({ params }) {
 
     console.log(data)
 
-    const { speed , accuracy } = data
+    const progress = data.lesson_progress?.[0] ?? {}
+    const speed = progress.highest_wpm ?? 0
+    const accuracy = progress.highest_accuracy ?? 0
+    const stars = progress.stars ?? 0
     return (
     <div className="flex flex-col items-center w-screen h-screen bg-gradient-to-tr from-sky-200 via-sky-300 to-sky-200">
         <div className="flex flex-col items-center justify-center w-3/4 mt-20 border-2 border-black rounded-md h-1/3 bg-gradient-to-tr from-sky-400 via-sky-200 to-sky-400">
                 <p className="text-lg ">good typing</p>
                 <div className="flex items-center justify-center text-6xl">
-                <p>{accuracy>=40 ? "⭐" : "☆"}</p>
-                <p>{accuracy>=70 ? "⭐" : "☆"}</p>
-                <p>{accuracy>=90 ? "⭐" : "☆"}</p>
+                <p>{stars >= 1 ? "⭐" : "☆"}</p>
+                <p>{stars >= 2 ? "⭐" : "☆"}</p>
+                <p>{stars >= 3 ? "⭐" : "☆"}</p>
                 </div>
             </div>
-            <p className="text-sm">your speed was {speed || 0} CPM with {(accuracy || 0).toFixed(0) }% accuracy</p>
+            <p className="text-sm">your speed was {speed || 0} WPM with {Number(accuracy || 0).toFixed(0)}% accuracy</p>
             <div className="flex justify-between w-3/4">
             
             

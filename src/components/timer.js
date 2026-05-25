@@ -19,9 +19,22 @@ function Timer(data){
         
     if (time>=180){
         const putdata = async () => {
-            await fetch(`/api/${data.id}`,{
+            const totalChars = data.correct + data.incorrect
+            const wpm = Math.round(totalChars / (time / 60)) || 0
+            const accuracy = totalChars > 0 ? (data.correct / totalChars) * 100 : 0
+            await fetch(`/api/${data.id}`, {
                 method: "PUT",
-                body: JSON.stringify({"speed":((data.correct+data.incorrect)/(time/60) || 0).toFixed(1),"accuracy":(data.correct/(data.correct+data.incorrect))*100})})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    wpm,
+                    cpm: totalChars,
+                    accuracy,
+                    correct_chars: data.correct,
+                    incorrect_chars: data.incorrect,
+                    total_chars: totalChars,
+                    duration_seconds: time,
+                })
+            })
         }
         putdata()
         const router = useRouter()

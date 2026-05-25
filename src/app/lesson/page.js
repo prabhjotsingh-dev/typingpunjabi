@@ -14,13 +14,13 @@ function Lesson() {
         fechdata();
     }, [])
     function Categorylessons(array) {
-        let filteredrows = array?.filter((obj) => obj.Category === plan).map((obj) => obj.row)
+        let filteredrows = array?.filter((obj) => obj.stage === plan).map((obj) => obj.group)
 
         let output = filteredrows?.filter((item, index) => filteredrows.indexOf(item) === index)
         return output ?? {}
     }
     const [lessonsData, setLessonsData] = useState([])
-    const [plan, setPlan] = useState('Bignner')
+    const [plan, setPlan] = useState('beginner')
     function setdata(data) {
         setPlan(data)
     }
@@ -40,15 +40,18 @@ function Lesson() {
                         : (Categorylessons(lessonsData) ?? []).map((a) => <>
                             <h1 className="mx-3 font-semibold">{a} Lessons</h1>
                             <div className="flex flex-col p-1 mx-3 border-2 border-black rounded-md bg-slate-300">
-                                {lessonsData.filter((item) => item.Category === plan && item.row === a)
-                                    .map((b) => <Link href={`/lesson/${b.id}`} className={`flex items-center justify-between p-2 mx-2 my-1 border-2 border-black rounded-md hover:mx-1 ${b.accuracy ? "bg-green-200" : "bg-slate-200"}`}>
-                                        <p className='text-xl'>{b.title}</p>
-                                        <div className="flex items-center justify-center text-3xl">
-                                            <p>{b.accuracy >= 40 ? "⭐" : "☆"}</p>
-                                            <p>{b.accuracy >= 70 ? "⭐" : "☆"}</p>
-                                            <p>{b.accuracy >= 90 ? "⭐" : "☆"}</p>
-                                        </div>
-                                    </Link>)}
+                                {lessonsData.filter((item) => item.stage === plan && item.group === a)
+                                    .map((b) => {
+                                        const stars = b.lesson_progress?.[0]?.stars ?? 0
+                                        return <Link href={`/lesson/${b.id}`} className={`flex items-center justify-between p-2 mx-2 my-1 border-2 border-black rounded-md hover:mx-1 ${stars > 0 ? "bg-green-200" : "bg-slate-200"}`}>
+                                            <p className='text-xl'>{b.title}</p>
+                                            <div className="flex items-center justify-center text-3xl">
+                                                <p>{stars >= 1 ? "⭐" : "☆"}</p>
+                                                <p>{stars >= 2 ? "⭐" : "☆"}</p>
+                                                <p>{stars >= 3 ? "⭐" : "☆"}</p>
+                                            </div>
+                                        </Link>
+                                    })}
                             </div></>)
                 }
 

@@ -1,27 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabaseServer'
+import { createServerClient } from '@/supabaseServices/supabaseServer'
 
 export async function GET(request: NextRequest, { params }: { params: { pra: string } }) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { pra } = params
+
+  // Get the current anonymous/logged-in user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  }
+
+  const userId = user.id
+  const progressSelect = `lesson_progress!left(stars, highest_wpm, highest_accuracy)`
 
   let result
 
   if (pra === 'all') {
-    result = await supabase.from('userdata').select('*')
+    result = await supabase
+      .from('lessons')
+      .select(`*, ${progressSelect}`)
+      .eq('is_published', true)
+      .eq('lesson_progress.profile_id', userId)
+      .order('sequence_number')
   } else if (pra.endsWith('nextlesson')) {
     const id = pra.slice(0, -10)
+
+    // Step 1: get current lesson's sequence_number
+    const { data: current, error: seqError } = await supabase
+      .from('lessons')
+      .select('sequence_number')
+      .eq('id', id)
+      .single()
+
+    if (seqError || !current) {
+      return NextResponse.json({ error: 'Current lesson not found' }, { status: 404 })
+    }
+
+    // Step 2: get next lesson by sequence_number
     result = await supabase
-      .from('userdata')
-      .select('*')
-      .gt('id', id)
+      .from('lessons')
+      .select(`*, ${progressSelect}`)
+      .eq('is_published', true)
+      .eq('lesson_progress.profile_id', userId)
+      .gt('sequence_number', current.sequence_number)
+      .order('sequence_number')
       .limit(1)
       .single()
   } else {
     result = await supabase
-      .from('userdata')
-      .select('*')
+      .from('lessons')
+      .select(`*, ${progressSelect}`)
       .eq('id', pra)
+      .eq('lesson_progress.profile_id', userId)
       .single()
   }
 
@@ -32,32 +63,90 @@ export async function GET(request: NextRequest, { params }: { params: { pra: str
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { pra: string } }) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const body = await request.json()
   const { pra } = params
 
-  // For "nextlesson" PUT: find the next id first, then update it
-  let targetId
-  if (pra.endsWith('nextlesson')) {
-    const currentId = pra.slice(0, -10)
-    const { data: nextRow, error: findError } = await supabase
-      .from('userdata')
-      .select('id')
-      .gt('id', currentId)
-      .limit(1)
-      .single()
-    if (findError) return NextResponse.json({ error: findError.message }, { status: 500 })
-    targetId = nextRow.id
-  } else {
-    targetId = pra
+  // Get the current user
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  const { data, error } = await supabase
-    .from('userdata')
-    .update(body)
-    .eq('id', targetId)
-    .select()
+  const userId = user.id
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ result: data })
+  // Resolve lesson id (handle nextlesson suffix)
+  let lessonId: string
+  if (pra.endsWith('nextlesson')) {
+    const currentId = pra.slice(0, -10)
+    const { data: current, error: seqError } = await supabase
+      .from('lessons')
+      .select('sequence_number')
+      .eq('id', currentId)
+      .single()
+    if (seqError || !current) {
+      return NextResponse.json({ error: 'Current lesson not found' }, { status: 404 })
+    }
+    const { data: nextLesson, error: nextError } = await supabase
+      .from('lessons')
+      .select('id')
+      .eq('is_published', true)
+      .gt('sequence_number', current.sequence_number)
+      .order('sequence_number')
+      .limit(1)
+      .single()
+    if (nextError || !nextLesson) {
+      return NextResponse.json({ error: 'Next lesson not found' }, { status: 404 })
+    }
+    lessonId = nextLesson.id
+  } else {
+    lessonId = pra
+  }
+
+  const {
+    wpm = 0, cpm = 0, accuracy = 0,
+    correct_chars = 0, incorrect_chars = 0,
+    total_chars = 0, duration_seconds = 180,
+  } = body
+
+  // 1. Insert typing result
+  const { error: insertError } = await supabase.from('typing_results').insert({
+    profile_id: userId,
+    lesson_id: lessonId,
+    mode: 'lesson',
+    content_source: 'lesson',
+    wpm,
+    cpm,
+    accuracy,
+    correct_chars,
+    incorrect_chars,
+    total_chars,
+    duration_seconds,
+    is_completed: true,
+  })
+  if (insertError) {
+    return NextResponse.json({ error: insertError.message }, { status: 500 })
+  }
+
+  // 2. Compute stars
+  const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 40 ? 1 : 0
+
+  // 3. Upsert lesson_progress
+  const { error: upsertError } = await supabase.from('lesson_progress').upsert(
+    {
+      profile_id: userId,
+      lesson_id: lessonId,
+      is_completed: true,
+      stars,
+      highest_wpm: wpm,
+      highest_accuracy: accuracy,
+      last_played_at: new Date().toISOString(),
+    },
+    { onConflict: 'profile_id,lesson_id' }
+  )
+  if (upsertError) {
+    return NextResponse.json({ error: upsertError.message }, { status: 500 })
+  }
+
+  return NextResponse.json({ success: true, stars })
 }

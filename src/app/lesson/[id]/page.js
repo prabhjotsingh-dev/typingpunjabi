@@ -45,9 +45,9 @@ function Typing({ params }) {
     useEffect(() => {
         async function fetchData() {
             const res = await fetch(`/api/${params.id}`);
-            const { text } = await res.json();
-            console.log(text)
-            setAllCharacters(Array.isArray(text) ? text : eval(text))
+            const { content } = await res.json();
+            console.log(content)
+            setAllCharacters(content.split(''))
         }
 
 
