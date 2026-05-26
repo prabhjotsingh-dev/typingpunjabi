@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/supabaseServices/supabaseServer'
 
-export async function GET(request: NextRequest, { params }: { params: { pra: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ pra: string }> }) {
   const supabase = await createServerClient()
-  const { pra } = params
+  const { pra } = await params
 
   // Get the current anonymous/logged-in user
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -62,10 +62,10 @@ export async function GET(request: NextRequest, { params }: { params: { pra: str
   return NextResponse.json(Array.isArray(data) ? { data } : data)
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { pra: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ pra: string }> }) {
   const supabase = await createServerClient()
   const body = await request.json()
-  const { pra } = params
+  const { pra } = await params
 
   // Get the current user
   const { data: { user }, error: authError } = await supabase.auth.getUser()

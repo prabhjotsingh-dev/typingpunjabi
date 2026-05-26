@@ -1,0 +1,126 @@
+"use client";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+type NewUser = {
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const fields = [
+  {
+    id: "username",
+    type: "text",
+    placeholder: "Choose a username",
+    label: "Username",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "m@example.com",
+    label: "Email",
+  },
+  {
+    id: "password",
+    type: "password",
+    placeholder: "Create a password",
+    label: "Password",
+  },
+  {
+    id: "confirmPassword",
+    type: "password",
+    placeholder: "Confirm your password",
+    label: "Confirm Password",
+  },
+];
+
+export default function Signup() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Omit<NewUser, "id">>();
+  const password = watch("password");
+
+  const onSubmit = (data: Omit<NewUser, "id">) => {
+    const formData: NewUser = {
+      id: Date.now(),
+      ...data,
+    };
+    console.log("signup form data", formData);
+  };
+
+  return (
+    <div className="min-h-full flex items-center justify-center bg-gradient-to-br from-surface-muted via-primary-light to-accent-light dark:from-secondary-dark dark:via-primary-dark dark:to-secondary-dark">
+      <div className="w-full max-w-md p-8 space-y-6 bg-glass-bg backdrop-blur-md rounded-2xl border border-glass-border shadow-[0_8px_32px_rgba(3,105,161,0.10)]">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold">Create an account</h1>
+          <p className="text-muted-foreground">Enter your details to get started</p>
+        </div>
+
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+          {fields.map(({ id, type, placeholder, label }) => (
+            <div key={id} className="space-y-2">
+              <label htmlFor={id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                {label}
+              </label>
+              <Input
+                id={id}
+                type={type}
+                placeholder={placeholder}
+                autoComplete={id}
+                className={errors[id as keyof Omit<NewUser, "id">] ? "border-error focus-visible:ring-error" : ""}
+                {...register(id as keyof Omit<NewUser, "id">, {
+                  required: `${label} is required`,
+                  ...(id === "confirmPassword" && {
+                    validate: (value) => value === password || "Passwords do not match",
+                  }),
+                  ...(id === "email" && {
+                    pattern: {
+                      value: /^\S+@\S+\.\S+$/,
+                      message: "Please enter a valid email",
+                    },
+                  }),
+                  ...(id === "password" && {
+                    pattern: {
+                      value: /^.{8,}$/,
+                      message: "Password should contain 8 char",
+                    },
+                  }),
+                  ...(id === "phone" && {
+                    pattern: {
+                      value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
+                      message: "Phone number should contain 10 digits",
+                    }, maxLength: 12,
+                    minLength: 10,
+                  }),
+                })}
+              />
+
+              {errors[id as keyof Omit<NewUser, "id">] && (
+                <p className="text-error text-sm">{errors[id as keyof Omit<NewUser, "id">]?.message as string}</p>
+              )}
+            </div>
+          ))}
+
+          <Button type="submit" className="w-full">
+            Sign up
+          </Button>
+        </form>
+
+        <div className="text-center text-sm">
+          <span className="text-muted-foreground">Already have an account?</span>{" "}
+          <Link href="/login" className="text-primary hover:underline">
+            Sign in
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
