@@ -3,7 +3,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/supabaseServices/AuthProvider";
+import { createClient } from "@/supabaseServices/supabaseClient";
 
 const navItems = [
   { href: "/lesson", label: "Lessons" },
@@ -13,6 +15,11 @@ const navItems = [
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  
+  const isAnonymous = user?.is_anonymous || user?.app_metadata?.provider === 'anonymous';
+  const isLoggedInRegisteredUser = user && !isAnonymous;
 
   return (
     <header className="sticky top-0 z-50 w-full not-italic font-outfit border-b border-glass-border bg-glass-bg backdrop-blur-md py-2.5 px-6 sm:px-12 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition duration-200">
@@ -64,27 +71,40 @@ const Navbar: React.FC = () => {
 
           <span className="h-4 w-[1px] bg-border mx-2"></span>
 
-          <Link
-            href="/signup"
-            className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
-          >
-            <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
-            <span className="relative flex items-center gap-1.5">Sign Up</span>
-          </Link>
-          <Link
-            href="/login"
-            className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
-          >
-            <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
-            <span className="relative flex items-center gap-1.5">Log In</span>
-          </Link>
-          <button
-            onClick={() => {}}
-            className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
-          >
-            <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
-            <span className="relative flex items-center gap-1.5">Log Out</span>
-          </button>
+          {!loading && !isLoggedInRegisteredUser ? (
+            <>
+              <Link
+                href="/signup"
+                className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
+              >
+                <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
+                <span className="relative flex items-center gap-1.5">Sign Up</span>
+              </Link>
+              <Link
+                href="/login"
+                className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
+              >
+                <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
+                <span className="relative flex items-center gap-1.5">Log In</span>
+              </Link>
+            </>
+          ) : !loading && isLoggedInRegisteredUser ? (
+            <button
+              onClick={async () => {
+                const supabase = createClient();
+                await supabase.auth.signOut();
+                router.push("/");
+                router.refresh();
+              }}
+              className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
+            >
+              <span className="absolute inset-0 duration-1000 -translate-x-full bg-gradient-to-r from-transparent via-brand-white/10 to-transparent group-hover:translate-x-full cubic-transition"></span>
+              <span className="relative flex items-center gap-1.5">Log Out</span>
+            </button>
+          ) : (
+            /* Empty placeholder while loading to prevent layout shift */
+            <div className="w-40 h-8"></div>
+          )}
 
           <div className="relative group pl-1.5">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-accent-light rounded-full blur-[2px] opacity-0 group-hover:opacity-100 cubic-transition"></div>

@@ -1,24 +1,45 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/supabaseServices/supabaseClient";
+
+type LoginForm = {
+  email: string;
+  password: string;
+};
+
 const Login = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<LoginForm>();
 
-  const onSubmit = async (data:any) => {
-    console.log(data);
+  const [isPending, startTransition] = useTransition();
+  const [serverError, setServerError] = useState("");
+
+  const onSubmit = (data: LoginForm) => {
+    setServerError("");
+    startTransition(async () => {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        setServerError(error.message);
+      } else {
+        router.push("/");
+        router.refresh();
+      }
+    });
   };
-
-  useEffect(() => {
-  }, []);
-
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 via-sky-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
@@ -30,6 +51,12 @@ const Login = () => {
           </p>
         </div>
 
+        {serverError && (
+          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm text-center">
+            {serverError}
+          </div>
+        )}
+
         <form
           className="space-y-4"
           onSubmit={handleSubmit(onSubmit)}
@@ -37,22 +64,28 @@ const Login = () => {
         >
           <div className="space-y-2">
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Username
+              Email
             </label>
             <Input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              autoComplete="username"
-              className={errors.username ? "border-red-500 focus-visible:ring-red-500" : ""}
-              {...register("username", { required: `User Name is required` })}
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "Please enter a valid email",
+                },
+              })}
             />
-            {errors.username && (
+            {errors.email && (
               <p className="text-red-500 text-sm">
-                {errors.username.message as string}
+                {errors.email.message as string}
               </p>
             )}
           </div>
@@ -66,7 +99,7 @@ const Login = () => {
             <Input
               id="password"
               type="password"
-              autoComplete="password"
+              autoComplete="current-password"
               className={errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}
               {...register("password", {
                 required: `Password is required`,
@@ -90,8 +123,7 @@ const Login = () => {
                 type="checkbox"
                 name="remember"
                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                checked
-                onChange={() => {}}
+                defaultChecked
               />
               <label
                 htmlFor="remember"
@@ -108,8 +140,8 @@ const Login = () => {
             </Link>
           </div>
 
-          <Button type="submit" className="w-full">
-            Sign in
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 
