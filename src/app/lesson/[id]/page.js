@@ -3,6 +3,8 @@ import Keyboard from '@/components/keyboard'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import Timer from '@/components/timer'
+import { useParams } from 'next/navigation'
+import { useAuth } from '@/supabaseServices/AuthProvider'
 
 
 function Character(data) {
@@ -29,7 +31,9 @@ Character = React.memo(Character)
 // Typing=React.memo(Typing)
 
 
-function Typing({ params }) {
+function Typing() {
+    const { id } = useParams()
+    const { user, loading } = useAuth()
 
     const row = (x) => {
         let text = `${x[0].repeat(4) + x[1].repeat(4) + x[0].repeat(2) + x[1].repeat(2) + x[0].repeat(2) + x[1].repeat(2) + (x[0] + x[1]).repeat(4)}`
@@ -40,21 +44,26 @@ function Typing({ params }) {
     let eng_to_pun_words = { "q": "ੌ", "w": "ੈ", "e": "ਾ", "r": "ੀ", "t": "ੂ", "y": "ਬ", "u": "ਹ", "i": "ਗ", "o": "ਦ", "p": "ਜ", "[": "ਡ", "]": "਼", "a": "ੋ", "s": "ੇ", "d": "੍", "f": "ਿ", "g": "ੁ", "h": "ਪ", "j": "ਰ", "k": "ਕ", "l": "ਤ", ";": "ਚ", "'": "ਟ", "x": "ੰ", "c": "ਮ", "v": "ਨ", "b": "ਵ", "n": "ਲ", "m": "ਸ", "/": "ਯ", "Q": "ਔ", "W": "ਐ", "E": "ਆ", "R": "ਈ", "T": "ਊ", "Y": "ਭ", "U": "ਙ", "I": "ਘ", "O": "ਧ", "P": "ਝ", "{": "ਢ", "}": "ਞ", "A": "ਓ", "S": "ਏ", "D": "ਅ", "F": "ਇ", "G": "ਉ", "H": "ਫ", "J": "ੜ", "K": "ਖ", "L": "ਥ", ":": "ਛ", '"': "ਠ", "X": "ਂ", "C": "ਣ", "V": "ਨ", "B": "ੲ", "N": "ਲ਼", "M": "ਸ਼", "<": ",", ">": "।", "?": "ਯ", "$": "ੱ" };
 
     const [allCharacters, setAllCharacters] = useState();
-    console.log(params.id)
 
     useEffect(() => {
+        if (loading || !user || !id) return;
+
         async function fetchData() {
-            const res = await fetch(`/api/${params.id}`);
-            const { content } = await res.json();
-            console.log(content)
-            setAllCharacters(content.split(''))
+            try {
+                const res = await fetch(`/api/${id}`);
+                const data = await res.json();
+                if (data && data.content) {
+                    setAllCharacters(data.content.split(''))
+                } else {
+                    console.error("Failed to load lesson content:", data)
+                }
+            } catch (err) {
+                console.error("Error fetching lesson content:", err)
+            }
         }
 
-
         fetchData()
-
-
-    }, [params.id]);
+    }, [id, loading, user]);
 
 
 
@@ -110,7 +119,7 @@ function Typing({ params }) {
                 <Timer start={noOfCorrectChar + noOfIncorrectChar >= 1}
                     correct={noOfCorrectChar}
                     incorrect={noOfIncorrectChar}
-                    id={params.id} />
+                    id={id} />
             </div>
             <input id="typingText" className="w-10 h-0 outline-0" value={value} onChange={(e) => { inputtab(e) }}
                 onKeyDown={(e) => {
