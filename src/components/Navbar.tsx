@@ -8,8 +8,8 @@ const Navbar: React.FC = () => {
         <div className="flex mb-3 items-center gap-1 sm:gap-3 border-2 border-r-0 border-sky-800 w-fit rounded-full h-[1.2lh] text-xs sm:text-md sm:my-5 lg:text-lg lg:m-0 lg:gap-10 ">
             <nav className="flex lg:gap-5 lg:ml-5 ">
                 <Link href="/lesson" className="ml-1" >Lesson</Link>
-                <Link href="./contact" className="ml-1" >Contact</Link>
-                <Link href="/" className="ml-1 " >About</Link>
+                <Link href="/contact" className="ml-1" >Contact</Link>
+                <Link href="/about" className="ml-1 " >About</Link>
             </nav>
             <Image className="w-[2.5lh] h-[2.5lh] rounded-full" height={2} width={2} src="/letter-1347416_960_720.jpg" alt="Punjabi Typing Logo" />
         </div>
