@@ -2,6 +2,7 @@ import './globals.css'
 import React from 'react'
 import Navbar from '@/components/Navbar'
 import AuthProvider from '@/supabaseServices/AuthProvider'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function RootLayout({children}) {
   return (
@@ -10,6 +11,7 @@ export default function RootLayout({children}) {
         <AuthProvider />
         <Navbar />
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

@@ -3,11 +3,14 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-type NewUser = {
-  id: number;
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+
+type SignUpForm = {
   username: string;
   email: string;
-  phone: string;
   password: string;
   confirmPassword: string;
 };
@@ -37,37 +40,76 @@ const fields = [
     placeholder: "Confirm your password",
     label: "Confirm Password",
   },
-];
+] as const;
 
 export default function Signup() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Omit<NewUser, "id">>();
+  } = useForm<SignUpForm>();
   const password = watch("password");
 
-  const onSubmit = (data: Omit<NewUser, "id">) => {
-    const formData: NewUser = {
-      id: Date.now(),
-      ...data,
-    };
-    console.log("signup form data", formData);
+  const onSubmit = async (data: SignUpForm) => {
+    setIsLoading(true);
+    setServerError(null);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          username: data.username,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setServerError(json.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+
+      toast.success("Account created!", {
+        description: "You can now sign in with your credentials.",
+      });
+      router.push("/login");
+    } catch {
+      setServerError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center bg-gradient-to-br from-surface-muted via-primary-light to-accent-light dark:from-secondary-dark dark:via-primary-dark dark:to-secondary-dark">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-muted via-primary-light to-accent-light dark:from-secondary-dark dark:via-primary-dark dark:to-secondary-dark">
       <div className="w-full max-w-md p-8 space-y-6 bg-glass-bg backdrop-blur-md rounded-2xl border border-glass-border shadow-[0_8px_32px_rgba(3,105,161,0.10)]">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Create an account</h1>
           <p className="text-muted-foreground">Enter your details to get started</p>
         </div>
 
+        {serverError && (
+          <div className="flex items-start gap-2 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-700/50 dark:bg-red-900/20 dark:text-red-400">
+            <span className="mt-0.5 shrink-0">⚠</span>
+            <span>{serverError}</span>
+          </div>
+        )}
+
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
           {fields.map(({ id, type, placeholder, label }) => (
             <div key={id} className="space-y-2">
-              <label htmlFor={id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <label
+                htmlFor={id}
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
                 {label}
               </label>
               <Input
@@ -75,11 +117,13 @@ export default function Signup() {
                 type={type}
                 placeholder={placeholder}
                 autoComplete={id}
-                className={errors[id as keyof Omit<NewUser, "id">] ? "border-error focus-visible:ring-error" : ""}
-                {...register(id as keyof Omit<NewUser, "id">, {
+                disabled={isLoading}
+                className={errors[id] ? "border-error focus-visible:ring-error" : ""}
+                {...register(id, {
                   required: `${label} is required`,
                   ...(id === "confirmPassword" && {
-                    validate: (value) => value === password || "Passwords do not match",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
                   }),
                   ...(id === "email" && {
                     pattern: {
@@ -90,27 +134,26 @@ export default function Signup() {
                   ...(id === "password" && {
                     pattern: {
                       value: /^.{8,}$/,
-                      message: "Password should contain 8 char",
+                      message: "Password must be at least 8 characters",
                     },
-                  }),
-                  ...(id === "phone" && {
-                    pattern: {
-                      value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
-                      message: "Phone number should contain 10 digits",
-                    }, maxLength: 12,
-                    minLength: 10,
                   }),
                 })}
               />
-
-              {errors[id as keyof Omit<NewUser, "id">] && (
-                <p className="text-error text-sm">{errors[id as keyof Omit<NewUser, "id">]?.message as string}</p>
+              {errors[id] && (
+                <p className="text-error text-sm">{errors[id]?.message as string}</p>
               )}
             </div>
           ))}
 
-          <Button type="submit" className="w-full">
-            Sign up
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Spinner className="mr-2" />
+                Creating account…
+              </>
+            ) : (
+              "Sign up"
+            )}
           </Button>
         </form>
 
@@ -123,4 +166,4 @@ export default function Signup() {
       </div>
     </div>
   );
-};
+}
