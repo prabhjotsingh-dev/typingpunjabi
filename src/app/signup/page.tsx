@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { signupAction } from "@/supabaseServices/signupService";
+import { signupAction } from "@/supabaseServices/actions/signupService";
 
 type SignUpForm = {
   username: string;

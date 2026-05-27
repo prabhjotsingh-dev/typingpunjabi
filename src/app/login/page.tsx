@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/supabaseServices/supabaseClient";
+import { createClient } from "@/supabaseServices/clients/browserClient";
 
 type LoginForm = {
   email: string;

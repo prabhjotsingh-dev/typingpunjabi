@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/supabaseServices/AuthProvider";
-import { createClient } from "@/supabaseServices/supabaseClient";
+import { createClient } from "@/supabaseServices/clients/browserClient";
 
 const navItems = [
   { href: "/lesson", label: "Lessons" },

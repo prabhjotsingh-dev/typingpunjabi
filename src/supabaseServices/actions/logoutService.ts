@@ -1,6 +1,6 @@
 'use server'
 
-import { createAuthServerClient } from '@/supabaseServices/supabaseServer'
+import { createAuthServerClient } from '@/supabaseServices/clients/serverClient'
 import { redirect } from 'next/navigation'
 
 export async function logoutAction() {
