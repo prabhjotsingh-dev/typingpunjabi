@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { signupAction } from "@/supabaseServices/signupService";
 
 type SignUpForm = {
   username: string;
@@ -60,27 +61,17 @@ export default function Signup() {
     setServerError(null);
 
     try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          username: data.username,
-        }),
-      });
+      const result = await signupAction(data.email, data.password, data.username);
 
-      const json = await res.json();
-
-      if (!res.ok) {
-        setServerError(json.error ?? "Something went wrong. Please try again.");
+      if (result?.error) {
+        setServerError(result.error);
         return;
       }
 
       toast.success("Account created!", {
         description: "You can now sign in with your credentials.",
       });
-      router.push("/login");
+      // redirect to login is handled inside signupAction
     } catch {
       setServerError("Network error. Please check your connection and try again.");
     } finally {
