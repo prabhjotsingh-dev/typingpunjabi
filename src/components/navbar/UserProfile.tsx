@@ -1,5 +1,5 @@
 import React from "react";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 interface UserProfileProps {
   userInitial: string;
@@ -39,14 +39,14 @@ const UserProfile: React.FC<UserProfileProps> = ({
   }
 
   return (
-    <HoverCard>
-      <HoverCardTrigger className="relative group pl-1.5 focus-visible:outline-none cursor-pointer">
+    <Popover>
+      <PopoverTrigger className="relative group pl-1.5 focus-visible:outline-none cursor-pointer">
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-accent-light rounded-xl blur-[2px] opacity-0 group-hover:opacity-100 cubic-transition"></div>
         <div className="flex relative justify-center items-center w-8 h-8 text-sm font-bold rounded-xl border shadow-sm bg-glass-bg text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6">
           {userInitial}
         </div>
-      </HoverCardTrigger>
-      <HoverCardContent align="end" sideOffset={8} className="flex flex-col gap-3 p-3 w-56 rounded-xl border shadow-lg backdrop-blur-md border-glass-border bg-glass-bg">
+      </PopoverTrigger>
+      <PopoverContent align="end" sideOffset={8} className="flex flex-col gap-3 p-3 w-56 rounded-xl border shadow-lg backdrop-blur-md border-glass-border bg-glass-bg">
         <div className="flex flex-col px-1 pb-3 space-y-1 border-b border-border">
           <span className="text-sm font-bold truncate text-text">{userDisplayName}</span>
           <span className="text-xs truncate text-text-muted">{email}</span>
@@ -57,8 +57,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
         >
           Log Out
         </button>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 
