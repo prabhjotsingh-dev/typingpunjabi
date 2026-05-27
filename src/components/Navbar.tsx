@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { useAuth } from "@/supabaseServices/AuthProvider";
 import { createClient } from "@/supabaseServices/clients/browserClient";
 
@@ -23,7 +24,7 @@ const Navbar: React.FC = () => {
   const isLoggedInRegisteredUser = user && !isAnonymous;
 
   return (
-    <header className="sticky top-0 z-50 w-full not-italic font-outfit border-b border-glass-border bg-glass-bg backdrop-blur-md py-2.5 px-6 sm:px-12 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition duration-200">
+    <header className="sticky top-0 z-50 w-full not-italic font-outfit border-b border-glass-border bg-glass-bg backdrop-blur-md py-2.5 px-2 sm:px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition duration-200">
       <div className="flex gap-6 justify-between items-center mx-auto max-w-7xl">
         <Link
           href="/"
@@ -94,34 +95,42 @@ const Navbar: React.FC = () => {
               </Link>
             </>
           ) : !loading && isLoggedInRegisteredUser ? (
-            <button
-              onClick={async () => {
-                const supabase = createClient();
-                await supabase.auth.signOut();
-                router.push("/");
-                router.refresh();
-              }}
-              className="group relative overflow-hidden rounded-full bg-primary-dark px-5 py-1.5 text-brand-white font-bold text-xs tracking-wider shadow-[0_4px_15px_rgba(3,105,161,0.12)] cubic-transition hover:-translate-y-[1px] active:scale-[0.97] hover:bg-primary-dark/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent duration-1000 -translate-x-full via-brand-white/10 group-hover:translate-x-full cubic-transition"></span>
-              <span className="relative flex items-center gap-1.5">
-                Log Out
-              </span>
-            </button>
+            
+            <HoverCard>
+              <HoverCardTrigger className="relative group pl-1.5 focus-visible:outline-none cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-accent-light rounded-full blur-[2px] opacity-0 group-hover:opacity-100 cubic-transition"></div>
+                <div
+                  className="flex relative justify-center items-center w-8 h-8 text-sm font-bold rounded-full border shadow-sm bg-glass-bg text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6"
+                >
+                  {(user?.user_metadata?.username || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || "U")[0].toUpperCase()}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent align="end" sideOffset={8} className="flex flex-col gap-3 p-3 w-56 rounded-xl border shadow-lg backdrop-blur-md border-glass-border bg-glass-bg">
+                <div className="flex flex-col px-1 pb-3 space-y-1 border-b border-border">
+                  <span className="text-sm font-bold truncate text-text">
+                    {user?.user_metadata?.full_name || user?.user_metadata?.name || user?.user_metadata?.username || "User"}
+                  </span>
+                  <span className="text-xs truncate text-text-muted">
+                    {user?.email}
+                  </span>
+                </div>
+                <button
+                  onClick={async () => {
+                    const supabase = createClient();
+                    await supabase.auth.signOut();
+                    router.push("/");
+                    router.refresh();
+                  }}
+                  className="flex overflow-hidden relative gap-2 justify-center items-center px-4 py-2 w-full text-sm font-bold tracking-wide rounded-lg group bg-primary-dark/10 text-primary-dark cubic-transition hover:bg-primary-dark hover:text-brand-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Log Out
+                </button>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             <div className="w-40 h-8"></div>
           )}
-
-          <div className="relative group pl-1.5">
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-accent-light rounded-full blur-[2px] opacity-0 group-hover:opacity-100 cubic-transition"></div>
-            <Image
-              src="/letter-1347416_960_720.jpg"
-              alt="Punjabi Typing Logo"
-              width={32}
-              height={32}
-              className="object-cover relative rounded-full border shadow-sm cursor-pointer border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6"
-            />
-          </div>
         </nav>
       </div>
     </header>
