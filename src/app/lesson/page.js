@@ -5,7 +5,6 @@ import { useAuth } from "@/supabaseServices/AuthProvider";
 import {
   Sidebar,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/sidebar/Sidebar";
 
 function Lesson() {
@@ -52,7 +51,6 @@ function Lesson() {
   return (
     <SidebarProvider>
       <main className="flex w-full min-h-[calc(100vh-4rem)]">
-        <SidebarTrigger />
         <Sidebar selectedValue={plan} onValueChange={handlePlanChange} />
 
         <section className="flex overflow-y-auto flex-col flex-1 p-4 md:p-6 hide-scrollbar">
