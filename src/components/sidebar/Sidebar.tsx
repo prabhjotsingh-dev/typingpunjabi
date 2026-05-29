@@ -3,6 +3,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { cn } from "@/lib/utils";
 import { SidebarContent } from "./SidebarContent";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -26,9 +27,17 @@ interface SidebarProviderProps {
 
 export function SidebarProvider({
   children,
-  defaultCollapsed = false,
+  defaultCollapsed = true,
 }: SidebarProviderProps) {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+  const isMobile = useIsMobile();
+  useEffect(() => {
+    if (isMobile) {
+      setIsCollapsed(true);
+    } else {
+      setIsCollapsed(false);
+    }
+  }, [isMobile]);
 
   return (
     <SidebarContext.Provider
