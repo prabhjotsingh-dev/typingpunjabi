@@ -4,30 +4,12 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useAuth } from '@/supabaseServices/AuthProvider'
+import { useLessonResult } from '@/supabaseServices/fetchdata/useLessonResult'
 
 function Result() {
     const { id } = useParams()
     const { user, loading } = useAuth()
-    const [data, setData] = useState({})
-
-    useEffect(() => {
-        if (loading || !user || !id) return;
-
-        async function fetchData() {
-            try {
-                const res = await fetch(`/api/${id}`);
-                const item = await res.json();
-                if (item && !item.error) {
-                    setData(item)
-                } else {
-                    console.error("Failed to fetch result details:", item)
-                }
-            } catch (err) {
-                console.error("Error fetching result details:", err)
-            }
-        }
-        fetchData()
-    }, [id, loading, user]);
+    const { data, isLoading: isResultLoading, error: resultError } = useLessonResult((!loading && user && id) ? id : null);
 
     console.log(data)
 

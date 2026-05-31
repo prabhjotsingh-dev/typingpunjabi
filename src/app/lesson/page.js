@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/supabaseServices/AuthProvider";
+import { useAllLessons } from "@/supabaseServices/fetchdata/useAllLessons";
 import {
   Sidebar,
   SidebarProvider,
@@ -9,29 +10,9 @@ import {
 
 function Lesson() {
   const { user, loading } = useAuth();
-  const [lessonsData, setLessonsData] = useState(null);
   const [plan, setPlan] = useState("beginner");
+  const { data: lessonsData, isLoading: isLessonsLoading, error: lessonsError } = useAllLessons(!loading && !!user);
 
-  useEffect(() => {
-    if (loading || !user) return;
-
-    async function fechdata() {
-      try {
-        const res = await fetch("/api/all");
-        const result = await res.json();
-        if (result && result.data) {
-          setLessonsData(result.data);
-        } else {
-          console.error("Failed to load lessons:", result);
-          setLessonsData([]);
-        }
-      } catch (err) {
-        console.error("Error fetching lessons:", err);
-        setLessonsData([]);
-      }
-    }
-    fechdata();
-  }, [loading, user]);
 
   function Categorylessons(array) {
     let filteredrows = array
