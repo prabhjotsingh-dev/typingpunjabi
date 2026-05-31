@@ -7,7 +7,6 @@ function Timer(data) {
   const router = useRouter();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
-console.log(data)
   useEffect(() => {
     if (data.start && !isFinished) {
       const id = setInterval(() => {
