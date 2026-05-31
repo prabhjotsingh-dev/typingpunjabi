@@ -107,6 +107,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     wpm = 0, cpm = 0, accuracy = 0,
     correct_chars = 0, incorrect_chars = 0,
     total_chars = 0, duration_seconds = 180,
+    lesson_title,
   } = body
 
   // 1. Insert typing result
@@ -123,6 +124,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     total_chars,
     duration_seconds,
     is_completed: true,
+    lesson_title,
   })
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 })
