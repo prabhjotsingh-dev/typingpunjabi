@@ -50,95 +50,47 @@ function Lesson() {
 
   return (
     <SidebarProvider>
-      <main className="flex w-full min-h-[calc(100vh-4rem)]">
+      <main className="flex w-full min-h-[calc(100svh-4rem)]">
         <Sidebar selectedValue={plan} onValueChange={handlePlanChange} />
-
-        <section className="flex overflow-y-auto flex-col flex-1 p-4 md:p-6 hide-scrollbar">
-          <div className="mx-auto space-y-6 w-full max-w-4xl">
-            {!lessonsData ? (
-              <>
-                <div className="animate-pulse">
-                  <div className="mb-4 w-48 h-8 rounded-lg bg-glass-bg/80"></div>
-                  <div className="p-4 space-y-3 rounded-2xl border backdrop-blur-sm bg-glass-bg/80 border-glass-border">
-                    {[...Array(8)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-16 rounded-xl animate-pulse bg-glass-hover"
-                        style={{ animationDelay: `${i * 100}ms` }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
-              (Categorylessons(lessonsData) ?? []).map((group) => (
-                <div key={group}>
-                  <h2 className="px-1 mb-3 text-lg font-semibold text-text">
-                    {group} Lessons
-                  </h2>
-                  <div className="overflow-hidden rounded-2xl border-2 border-black backdrop-blur-sm bg-slate-300">
-                    <div className="divide-y divide-glass-border/50">
-                      {lessonsData
-                        .filter(
-                          (item) => item.stage === plan && item.group === group
-                        )
-                        .map((lesson) => {
-                          const stars = lesson.lesson_progress?.[0]?.stars ?? 0;
-                          return (
-                            <Link
-                              key={lesson.id}
-                              href={`/lesson/${lesson.id}`}
-                              className={`flex items-center justify-between p-4 transition-all duration-200 hover:bg-glass-hover group ${
-                                stars > 0
-                                  ? "bg-success/5"
-                                  : "bg-slate-200"
-                              }`}
-                            >
-                              <div className="flex gap-3 items-center">
-                                <div
-                                  className={`w-2 h-2 border-2 border-black rounded-full ${
-                                    stars > 0
-                                      ? "bg-success"
-                                      : "bg-text-muted/30"
-                                  }`}
-                                ></div>
-                                <p className="text-base font-medium transition-colors text-text group-hover:text-primary-dark">
-                                  {lesson.title}
-                                </p>
-                              </div>
-                              <div className="flex gap-1 items-center">
-                                {[1, 2, 3].map((star) => (
-                                  <span
-                                    key={star}
-                                    className={`text-xl transition-transform group-hover:scale-110 ${
-                                      stars >= star
-                                        ? "text-warning"
-                                        : "text-text-muted/30"
-                                    }`}
-                                  >
-                                    {stars >= star ? "\u2605" : "\u2606"}
-                                  </span>
-                                ))}
-                              </div>
-                            </Link>
-                          );
-                        })}
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-
-            {lessonsData && Categorylessons(lessonsData).length === 0 && (
-              <div className="py-12 text-center">
-                <p className="text-text-muted">
-                  No lessons available for this category yet.
-                </p>
+      <section className="flex flex-col border-2 m-0 border-black pt-2 w-full min-h-[calc(100svh-4rem)] overflow-scroll hide-scrollbar gap-2 bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 ">
+        {!lessonsData ? (
+          <>
+            <h1 className="mx-3 font-semibold">loding Lessons</h1>
+            <div className="flex flex-col p-1 mx-3 text-3xl rounded-md border-2 border-black bg-slate-300">
+              {[...Array(20)].map(() => (
+                <div className="flex items-center justify-between p-2 mx-2 my-1 border-2 border-black h-[1.5lh] rounded-md bg-slate-50 "></div>
+              ))}
+            </div>
+          </>
+        ) : (
+          (Categorylessons(lessonsData) ?? []).map((a) => (
+            <>
+              <h1 className="mx-3 font-semibold">{a} Lessons</h1>
+              <div className="flex flex-col p-1 mx-3 rounded-md border-2 border-black bg-slate-300">
+                {lessonsData
+                  .filter((item) => item.stage === plan && item.group === a)
+                  .map((b) => {
+                    const stars = b.lesson_progress?.[0]?.stars ?? 0;
+                    return (
+                      <Link
+                        href={`/lesson/${b.id}`}
+                        className={`flex items-center justify-between p-2 mx-2 my-1 border-2 border-black rounded-md hover:mx-1 ${stars > 0 ? "bg-green-200" : "bg-slate-200"}`}
+                      >
+                        <p className="text-xl">{b.title}</p>
+                        <div className="flex justify-center items-center text-3xl">
+                          <p>{stars >= 1 ? "⭐" : "☆"}</p>
+                          <p>{stars >= 2 ? "⭐" : "☆"}</p>
+                          <p>{stars >= 3 ? "⭐" : "☆"}</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
               </div>
-            )}
-          </div>
-        </section>
-      </main>
+            </>
+          ))
+        )}
+      </section>
+    </main>
     </SidebarProvider>
   );
 }
