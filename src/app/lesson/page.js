@@ -1,8 +1,11 @@
 "use client";
 import Link from "next/link";
-import Aside from "@/components/aside";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/supabaseServices/AuthProvider";
+import {
+  Sidebar,
+  SidebarProvider,
+} from "@/components/sidebar/Sidebar";
 
 function Lesson() {
   const { user, loading } = useAuth();
@@ -36,17 +39,20 @@ function Lesson() {
       .map((obj) => obj.group);
 
     let output = filteredrows?.filter(
-      (item, index) => filteredrows.indexOf(item) === index,
+      (item, index) => filteredrows.indexOf(item) === index
     );
     return output ?? [];
   }
-  function setdata(data) {
-    setPlan(data);
+
+  function handlePlanChange(value) {
+    setPlan(value);
   }
+
   return (
-    <main className="flex justify-end w-[100svw] hide-scrollbar">
-      <Aside data={setdata} />
-      <section className="flex flex-col border-2 m-0 border-black pt-2 rounded-md w-screen sm:w-[80vw] h-[calc(100vh-2.5lh)] overflow-scroll hide-scrollbar gap-2 bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 ">
+    <SidebarProvider>
+      <main className="flex w-full min-h-[calc(100svh-4rem)]">
+        <Sidebar selectedValue={plan} onValueChange={handlePlanChange} />
+      <section className="flex flex-col border-2 m-0 border-black pt-2 w-full min-h-[calc(100svh-4rem)] overflow-scroll hide-scrollbar gap-2 bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 ">
         {!lessonsData ? (
           <>
             <h1 className="mx-3 font-semibold">loding Lessons</h1>
@@ -85,6 +91,8 @@ function Lesson() {
         )}
       </section>
     </main>
+    </SidebarProvider>
   );
 }
+
 export default Lesson;

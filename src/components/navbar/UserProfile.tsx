@@ -41,8 +41,8 @@ const UserProfile: React.FC<UserProfileProps> = ({
   return (
     <Popover>
       <PopoverTrigger className="relative group pl-1.5 focus-visible:outline-none cursor-pointer">
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-accent-light rounded-xl blur-[2px] opacity-0 group-hover:opacity-100 cubic-transition"></div>
-        <div className="flex relative justify-center items-center w-8 h-8 text-sm font-bold rounded-xl border shadow-sm bg-glass-bg text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6">
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary-dark/10 to-accent-light/10 rounded-xl blur-[1px] opacity-0 group-hover:opacity-90 cubic-transition"></div>
+        <div className="flex relative justify-center items-center w-8 h-8 text-sm font-bold rounded-xl border shadow-sm bg-primary-dark/10 text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6">
           {userInitial}
         </div>
       </PopoverTrigger>
