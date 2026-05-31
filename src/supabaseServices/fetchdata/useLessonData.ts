@@ -1,7 +1,9 @@
+import { Database } from '@/comman/database.types';
 import { useState, useEffect } from 'react';
 
 export function useLessonData(id: string | null) {
-    const [data, setData] = useState<string[] | null>(null);
+    const [lessonData, setLessonData] = useState<Database['public']['Tables']['lessons']['Row'] | null>(null);
+    const [lessonContent, setLessonContent] = useState<string[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +19,8 @@ export function useLessonData(id: string | null) {
                 const result = await res.json();
                 
                 if (result && result.content) {
-                    setData(result.content.split(''));
+                    setLessonData(result);
+                    setLessonContent(result.content.split(''));
                 } else {
                     setError("Failed to load lesson content");
                     console.error("Failed to load lesson content:", result);
@@ -34,5 +37,5 @@ export function useLessonData(id: string | null) {
         fetchData();
     }, [id]);
 
-    return { data, isLoading, error };
+    return {lessonData, lessonContent, isLoading, error };
 }

@@ -44,8 +44,7 @@ function Typing() {
 
     let eng_to_pun_words = { "q": "ੌ", "w": "ੈ", "e": "ਾ", "r": "ੀ", "t": "ੂ", "y": "ਬ", "u": "ਹ", "i": "ਗ", "o": "ਦ", "p": "ਜ", "[": "ਡ", "]": "਼", "a": "ੋ", "s": "ੇ", "d": "੍", "f": "ਿ", "g": "ੁ", "h": "ਪ", "j": "ਰ", "k": "ਕ", "l": "ਤ", ";": "ਚ", "'": "ਟ", "x": "ੰ", "c": "ਮ", "v": "ਨ", "b": "ਵ", "n": "ਲ", "m": "ਸ", "/": "ਯ", "Q": "ਔ", "W": "ਐ", "E": "ਆ", "R": "ਈ", "T": "ਊ", "Y": "ਭ", "U": "ਙ", "I": "ਘ", "O": "ਧ", "P": "ਝ", "{": "ਢ", "}": "ਞ", "A": "ਓ", "S": "ਏ", "D": "ਅ", "F": "ਇ", "G": "ਉ", "H": "ਫ", "J": "ੜ", "K": "ਖ", "L": "ਥ", ":": "ਛ", '"': "ਠ", "X": "ਂ", "C": "ਣ", "V": "ਨ", "B": "ੲ", "N": "ਲ਼", "M": "ਸ਼", "<": ",", ">": "।", "?": "ਯ", "$": "ੱ" };
 
-    const { data: allCharacters, isLoading: isLessonLoading, error: lessonError } = useLessonData((!loading && user && id) ? id : null);
-
+    const { lessonData, lessonContent:allCharacters, isLoading: isLessonLoading, error: lessonError } = useLessonData((!loading && user && id) ? id : null);
 
 
     const [noOfCorrectChar, setNoOfCorrectChar] = useState(0)
@@ -100,7 +99,8 @@ function Typing() {
                 <Timer start={noOfCorrectChar + noOfIncorrectChar >= 1}
                     correct={noOfCorrectChar}
                     incorrect={noOfIncorrectChar}
-                    id={id} />
+                    id={id}
+                    title={lessonData?.title} />
             </div>
             <input id="typingText" className="w-10 h-0 outline-0" value={value} onChange={(e) => { inputtab(e) }}
                 onKeyDown={(e) => {

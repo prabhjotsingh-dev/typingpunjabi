@@ -7,7 +7,6 @@ function Timer(data) {
   const router = useRouter();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
-
   useEffect(() => {
     if (data.start && !isFinished) {
       const id = setInterval(() => {
@@ -36,6 +35,7 @@ function Timer(data) {
               incorrect_chars: data.incorrect,
               total_chars: totalChars,
               duration_seconds: time,
+              lesson_title: data.title,
             }),
           });
         } catch (err) {
