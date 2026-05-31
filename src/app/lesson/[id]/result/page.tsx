@@ -80,16 +80,6 @@ async function Result({ params }: PageProps) {
             </Link>
             
           </div>
-          
-          <div className="pt-2 lg:pt-4">
-            <Link 
-              href={Routes.lessons}
-              className="inline-flex items-center text-xs lg:text-sm font-medium tracking-tight text-zinc-400 hover:text-zinc-900 transition-colors duration-300"
-            >
-              <List className="w-4 h-4 mr-2" />
-              Return to Lessons Tab
-            </Link>
-          </div>
         </div>
 
         {/* Right Side - Bento Grid 2.0 Style */}
