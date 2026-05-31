@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
     "User";
 
   return (
-    <header className="sticky top-0 z-50 w-full not-italic border-b backdrop-blur-md transition duration-200 min-h-14 font-outfit border-glass-border bg-glass-bg">
+    <header className="sticky top-0 z-50 w-full not-italic border-b-1 backdrop-blur-md transition duration-200 h-[calc(3.5rem-1px)] font-outfit border-b-glass-border bg-glass-bg">
       <div className="relative z-20 flex justify-between items-center py-2.5 px-4 mx-auto max-w-7xl bg-glass-bg">
         <Link
           href="/"
