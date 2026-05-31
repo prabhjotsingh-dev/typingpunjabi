@@ -1,34 +1,18 @@
 "use client";
 import Link from "next/link";
-import Aside from "@/components/aside";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/supabaseServices/AuthProvider";
+import { useAllLessons } from "@/supabaseServices/fetchdata/useAllLessons";
+import {
+  Sidebar,
+  SidebarProvider,
+} from "@/components/sidebar/Sidebar";
 
 function Lesson() {
   const { user, loading } = useAuth();
-  const [lessonsData, setLessonsData] = useState(null);
   const [plan, setPlan] = useState("beginner");
+  const { data: lessonsData, isLoading: isLessonsLoading, error: lessonsError } = useAllLessons(!loading && !!user);
 
-  useEffect(() => {
-    if (loading || !user) return;
-
-    async function fechdata() {
-      try {
-        const res = await fetch("/api/all");
-        const result = await res.json();
-        if (result && result.data) {
-          setLessonsData(result.data);
-        } else {
-          console.error("Failed to load lessons:", result);
-          setLessonsData([]);
-        }
-      } catch (err) {
-        console.error("Error fetching lessons:", err);
-        setLessonsData([]);
-      }
-    }
-    fechdata();
-  }, [loading, user]);
 
   function Categorylessons(array) {
     let filteredrows = array
@@ -36,17 +20,20 @@ function Lesson() {
       .map((obj) => obj.group);
 
     let output = filteredrows?.filter(
-      (item, index) => filteredrows.indexOf(item) === index,
+      (item, index) => filteredrows.indexOf(item) === index
     );
     return output ?? [];
   }
-  function setdata(data) {
-    setPlan(data);
+
+  function handlePlanChange(value) {
+    setPlan(value);
   }
+
   return (
-    <main className="flex justify-end w-[100svw] hide-scrollbar">
-      <Aside data={setdata} />
-      <section className="flex flex-col border-2 m-0 border-black pt-2 rounded-md w-screen sm:w-[80vw] h-[calc(100vh-2.5lh)] overflow-scroll hide-scrollbar gap-2 bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 ">
+    <SidebarProvider>
+      <main className="flex w-full min-h-[calc(100svh-4rem)]">
+        <Sidebar selectedValue={plan} onValueChange={handlePlanChange} />
+      <section className="flex flex-col border-2 m-0 border-black pt-2 w-full min-h-[calc(100svh-4rem)] overflow-scroll hide-scrollbar gap-2 bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 ">
         {!lessonsData ? (
           <>
             <h1 className="mx-3 font-semibold">loding Lessons</h1>
@@ -85,6 +72,8 @@ function Lesson() {
         )}
       </section>
     </main>
+    </SidebarProvider>
   );
 }
+
 export default Lesson;
