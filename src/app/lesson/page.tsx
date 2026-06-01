@@ -16,7 +16,7 @@ function Lesson() {
     error: lessonsError,
   } = useAllLessons(!loading && !!user);
 
-  function Categorylessons(array) {
+  function Categorylessons(array: Database["public"]["Tables"]["lessons"]["Row"][] | null) {
     let filteredrows = array
       ?.filter((obj) => obj.stage === plan)
       .map((obj) => obj.group);
@@ -27,8 +27,8 @@ function Lesson() {
     return output ?? [];
   }
 
-  function handlePlanChange(value) {
-    setPlan(value);
+  function handlePlanChange(value: string) {
+    setPlan(value as Database["public"]["Tables"]["lessons"]["Row"]["stage"]);
   }
 
   return (

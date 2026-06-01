@@ -12,6 +12,11 @@ const Character = React.memo(function Character({
   currentCharacter,
   correctTyped,
   unbox,
+}: {
+  text: string;
+  currentCharacter: boolean;
+  correctTyped?: boolean | null;
+  unbox: boolean;
 }) {
   const isBoxed = !unbox;
 
@@ -59,9 +64,9 @@ function Typing() {
   const { user, loading } = useAuth();
 
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  let eng_to_pun_words = {
+  let eng_to_pun_words: Record<string, string> = {
     q: "ੌ",
     w: "ੈ",
     e: "ਾ",
@@ -135,12 +140,12 @@ function Typing() {
   } = useLessonData(!loading && user && id ? id as string : null);
 
   const [noOfCorrectChar, setNoOfCorrectChar] = useState(0);
-  const [typed, setTyped] = useState({});
+  const [typed, setTyped] = useState<Record<number, boolean | null>>({});
   const [noOfIncorrectChar, setNoOfIncorrectChar] = useState(0);
-  const [input, setInput] = useState();
+  const [input, setInput] = useState<string>("");
   const [value, setValue] = useState("");
   const [start, setStart] = useState(0);
-  const [keytype, setKeytype] = useState([" ", true]);
+  const [keytype, setKeytype] = useState<[string, boolean]>([" ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
 
   const handleMainClick = () => {
@@ -149,7 +154,8 @@ function Typing() {
     }
   };
 
-  const inputtab = (e) => {
+  const inputtab = (e: React.ChangeEvent<HTMLInputElement>) => {
+ 
     let punjabi_input = e.target.value;
     if (
       "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?$".includes(

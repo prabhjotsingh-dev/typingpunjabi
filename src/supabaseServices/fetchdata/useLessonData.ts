@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 export function useLessonData(id: string | null) {
     const [lessonData, setLessonData] = useState<Database['public']['Tables']['lessons']['Row'] | null>(null);
-    const [lessonContent, setLessonContent] = useState<string[] | null>(null);
+    const [lessonContent, setLessonContent] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
