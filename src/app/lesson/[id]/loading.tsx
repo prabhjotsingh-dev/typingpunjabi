@@ -1,58 +1,72 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <main className="min-h-[100dvh] flex flex-col items-center pt-8 md:pt-16 pb-24 bg-background font-sans overflow-hidden">
+    <main className="h-[calc(100svh-3.5rem)] flex flex-col items-center pt-2 pb-24 bg-background font-sans selection:bg-muted">
       {/* Header Area Skeleton */}
-      <div className="flex flex-col gap-6 justify-between items-start px-6 mb-8 w-full max-w-5xl md:flex-row md:items-end">
-        <div className="space-y-3 w-full max-w-xs animate-pulse">
-          <div className="w-3/4 h-9 rounded-lg md:h-10 bg-muted"></div>
-          <div className="w-full h-4 rounded-md md:h-5 bg-muted/60"></div>
+      <div className="flex flex-col gap-4 justify-between items-start px-6 mb-6 w-full max-w-5xl md:flex-row md:items-end">
+        <div className="space-y-1 cursor-default">
+          <Skeleton className="h-9 md:h-10 w-48" />
         </div>
-
-        {/* Timer and Stats Panel Skeleton */}
-        <Card className="px-6 py-3 border-border/60 shadow-sm flex items-center gap-6 rounded-full bg-card/80 h-[52px] md:h-[56px] w-full md:w-[280px] animate-pulse">
-          <div className="w-full h-5 rounded bg-muted/50"></div>
-          <div className="w-full h-5 rounded border-l bg-muted/50 border-border"></div>
-        </Card>
       </div>
+
+      {/* Timer and Stats Panel Skeleton */}
+      <Card className="flex flex-row flex-nowrap gap-4 items-center px-5 py-2.5 mb-6 whitespace-nowrap rounded-full shadow-sm backdrop-blur-md cursor-default border-border/60 bg-card/80">
+        <div className="flex items-center">
+          <Skeleton className="h-5 w-12" />
+        </div>
+        <div className="flex items-center border-l border-border pl-4">
+          <Skeleton className="h-5 w-16" />
+        </div>
+      </Card>
 
       {/* Main Typing Area Skeleton */}
       <div className="relative px-4 w-full max-w-5xl md:px-6">
-        <Card className="w-full border-border/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] rounded-[2.5rem] bg-card overflow-hidden flex flex-col min-h-[385px] animate-pulse">
+        <Card className="w-full border-border/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] rounded-[2.5rem] bg-card overflow-hidden cursor-text flex flex-col">
           {/* Placeholder characters */}
-          <div className="flex flex-wrap flex-1 gap-4 content-start p-8 md:p-16">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <div
+          <div className="p-6 md:p-10 flex flex-wrap content-start min-h-[250px] gap-2 md:gap-3 transition-all flex-1">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <Skeleton
                 key={i}
-                className="w-[3rem] h-[3.5rem] bg-muted/70 rounded-xl"
+                className="w-[3rem] h-[3.5rem] rounded-xl"
                 style={{
-                  opacity: 1 - i * 0.04, // Fades out nicely to the right
+                  opacity: 1 - i * 0.03, // Fades out nicely to the right
                 }}
-              ></div>
+              />
             ))}
           </div>
 
           {/* Input feedback banner Skeleton */}
-          <div className="bg-background border-t border-border py-4 px-8 flex items-center justify-between h-[61px]">
+          <div className="flex justify-between items-center px-8 py-4 font-mono text-sm border-t cursor-default bg-background border-border text-muted-foreground mt-auto">
             <div className="flex gap-6 items-center">
-              <div className="w-24 h-6 rounded-md bg-muted"></div>
-              <div className="w-24 h-6 rounded-md bg-muted"></div>
+              <span className="flex gap-2 items-center">
+                <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground/70">
+                  Typed
+                </span>
+                <Skeleton className="h-[28px] w-[2.5rem] rounded-md" />
+              </span>
+              <span className="flex gap-2 items-center">
+                <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground/70">
+                  Target
+                </span>
+                <Skeleton className="h-[28px] w-[2.5rem] rounded-md" />
+              </span>
+            </div>
+            <div className="hidden md:block">
+              <Skeleton className="h-4 w-48" />
             </div>
           </div>
         </Card>
       </div>
 
       {/* Keyboard visualization Skeleton */}
-      <div className="px-4 mt-12 w-full max-w-4xl md:px-0">
-        <div className="w-full h-[220px] md:h-[260px] bg-card rounded-[2rem] border border-border shadow-sm animate-pulse flex flex-col justify-between p-6">
-          {/* Fake keyboard rows */}
-          <div className="w-full h-10 rounded-xl md:h-12 bg-muted/30"></div>
-          <div className="w-[95%] h-10 md:h-12 bg-muted/30 rounded-xl mx-auto"></div>
-          <div className="w-[90%] h-10 md:h-12 bg-muted/30 rounded-xl mx-auto"></div>
-          <div className="w-[85%] h-10 md:h-12 bg-muted/30 rounded-xl mx-auto"></div>
-        </div>
+      <div className="w-[90vw] md:w-[60vw] h-[24vw] md:h-[16vw] my-10 bg-card/50 rounded-3xl border border-border/50 shadow-sm flex flex-col justify-between p-4 md:p-6 opacity-60">
+        <Skeleton className="w-full h-[18%] rounded-lg" />
+        <Skeleton className="w-[95%] h-[18%] rounded-lg mx-auto" />
+        <Skeleton className="w-[90%] h-[18%] rounded-lg mx-auto" />
+        <Skeleton className="w-[85%] h-[18%] rounded-lg mx-auto" />
       </div>
     </main>
   );

@@ -264,7 +264,7 @@ function Typing() {
                   />
                 ))
             ) : (
-              <div className="w-full h-full flex items-center justify-center space-x-2 text-muted-foreground min-h-[200px]">
+              <div className="w-full min-h-[100px] flex items-center justify-center space-x-2 text-muted-foreground">
                 <div className="w-2.5 h-2.5 rounded-full animate-bounce bg-muted"></div>
                 <div className="w-2.5 h-2.5 rounded-full delay-75 animate-bounce bg-muted"></div>
                 <div className="w-2.5 h-2.5 rounded-full delay-150 animate-bounce bg-muted"></div>
