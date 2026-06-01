@@ -1,11 +1,12 @@
 import { createServerClient as createSSRClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import type { Database } from '@/comman/database.types'
 
 // For data operations (bypasses RLS with service role key)
 export async function createServerClient() {
   const cookieStore = await cookies()
 
-  return createSSRClient(
+  return createSSRClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SECRET_KEY!,
     {
@@ -25,7 +26,7 @@ export async function createServerClient() {
 export async function createAuthServerClient() {
   const cookieStore = await cookies()
 
-  return createSSRClient(
+  return createSSRClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
