@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getLessonResult } from "@/supabaseServices/fetchdata/getLessonResult";
+import { getLessonResult } from "@/supabaseFunctions/getData";
 import {
   Zap,
   Target,
@@ -37,13 +37,11 @@ async function Result({ params }: PageProps) {
     );
   }
 
-  const progress =
-    (Array.isArray(data.lesson_progress)
-      ? data.lesson_progress[0]
-      : data.lesson_progress) ?? {};
-  const speed = progress.highest_wpm ?? 0;
-  const accuracy = progress.highest_accuracy ?? 0;
-  const stars = progress.stars ?? 0;
+  const speed = data.wpm ?? 0;
+  const accuracy = data.accuracy ?? 0;
+  
+  // Calculate stars based on accuracy
+  const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 40 ? 1 : 0;
 
   const titleText =
     stars === 3 ? "Outstanding!" : stars === 2 ? "Great Job!" : "Good Effort!";
@@ -57,7 +55,7 @@ async function Result({ params }: PageProps) {
               variant="outline"
               className="px-3 py-1 shadow-sm bg-background w-fit"
             >
-              {data.title}
+              {data.lesson_title}
             </Badge>
 
             <h1 className="text-4xl font-semibold tracking-tighter leading-tight">
@@ -84,13 +82,13 @@ async function Result({ params }: PageProps) {
               variant="outline"
               className="rounded-xl h-10 px-2 transition-all active:scale-[0.98]"
             >
-              <Link href={Routes.toLesson(data.id)} className="flex gap-2">
+              <Link href={Routes.toLesson(id)} className="flex gap-2">
                 <RotateCcw className="w-4 h-4 md:mx-1.5 opacity-50" />
                 Again
               </Link>
             </Button>
             <Button className="group rounded-xl h-10 px-2 transition-all active:scale-[0.98]">
-              <Link href={Routes.nextLesson(data.id)} className="flex gap-2">
+              <Link href={Routes.nextLesson(id)} className="flex gap-2">
                 <span className="mr-1.5">Next</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
