@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Menu01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
+import { Menu, X } from "lucide-react";
 
 import { useAuth } from "@/supabaseServices/AuthProvider";
 import { createClient } from "@/supabaseServices/clients/browserClient";
@@ -128,9 +127,9 @@ const Navbar: React.FC = () => {
           className="flex p-1 ml-4 rounded-xl md:hidden text-primary-dark focus:outline-none hover:bg-glass-hover cubic-transition"
         >
           {isMobileMenuOpen ? (
-            <HugeiconsIcon icon={Cancel01Icon} className="w-6 h-6" />
+            <X className="w-6 h-6" />
           ) : (
-            <HugeiconsIcon icon={Menu01Icon} className="w-6 h-6" />
+            <Menu className="w-6 h-6" />
           )}
         </Button>
       </div>
