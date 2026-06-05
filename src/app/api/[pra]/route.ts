@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   const userId = user.id
-  const progressSelect = `lesson_progress!left(stars, highest_wpm, highest_accuracy)`
+  const progressSelect = `lesson_stats!left(highest_wpm, highest_accuracy)`
 
   let result
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from('lessons')
       .select(`*, ${progressSelect}`)
       .eq('is_published', true)
-      .eq('lesson_progress.profile_id', userId)
+      .eq('lesson_stats.profile_id', userId)
       .order('sequence_number')
   } else if (pra.endsWith('nextlesson')) {
     const id = pra.slice(0, -10)
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from('lessons')
       .select(`*, ${progressSelect}`)
       .eq('is_published', true)
-      .eq('lesson_progress.profile_id', userId)
+      .eq('lesson_stats.profile_id', userId)
       .gt('sequence_number', current.sequence_number)
       .order('sequence_number')
       .limit(1)
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       .from('lessons')
       .select(`*, ${progressSelect}`)
       .eq('id', pra)
-      .eq('lesson_progress.profile_id', userId)
+      .eq('lesson_stats.profile_id', userId)
       .single()
   }
 
@@ -133,15 +133,14 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   // 2. Compute stars
   const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 40 ? 1 : 0
 
-  // 3. Upsert lesson_progress
-  const { error: upsertError } = await supabase.from('lesson_progress').upsert(
+  // 3. Upsert lesson_stats
+  const { error: upsertError } = await supabase.from('lesson_stats').upsert(
     {
       profile_id: userId,
       lesson_id: lessonId,
-      is_completed: true,
-      stars,
       highest_wpm: wpm,
       highest_accuracy: accuracy,
+      lesson_title: lesson_title || "",
       last_played_at: new Date().toISOString(),
     },
     { onConflict: 'profile_id,lesson_id' }

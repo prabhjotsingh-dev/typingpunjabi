@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { GetStart } from "@/comman/utils";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -40,8 +41,7 @@ async function Result({ params }: PageProps) {
   const speed = data.wpm ?? 0;
   const accuracy = data.accuracy ?? 0;
   
-  // Calculate stars based on accuracy
-  const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 40 ? 1 : 0;
+  const stars = GetStart(accuracy)
 
   const titleText =
     stars === 3 ? "Outstanding!" : stars === 2 ? "Great Job!" : "Good Effort!";

@@ -1,13 +1,14 @@
-import { Database } from './database.types';
+import { Database } from '../supabaseServices/database.types';
 
 export type Stage = Database["public"]["Tables"]["lessons"]["Row"]["stage"];
+
+export type AddTypingResultArgs = Omit<Database["public"]["Functions"]["add_typing_result"]["Args"], "p_profile_id">;
 
 export type LessonData = {
   group: string;
   id: string;
-  is_completed: boolean;
   sequence_number: number;
   stage: string;
-  stars: number;
   title: string;
+  highest_accuracy: number;
 };

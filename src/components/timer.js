@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { addTypingResult } from "@/supabaseFunctions/addOrUpdateData";
 
 function Timer(data) {
   const router = useRouter();
@@ -24,19 +24,19 @@ function Timer(data) {
         const wpm = Math.round(totalChars / (time / 60)) || 0;
         const accuracy = totalChars > 0 ? (data.correct / totalChars) * 100 : 0;
         try {
-          await fetch(`/api/${data.id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              wpm,
-              cpm: totalChars,
-              accuracy,
-              correct_chars: data.correct,
-              incorrect_chars: data.incorrect,
-              total_chars: totalChars,
-              duration_seconds: time,
-              lesson_title: data.title,
-            }),
+          await addTypingResult({
+            p_accuracy: accuracy,
+            p_content_source: "lesson",
+            p_correct_chars: data.correct,
+            p_cpm: totalChars,
+            p_duration_seconds: time,
+            p_incorrect_chars: data.incorrect,
+            p_is_completed: true,
+            p_lesson_id: data.id,
+            p_lesson_title: data.title || "",
+            p_mode: "lesson",
+            p_total_chars: totalChars,
+            p_wpm: wpm,
           });
         } catch (err) {
           console.error("Error submitting typing results:", err);

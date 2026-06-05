@@ -4,10 +4,10 @@ import { useState } from "react";
 import { LessonData, Stage } from "@/comman/types";
 import { Sidebar, SidebarProvider } from "@/components/sidebar/Sidebar";
 import { Star } from "lucide-react";
+import { GetStart } from "@/comman/utils";
 
 export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData[] }) {
   const [plan, setPlan] = useState<Stage>("beginner");
-  
   
   function getLessonsByStage():LessonData[] {
     if (!lessonsData) return [];
@@ -58,8 +58,8 @@ export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData
                     <div className="bg-card border border-border shadow-sm rounded-[1.5rem] p-2.5 space-y-2">
                       {getLessonsByGroup(getLessonsByStage(), groupName)
                         .map((lesson) => {
-                          const stars = lesson.stars ?? 0;
-                          const isCompleted = lesson.is_completed;
+                          const stars = GetStart(lesson.highest_accuracy);
+                          const isCompleted = stars > 0;
 
                           return (
                             <Link
