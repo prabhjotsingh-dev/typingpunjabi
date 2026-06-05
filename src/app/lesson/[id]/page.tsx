@@ -1,10 +1,10 @@
 "use client";
 import Keyboard from "@/components/keyboard";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Timer from "@/components/timer";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/supabaseServices/AuthProvider";
-import { useLessonData } from "@/supabaseServices/fetchdata/useLessonData";
+import { getLessonContent } from "@/supabaseFunctions/getData";
 import { Card } from "@/components/ui/card";
 
 const Character = React.memo(function Character({
@@ -132,12 +132,24 @@ function Typing() {
     $: "ੱ",
   };
 
-  const {
-    lessonData,
-    lessonContent: allCharacters,
-    isLoading: isLessonLoading,
-    error: lessonError,
-  } = useLessonData(!loading && user && id ? id as string : null);
+  const [lessonData, setLessonData] = useState<{ title: string } | null>(null);
+  const [allCharacters, setAllCharacters] = useState<string[]>([]);
+  const [isLessonLoading, setIsLessonLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loading && user && id) {
+      setIsLessonLoading(true);
+      getLessonContent(id as string)
+        .then(data => {
+          if (data) {
+            setLessonData({ title: data.title });
+            setAllCharacters(data.content.split(''));
+          }
+        })
+        .catch(console.error)
+        .finally(() => setIsLessonLoading(false));
+    }
+  }, [loading, user, id]);
 
   const [noOfCorrectChar, setNoOfCorrectChar] = useState(0);
   const [typed, setTyped] = useState<Record<number, boolean | null>>({});

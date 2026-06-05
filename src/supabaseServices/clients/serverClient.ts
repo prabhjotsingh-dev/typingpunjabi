@@ -1,6 +1,6 @@
 import { createServerClient as createSSRClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database } from '@/comman/database.types'
+import type { Database } from '@/supabaseServices/database.types'
 
 // For data operations (bypasses RLS with service role key)
 export async function createServerClient() {
