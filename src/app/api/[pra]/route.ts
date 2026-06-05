@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/supabaseServices/clients/serverClient'
+import { GetStart } from '@/comman/utils'
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ pra: string }> }) {
   const supabase = await createServerClient()
@@ -131,7 +132,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 
   // 2. Compute stars
-  const stars = accuracy >= 90 ? 3 : accuracy >= 70 ? 2 : accuracy >= 40 ? 1 : 0
+  const stars = GetStart(accuracy)
 
   // 3. Upsert lesson_stats
   const { error: upsertError } = await supabase.from('lesson_stats').upsert(
