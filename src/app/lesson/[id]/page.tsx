@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Timer from "@/components/timer";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/supabaseServices/AuthProvider";
+import { transliterate } from "@/lib/transliteration/engine";
 import { getLessonContent } from "@/supabaseFunctions/getData";
 import { Card } from "@/components/ui/card";
 
@@ -23,7 +24,7 @@ const Character = React.memo(function Character({
   if (isBoxed) {
     let boxStyles = "bg-card border border-border text-muted-foreground";
     if (correctTyped === true)
-      boxStyles = "bg-foreground text-background border-foreground shadow-sm";
+      boxStyles = "bg-success text-white border-success shadow-sm";
     if (correctTyped === false)
       boxStyles = "bg-destructive/10 border-destructive/20 text-destructive";
 
@@ -40,10 +41,10 @@ const Character = React.memo(function Character({
     );
   }
 
-  let textStyles = "text-muted-foreground/60";
-  if (correctTyped === true) textStyles = "text-foreground font-medium";
+  let textStyles = "text-muted-foreground/60 h-[3.5rem]";
+  if (correctTyped === true) textStyles = "text-success font-medium";
   if (correctTyped === false)
-    textStyles = "text-destructive bg-destructive/10 rounded-sm px-0.5";
+    textStyles = "text-destructive bg-destructive/10 rounded-sm";
 
   let currentStyles = currentCharacter
     ? "border-b-[3px] border-foreground pb-0.5"
@@ -66,72 +67,6 @@ function Typing() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  let eng_to_pun_words: Record<string, string> = {
-    q: "ੌ",
-    w: "ੈ",
-    e: "ਾ",
-    r: "ੀ",
-    t: "ੂ",
-    y: "ਬ",
-    u: "ਹ",
-    i: "ਗ",
-    o: "ਦ",
-    p: "ਜ",
-    "[": "ਡ",
-    "]": "਼",
-    a: "ੋ",
-    s: "ੇ",
-    d: "੍",
-    f: "ਿ",
-    g: "ੁ",
-    h: "ਪ",
-    j: "ਰ",
-    k: "ਕ",
-    l: "ਤ",
-    ";": "ਚ",
-    "'": "ਟ",
-    x: "ੰ",
-    c: "ਮ",
-    v: "ਨ",
-    b: "ਵ",
-    n: "ਲ",
-    m: "ਸ",
-    "/": "ਯ",
-    Q: "ਔ",
-    W: "ਐ",
-    E: "ਆ",
-    R: "ਈ",
-    T: "ਊ",
-    Y: "ਭ",
-    U: "ਙ",
-    I: "ਘ",
-    O: "ਧ",
-    P: "ਝ",
-    "{": "ਢ",
-    "}": "ਞ",
-    A: "ਓ",
-    S: "ਏ",
-    D: "ਅ",
-    F: "ਇ",
-    G: "ਉ",
-    H: "ਫ",
-    J: "ੜ",
-    K: "ਖ",
-    L: "ਥ",
-    ":": "ਛ",
-    '"': "ਠ",
-    X: "ਂ",
-    C: "ਣ",
-    V: "ਨ",
-    B: "ੲ",
-    N: "ਲ਼",
-    M: "ਸ਼",
-    "<": ",",
-    ">": "।",
-    "?": "ਯ",
-    $: "ੱ",
-  };
-
   const [lessonData, setLessonData] = useState<{ title: string } | null>(null);
   const [allCharacters, setAllCharacters] = useState<string[]>([]);
   const [isLessonLoading, setIsLessonLoading] = useState(true);
@@ -143,7 +78,14 @@ function Typing() {
         .then(data => {
           if (data) {
             setLessonData({ title: data.title });
-            setAllCharacters(data.content.split(''));
+            let segments: string[];
+            if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+              const segmenter = new Intl.Segmenter('pa-IN', { granularity: 'grapheme' });
+              segments = Array.from(segmenter.segment(data.content)).map(s => s.segment);
+            } else {
+              segments = data.content.split('');
+            }
+            setAllCharacters(segments);
           }
         })
         .catch(console.error)
@@ -169,15 +111,10 @@ function Typing() {
   const inputtab = (e: React.ChangeEvent<HTMLInputElement>) => {
  
     let punjabi_input = e.target.value;
-    if (
-      "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>?$".includes(
-        punjabi_input.slice(-1),
-      )
-    ) {
-      punjabi_input = punjabi_input.replace(
-        punjabi_input.slice(-1),
-        (x) => eng_to_pun_words[x],
-      );
+    const lastChar = punjabi_input.slice(-1);
+    const transliteratedLast = transliterate(lastChar);
+    if (transliteratedLast !== lastChar) {
+      punjabi_input = punjabi_input.slice(0, -1) + transliteratedLast;
     }
     if (e.target.value === "") {
       setValue("");
@@ -249,22 +186,21 @@ function Typing() {
           speedClass="font-mono text-sm md:text-base font-medium text-foreground/80 flex items-center border-l border-border pl-4 capitalize m-0"
         />
       </Card>
-
       <input
-        id="typingText"
-        ref={inputRef}
-        autoFocus
-        className="absolute w-0 h-0 opacity-0"
-        value={value}
-        onChange={inputtab}
-        onKeyDown={(e) => {
+  id="typingText"
+  ref={inputRef}
+  autoFocus
+  className="absolute w-0 h-0 opacity-0"
+  value={value}
+  onChange={inputtab}
+  onKeyDown={(e) => {
           if (e.key === "Backspace" && currentCharacterIndex > 0) {
-            setTyped({ ...typed, [currentCharacterIndex - 1]: null });
-            setCurrentCharacterIndex(currentCharacterIndex - 1);
-            setInput("<<");
-          }
-        }}
-      />
+        setTyped({ ...typed, [currentCharacterIndex - 1]: null });
+        setCurrentCharacterIndex(currentCharacterIndex - 1);
+        setInput("<<");
+    }
+  }}
+/>
 
       <div className="relative px-4 w-full max-w-5xl md:px-6">
         <Card className="w-full border-border/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] rounded-[2.5rem] bg-card overflow-hidden cursor-text">
