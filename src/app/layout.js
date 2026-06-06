@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 export default function RootLayout({children}) {
   return (
     <html lang="en">
-      <body className='italic bg-gradient-to-tr from-sky-200 via-sky-400 to-sky-500 hide-scrollbar'>
+      <body className='italic hide-scrollbar'>
         <AuthProvider>
           <Navbar />
           {children}

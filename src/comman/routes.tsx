@@ -5,6 +5,7 @@ export default class Routes {
     static signup = "/signup";
     static about = "/about";
     static contact = "/contact";
+    static dashboard = "/dashboard";
     static toLesson(id: string) {
         return `/lesson/${id}`;
     }
