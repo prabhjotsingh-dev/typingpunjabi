@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
-
+import Routes from "@/comman/routes";
 import { useAuth } from "@/supabaseServices/AuthProvider";
 import { createClient } from "@/supabaseServices/clients/browserClient";
 
@@ -13,9 +13,10 @@ import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
 
 const navItems = [
-  { href: "/lesson", label: "Lessons" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: Routes.lessons, label: "Lessons" },
+  { href: Routes.dashboard, label: "Dashboard" },
+  { href: Routes.about, label: "About" },
+  { href: Routes.contact, label: "Contact" },
 ];
 
 const Navbar: React.FC = () => {

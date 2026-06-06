@@ -21,22 +21,9 @@ import {
   BookOpen,
   Trophy,
 } from "lucide-react";
-
-// No mock data - fetching directly from Supabase
-
-const formatTime = (seconds: number) => {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  return `${h}h ${m}m`;
-};
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
+import DashboardCard from "@/components/common/DashboardCard";
+import { formatTime } from "@/comman/utils";
+import { formatDate } from "@/comman/utils";
 
 export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
@@ -55,7 +42,6 @@ export default function DashboardPage() {
         ]);
         if (dashData) setData(dashData);
         if (lessonsData) setLessonsHistory(lessonsData);
-        debugger;
       } catch (error) {
         console.error("Failed to load dashboard data:", error);
       } finally {
@@ -78,7 +64,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!data) {
+  if (!data?.average_accuracy) {
     return (
       <div className="min-h-[100dvh] bg-surface-muted p-8 flex items-center justify-center">
         <div className="space-y-4 max-w-md text-center">
@@ -98,20 +84,19 @@ export default function DashboardPage() {
   return (
     <div className="min-h-[100dvh] bg-surface-muted px-4 py-12 md:p-12 lg:p-16 text-text">
       <div className="mx-auto space-y-12 max-w-7xl">
-        {/* HEADER SECTION */}
         <header className="flex flex-col gap-6 justify-between md:flex-row md:items-end">
           <div className="space-y-2">
             <div className="flex gap-3 items-center">
-              <h1 className="text-4xl font-semibold tracking-tighter md:text-5xl">
+              <h1 className="text-2xl font-semibold tracking-tighter md:text-4xl">
                 Welcome back, {data.username}
               </h1>
               <Badge
                 variant={
                   data.account_type === "registered" ? "default" : "secondary"
                 }
-                className="mt-1 h-6 tracking-wide uppercase md:mt-2"
+                className="mt-1 h-6 tracking-wide uppercase rounded-full md:mt-2"
               >
-                {data.account_type}
+                {data.account_type === "registered" ? "loged In" : "Guest"}
               </Badge>
             </div>
             <p className="text-lg tracking-tight text-text-muted">
@@ -119,139 +104,125 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* SETTINGS PANEL (Contextual UI Focus) */}
-          <div className="flex flex-wrap items-center gap-4 bg-surface p-4 rounded-3xl border border-border shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)]">
-            <div className="flex gap-2 items-center mr-4">
-              <Settings className="w-4 h-4 text-text-muted" />
-              <span className="text-sm font-medium tracking-wider uppercase text-text-muted">
-                Preferences
-              </span>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Switch
-                id="public-profile"
-                checked={data.is_profile_public}
-                onCheckedChange={(c) =>
-                  setData({ ...data, is_profile_public: c })
-                }
-              />
-              <label
-                htmlFor="public-profile"
-                className="text-sm font-medium cursor-pointer select-none text-text"
-              >
-                Public
-              </label>
-            </div>
-            <div className="w-[1px] h-4 bg-border hidden sm:block mx-2" />
-            <div className="flex gap-2 items-center">
-              <Switch
-                id="leaderboard"
-                checked={data.show_on_leaderboard}
-                onCheckedChange={(c) =>
-                  setData({ ...data, show_on_leaderboard: c })
-                }
-              />
-              <label
-                htmlFor="leaderboard"
-                className="text-sm font-medium cursor-pointer select-none text-text"
-              >
-                Leaderboard
-              </label>
-            </div>
-            <div className="w-[1px] h-4 bg-border hidden sm:block mx-2" />
-            <div className="flex gap-2 items-center">
-              <Select
-                value={data.theme_preference}
-                onValueChange={(v: "dark" | "light") =>
-                  setData({ ...data, theme_preference: v })
-                }
-              >
-                <SelectTrigger className="h-8 border-none shadow-none bg-surface-muted hover:bg-glass-hover focus:ring-0 text-text">
-                  <SelectValue placeholder="Theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="dark">Dark Theme</SelectItem>
-                  <SelectItem value="light">Light Theme</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <DashboardCard
+            className={{
+              card: "flex flex-col gap-2 justify-between w-full rounded-3xl md:p-4 bg-surface",
+              content: "font-bold md:text-5xl",
+            }}
+            content={
+              <div className="flex flex-row justify-between items-center px-8 w-full">
+                <div className="flex gap-2 items-center mr-4 w-full rounded-full">
+                  <Settings className="w-4 h-4 text-text-muted" />
+                  <Select
+                    value={data.theme_preference}
+                    onValueChange={(v: "dark" | "light") =>
+                      setData({ ...data, theme_preference: v })
+                    }
+                  >
+                    <SelectTrigger className="h-8 rounded-full border-none shadow-none bg-surface-muted hover:bg-glass-hover focus:ring-0 text-text">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dark">Dark Theme</SelectItem>
+                      <SelectItem value="light">Light Theme</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex gap-2 items-center w-full">
+                  <Switch
+                    id="public-profile"
+                    checked={data.is_profile_public}
+                    onCheckedChange={(c) =>
+                      setData({ ...data, is_profile_public: c })
+                    }
+                  />
+                  <label
+                    htmlFor="public-profile"
+                    className="text-sm font-medium cursor-pointer select-none text-text"
+                  >
+                    {data.is_profile_public
+                      ? "Public Profile"
+                      : "Private Profile"}
+                  </label>
+                </div>
+                <div className="flex gap-2 items-center w-full">
+                  <Switch
+                    id="leaderboard"
+                    checked={data.show_on_leaderboard}
+                    onCheckedChange={(c) =>
+                      setData({ ...data, show_on_leaderboard: c })
+                    }
+                  />
+                  <label
+                    htmlFor="leaderboard"
+                    className="text-sm font-medium cursor-pointer select-none text-text"
+                  >
+                    {data.show_on_leaderboard
+                      ? "Show on Leaderboard"
+                      : "Hide on Leaderboard"}
+                  </label>
+                </div>
+              </div>
+            }
+          ></DashboardCard>
         </header>
 
-        {/* BENTO GRID 2.0 */}
         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-[minmax(180px,auto)]">
-          {/* PRIMARY METRIC CARD (Highest Speed) */}
-          <div className="col-span-1 md:col-span-2 xl:col-span-2 bg-primary text-primary-foreground p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(3,105,161,0.2)] flex flex-col justify-between relative overflow-hidden group transition-transform duration-500 hover:scale-[1.02]">
-            {/* Liquid glass inner ring */}
+          <DashboardCard
+            className={{
+              card: "col-span-1 md:col-span-2 xl:col-span-2 bg-primary text-primary-foreground shadow-[0_20px_40px_-15px_rgba(3,105,161,0.2)] hover:scale-[1.02] overflow-hidden group border-none",
+            }}
+            header={
+              <div className="flex gap-2">
+                <Trophy className="w-5 h-5" /> <span>Personal Best</span>
+              </div>
+            }
+            content={
+              <span className="text-4xl">
+                {data.highest_wpm} <span className="text-sm">WPM</span>
+              </span>
+            }
+            footer={
+              <span className="font-bold">Highest CPM:{data.highest_cpm}</span>
+            }
+          >
             <div className="absolute inset-0 border border-white/10 rounded-[2.5rem] pointer-events-none shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]" />
-
-            <div className="flex relative z-10 gap-3 items-center mb-8 opacity-80">
-              <Trophy className="w-5 h-5" />
-              <span className="text-sm font-medium tracking-tight uppercase">
-                Personal Best
-              </span>
-            </div>
-
-            <div className="flex relative z-10 gap-4 items-end">
-              <div className="text-7xl font-bold tracking-tighter leading-none md:text-8xl">
-                {data.highest_wpm}
-              </div>
-              <div className="pb-2 text-xl font-medium text-primary-light">
-                WPM
-              </div>
-            </div>
-
-            <div className="relative z-10 mt-4 text-sm opacity-80">
-              Highest CPM:{" "}
-              <span className="font-mono font-bold">{data.highest_cpm}</span>
-            </div>
-
-            {/* Decorative background element */}
             <div className="absolute -right-12 -bottom-12 z-0 w-64 h-64 rounded-full blur-3xl transition-colors duration-700 pointer-events-none bg-white/5 group-hover:bg-white/10" />
-          </div>
+          </DashboardCard>
 
-          {/* SECONDARY METRIC CARD (Average Speed) */}
-          <div className="col-span-1 bg-surface border border-border p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-1">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex gap-3 items-center text-text-muted">
-                <Zap className="w-5 h-5" />
-                <span className="text-sm font-medium tracking-tight uppercase">
-                  Average Speed
-                </span>
+          <DashboardCard
+            header={
+              <div className="flex gap-2">
+                <Zap className="w-5 h-5" /> <span>Average Speed</span>
               </div>
-            </div>
-            <div>
-              <div className="flex gap-2 items-end">
-                <div className="text-5xl font-bold tracking-tighter text-text">
-                  {data.average_wpm}
-                </div>
-                <div className="pb-1 font-medium text-text-muted">WPM</div>
-              </div>
-              <div className="mt-2 text-sm text-text-muted">
-                {data.average_cpm} <span className="font-mono">CPM</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ACCURACY CARD */}
-          <div className="col-span-1 bg-surface border border-border p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col justify-between transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-1">
-            <div className="flex gap-3 items-center mb-8 text-text-muted">
-              <Target className="w-5 h-5" />
-              <span className="text-sm font-medium tracking-tight uppercase">
-                Accuracy
+            }
+            content={
+              <span className="text-4xl text-text">
+                {data.average_wpm}{" "}
+                <span className="text-sm text-muted-foreground">WPM</span>
               </span>
-            </div>
-            <div className="flex gap-2 items-end">
-              <div className="text-5xl font-bold tracking-tighter text-text">
-                {data.average_accuracy.toFixed(1)}
+            }
+            footer={<span className="font-bold">{data.average_cpm}CPM</span>}
+          />
+          <DashboardCard
+            header={
+              <div className="flex gap-2">
+                <Target className="w-5 h-5" /> <span>Average Accuracy</span>
               </div>
-              <div className="pb-1 font-medium text-text-muted">%</div>
-            </div>
-          </div>
+            }
+            content={
+              <span className="text-4xl text-text">
+                {data.average_accuracy?.toFixed(1)}%
+              </span>
+            }
+          />
 
-          {/* RECENT LESSON / PRE-LESSON START */}
           {recentLesson && (
-            <div className="col-span-1 md:col-span-2 xl:col-span-3 bg-surface border border-border p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all duration-300 hover:border-accent">
+            <DashboardCard
+              className={{
+                card: "col-span-1 gap-8 justify-between md:col-span-2 xl:col-span-3 md:flex-row md:items-center hover:border-accent",
+              }}
+            >
               <div className="flex-1 space-y-4">
                 <div className="flex gap-3 items-center text-accent">
                   <BookOpen className="w-5 h-5" />
@@ -290,11 +261,14 @@ export default function DashboardPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </DashboardCard>
           )}
 
-          {/* CONSISTENCY CARD (Total Tests & Time) */}
-          <div className="col-span-1 md:col-span-1 xl:col-span-1 bg-surface border border-border p-8 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col justify-center gap-6 transition-all duration-300 hover:-translate-y-1">
+          <DashboardCard
+            className={{
+              card: "flex-col col-span-1 gap-6 justify-center p-8 md:col-span-1 xl:col-span-1 md:p-8",
+            }}
+          >
             <div className="flex gap-4 items-center">
               <div className="flex justify-center items-center w-12 h-12 rounded-full bg-secondary shrink-0">
                 <Activity className="w-5 h-5 text-secondary-foreground" />
@@ -324,10 +298,9 @@ export default function DashboardPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </DashboardCard>
         </div>
 
-        {/* LESSON HISTORY LIST */}
         {pastLessons.length > 0 && (
           <div className="bg-surface border border-border p-8 md:p-10 rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] space-y-6">
             <div className="flex justify-between items-center mb-8">
@@ -387,7 +360,6 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* FOOTER METADATA */}
         <div className="flex justify-center pt-8 text-xs font-medium opacity-60 text-text-muted">
           Stats last updated: {formatDate(data.user_stats_updated_at)}
         </div>
