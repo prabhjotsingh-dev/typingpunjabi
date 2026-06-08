@@ -1,22 +1,10 @@
+# This Readme file is written by using github copilot.
+
 # Typing Punjabi ⌨️
 
 A modern, interactive typing practice application for Punjabi language learners. Master your typing skills with engaging exercises, real-time feedback, and comprehensive progress tracking.
 
 **Live Demo:** [typingpunjabi.vercel.app](https://typingpunjabi.vercel.app)
-
----
-
-## ✨ Features
-
-- **Punjabi Typing Exercises** - Practice typing authentic Punjabi text with proper Gurmukhi script
-- **Real-time Feedback** - Instant visual feedback as you type with accuracy metrics
-- **Progress Tracking** - Monitor your typing speed (WPM), accuracy, and improvement over time
-- **Multiple Difficulty Levels** - From beginner-friendly to advanced texts
-- **Dark Mode Support** - Comfortable typing experience in any lighting condition
-- **User Authentication** - Secure login with Supabase to save your progress
-- **Responsive Design** - Seamless experience across desktop, tablet, and mobile devices
-- **Leaderboard** - Compare your performance with other learners
-- **Statistics Dashboard** - Comprehensive analytics on your typing journey
 
 ---
 
@@ -132,10 +120,6 @@ typingpunjabi/
 4. **Review Results** - Check your WPM, accuracy, and mistakes
 5. **Track Progress** - Monitor improvements in your stats dashboard
 
-### For Contributors
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
-
 ---
 
 ## 📊 Available Scripts
@@ -166,10 +150,8 @@ Get these values from your [Supabase project settings](https://app.supabase.com)
 ## 🤝 Contributing
 
 Contributions are welcome! Whether you want to:
-- Add new typing exercises
 - Improve the UI/UX
 - Fix bugs
-- Enhance documentation
 - Add new features
 
 Please follow these steps:
@@ -179,12 +161,6 @@ Please follow these steps:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is open-source. Check the LICENSE file for details.
 
 ---
 
@@ -200,34 +176,6 @@ This project is open-source. Check the LICENSE file for details.
 
 - **Author:** [Prabhjot Singh](https://github.com/prabhjotsingh-dev)
 - **Website:** [typingpunjabi.vercel.app](https://typingpunjabi.vercel.app)
-
----
-
-## 🎓 Learning Resources
-
-- [Gurmukhi Script Guide](https://www.sikhdharma.org/gurmukhi-alphabet/)
-- [Punjabi Language Learning](https://www.sikhnet.com/podcast/sikh-net-radio-live)
-- [Typing Practice Tips](https://www.ratatype.com/learn/typing-lessons/)
-
----
-
-## 🚀 Deployment
-
-### Deploy on Vercel (Recommended)
-
-The easiest way to deploy is using [Vercel](https://vercel.com):
-
-1. Push your code to GitHub
-2. Go to [vercel.com](https://vercel.com)
-3. Import your repository
-4. Add environment variables
-5. Click Deploy!
-
-### Alternative Hosting
-
-- **Netlify** - Connect to GitHub for automatic deployments
-- **GitHub Pages** - Static hosting
-- **Self-hosted** - Deploy to your own server
 
 ---
 
