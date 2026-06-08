@@ -14,94 +14,105 @@ interface UseTypingEngineReturn {
   handleBackspace: () => void;
 }
 
-export function useTypingEngine(allCharacters: string[]): UseTypingEngineReturn {
+export function useTypingEngine(
+  allCharacters: string[],
+): UseTypingEngineReturn {
   const [noOfCorrectChar, setNoOfCorrectChar] = useState(0);
-  const [typed, setTyped] = useState<Record<number, boolean | null>>({});
   const [noOfIncorrectChar, setNoOfIncorrectChar] = useState(0);
+  const [typed, setTyped] = useState<Record<number, boolean | null>>({});
   const [input, setInput] = useState<string>("");
   const [value, setValue] = useState("");
   const [start, setStart] = useState(0);
   const [keytype, setKeytype] = useState<[string, boolean]>([" ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
- 
+
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let punjabi_input = e.target.value;
-      const lastChar = punjabi_input.slice(-1);
-      const transliteratedLast = transliterate(lastChar);
-      if (transliteratedLast !== lastChar) {
-        punjabi_input = punjabi_input.slice(0, -1) + transliteratedLast;
+      const rawInput = e.target.value;
+
+      if (!rawInput) {
+        setValue("");
+        setInput("");
+        return;
       }
 
-      if (e.target.value === "") {
-        setValue("");
-      } else if (
-        allCharacters[currentCharacterIndex].length <= punjabi_input.length
-      ) {
-        if (allCharacters[currentCharacterIndex] === punjabi_input) {
-          setTyped((prev) => ({ ...prev, [currentCharacterIndex]: true }));
-          setNoOfCorrectChar(
-            (old) => old + allCharacters[currentCharacterIndex].length,
-          );
+      const lastChar = rawInput.slice(-1);
+      const transliteratedLast = transliterate(lastChar);
+
+      const punjabi_input =
+        transliteratedLast !== lastChar
+          ? rawInput.slice(0, -1) + transliteratedLast
+          : rawInput;
+
+      const currentTarget = allCharacters[currentCharacterIndex] || "";
+
+      if (currentTarget.length <= punjabi_input.length) {
+        const isCorrect = currentTarget === punjabi_input;
+
+        setTyped((prev) => ({ ...prev, [currentCharacterIndex]: isCorrect }));
+
+        if (isCorrect) {
+          setNoOfCorrectChar((old) => old + currentTarget.length);
         } else {
-          setTyped((prev) => ({ ...prev, [currentCharacterIndex]: false }));
-          setNoOfIncorrectChar(
-            (old) => old + allCharacters[currentCharacterIndex].length,
-          );
+          setNoOfIncorrectChar((old) => old + currentTarget.length);
         }
-        setInput(punjabi_input);
+
         setValue("");
-        setCurrentCharacterIndex((prev) => prev + 1);
+        setInput(punjabi_input);
+
+        setCurrentCharacterIndex((prevIndex) => {
+          const nextIndex = prevIndex + 1;
+
+          if (nextIndex >= allCharacters.length) {
+            setTyped({});
+            setStart(0);
+            return 0;
+          }
+          if (nextIndex >= start + 20) {
+            setStart((old) => old + 20);
+          }
+          return nextIndex;
+        });
       } else {
         setValue(punjabi_input);
         setInput(punjabi_input);
       }
 
-      setKeytype([
-        punjabi_input.slice(-1),
-        punjabi_input.slice(-1) ===
-        allCharacters[currentCharacterIndex]?.slice(
-          punjabi_input.length - 1,
-          punjabi_input.length,
-        )
-          ? true
-          : false,
-      ]);
-
-      if (Object.keys(typed).length >= allCharacters.length - 1) {
-        setCurrentCharacterIndex(0);
-        setTyped({});
-        setStart(0);
-      }
-      if (Object.keys(typed).length >= start + 19) {
-        setStart((old) => old + 20);
-      }
+      const lastTypedPunjabi = punjabi_input.slice(-1);
+      const expectedChar = currentTarget[punjabi_input.length - 1];
+      setKeytype([lastTypedPunjabi, lastTypedPunjabi === expectedChar]);
     },
-    [allCharacters, currentCharacterIndex, typed, start],
+    [allCharacters, currentCharacterIndex, start],
   );
 
   const handleBackspace = useCallback(() => {
+    const prevIndex = currentCharacterIndex - 1;
+    const prevTarget = allCharacters[prevIndex];
     if (value.length > 0) {
       const codePoints = Array.from(value);
       codePoints.pop();
       const newValue = codePoints.join("");
       setValue(newValue);
-      setInput(newValue || "<<");
+      setInput(newValue || prevTarget);
     } else if (currentCharacterIndex > 0) {
-      const prevIndex = currentCharacterIndex - 1;
-      const prevTarget = allCharacters[prevIndex];
-      const prevCodePoints = Array.from(prevTarget);
       if (typed[prevIndex] === true) {
         setNoOfCorrectChar((old) => old - prevTarget.length);
       } else if (typed[prevIndex] === false) {
         setNoOfIncorrectChar((old) => old - prevTarget.length);
       }
 
-      setTyped((prev) => ({ ...prev, [prevIndex]: null }));
-      setCurrentCharacterIndex((prev) => prev - 1);
+      setTyped((prev) => {
+        const newTyped = { ...prev };
+        delete newTyped[prevIndex];
+        return newTyped;
+      });
 
-      if (prevCodePoints.length > 1) {
-        const partial = prevCodePoints.slice(0, -1).join("");
+      setCurrentCharacterIndex(prevIndex);
+
+      const codePoints = Array.from(prevTarget);
+      if (codePoints.length > 1) {
+        codePoints.pop();
+        const partial = codePoints.join("");
         setValue(partial);
         setInput(partial);
       } else {
