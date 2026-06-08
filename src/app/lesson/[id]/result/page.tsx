@@ -53,7 +53,7 @@ async function Result({ params }: PageProps) {
           <div className="space-y-3">
             <Badge
               variant="outline"
-              className="px-3 py-1 shadow-sm bg-background w-fit"
+              className="px-3 py-1 rounded-full shadow-sm bg-background w-fit"
             >
               {data.lesson_title}
             </Badge>
