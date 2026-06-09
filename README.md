@@ -1,182 +1,148 @@
-# This Readme file is written by using github copilot.
-
+﻿ This Readme file is written by using github copilot.
+ 
 # Typing Punjabi ⌨️
 
-A modern, interactive typing practice application for Punjabi language learners. Master your typing skills with engaging exercises, real-time feedback, and comprehensive progress tracking.
+A Punjabi typing practice app built with Next.js and Supabase. Learn to type Punjabi using romanized input, follow guided lessons, track your performance, and review results in a personalized dashboard.
 
-**Live Demo:** [typingpunjabi.vercel.app](https://typingpunjabi.vercel.app)
+**Live Demo:** https://typingpunjabi.vercel.app
 
 ---
 
-## 🚀 Quick Start
+## 🚀 What this app does
+
+- Authenticated login and signup using Supabase
+- Punjabi typing lessons with roman-to-Gurmukhi transliteration
+- Real-time WPM, accuracy, and mistake tracking
+- Lesson result pages with performance summary and navigation
+- Personalized dashboard showing recent practice, history.
+- Responsive UI built with Tailwind CSS and shadcn components
+
+---
+
+## 🧩 App Pages
+
+- `/` — Home page
+- `/about` — About the app
+- `/contact` — Contact page
+- `/login` — User login
+- `/signup` — User registration
+- `/dashboard` — Personalized progress dashboard
+- `/lesson` — Lesson list
+- `/lesson/[id]` — Lesson practice page
+- `/lesson/[id]/result` — Lesson result summary
+
+---
+
+## ⚙️ Installation
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn package manager
-- A Supabase account (for backend services)
 
-### Installation
+- Node.js 18+
+- npm or yarn
+- Supabase project with Auth and database configured
 
-1. **Clone the repository**
+### Setup
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/prabhjotsingh-dev/typingpunjabi.git
    cd typingpunjabi
    ```
 
-2. **Install dependencies**
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
-   
-   Create a `.env.local` file in the root directory:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. **Run the development server**
+3. Start development server:
    ```bash
    npm run dev
    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
-5. **Build for production**
-   ```bash
-   npm run build
-   npm start
-   ```
+4. Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🏗️ Tech Stack
-
-### Frontend
-- **Framework:** Next.js 16 - React-based framework for production-grade applications
-- **Language:** TypeScript - Type-safe development experience
-- **Styling:** 
-  - Tailwind CSS - Utility-first CSS framework
-  - Shadcn UI - High-quality React components
-  - Class Variance Authority - CSS class composition
-- **UI Components & Icons:**
-  - Lucide React - Beautiful, consistent icon library
-  - Base UI React - Unstyled, accessible component primitives
-
-### State & Forms
-- **React Hook Form** - Performant form validation and management
-- **Sonner** - Toast notifications for user feedback
-
-### Backend & Authentication
-- **Supabase** - Open-source Firebase alternative
-  - PostgreSQL database for data persistence
-  - Row-level security for data protection
-  - Built-in authentication system
-- **Supabase SSR** - Server-side rendering with authentication
-
-### Utilities
-- **Next Themes** - Theme management (light/dark mode)
-- **Tailwind Merge** - Merge Tailwind CSS classes intelligently
-- **TW Animate CSS** - Animation utilities
-
-### Development
-- **TypeScript** - Static type checking
-- **ESLint** - Code quality and consistency
-- **PostCSS** - CSS transformations
-- **Autoprefixer** - Automatic vendor prefixes
-
----
-
-## 📁 Project Structure
-
-```
-typingpunjabi/
-├── app/                    # Next.js app directory
-│   ├── layout.tsx          # Root layout component
-│   ├── page.tsx            # Home page
-│   └── ...                 # Other pages
-├── components/             # Reusable React components
-│   ├── ui/                 # Shadcn UI components
-│   └── ...                 # Custom components
-├── lib/                    # Utility functions and helpers
-├── styles/                 # Global styles
-├── public/                 # Static assets
-├── package.json            # Dependencies and scripts
-├── tsconfig.json           # TypeScript configuration
-├── tailwind.config.ts      # Tailwind CSS configuration
-└── next.config.ts          # Next.js configuration
-```
-
----
-
-## 🎯 Usage
-
-### For Learners
-
-1. **Sign Up/Login** - Create an account to track your progress
-2. **Select Exercise** - Choose from available typing exercises
-3. **Type Along** - Follow the Punjabi text and type accurately
-4. **Review Results** - Check your WPM, accuracy, and mistakes
-5. **Track Progress** - Monitor improvements in your stats dashboard
-
----
-
-## 📊 Available Scripts
+## 🧪 Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server on localhost:3000 |
-| `npm run build` | Build for production |
-| `npm start` | Start production server |
-| `npm run lint` | Run ESLint to check code quality |
+| `npm run dev` | Start development server |
+| `npm run build` | Build production bundle |
+| `npm start` | Run production server |
+| `npm run lint` | Run ESLint checks |
 
 ---
 
-## 🔐 Environment Variables
+## 🧰 Tech Stack
 
-Create a `.env.local` file with the following variables:
+- Next.js 16
+- React 18
+- TypeScript
+- Tailwind CSS
+- Supabase Auth + Database
+- React Hook Form
+- shadcn UI
+- Lucide React icons
+- Sonner toast notifications
+- `tw-animate-css`
+- `class-variance-authority`
 
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+---
+
+## 📁 Project structure
+
+```
+typingpunjabi/
+├── src/
+│   ├── app/                  # Next.js app routes and pages
+│   ├── components/           # Reusable UI components
+│   ├── comman/               # Shared routes, types, utilities
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Helper functions, transliteration engine
+│   ├── supabaseFunctions/    # Data fetching helpers
+│   └── supabaseServices/     # Auth and Supabase client logic
+├── public/                   # Static assets
+├── package.json              # Dependencies and scripts
+├── tsconfig.json             # TypeScript config
+├── tailwind.config.js        # Tailwind config
+└── next.config.js            # Next.js config
 ```
 
-Get these values from your [Supabase project settings](https://app.supabase.com).
+---
+
+## 📝 Notes for this app
+
+- Signup uses Supabase server-side admin user creation.
+- The typing engine converts romanized input into Punjabi characters.
+- Lesson and dashboard data are loaded from Supabase.
+- The lesson result page shows stars, WPM, and accuracy.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Whether you want to:
-- Improve the UI/UX
-- Fix bugs
-- Add new features
+Contributions are welcome! You can help with:
 
-Please follow these steps:
+- Adding new Punjabi typing lessons
+- Improving keyboard and transliteration support
+- Enhancing mobile responsiveness
+- Fixing bugs or polishing UI
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Steps:
 
----
-
-## 🙏 Support
-
-- 🐛 Found a bug? [Open an issue](https://github.com/prabhjotsingh-dev/typingpunjabi/issues)
-- 💡 Have a suggestion? Share your ideas in [discussions](https://github.com/prabhjotsingh-dev/typingpunjabi/discussions)
-- ⭐ Like the project? Give it a star!
+1. Fork the repo
+2. Create a branch (`git checkout -b feature/your-feature`)
+3. Commit your changes
+4. Push and open a pull request
 
 ---
 
 ## 📧 Contact
 
-- **Author:** [Prabhjot Singh](https://github.com/prabhjotsingh-dev)
-- **Website:** [typingpunjabi.vercel.app](https://typingpunjabi.vercel.app)
+- **GitHub:** https://github.com/prabhjotsingh-dev
+- **Demo:** https://typingpunjabi.vercel.app
 
 ---
 
-**Made with ❤️ for Punjabi language enthusiasts**
+Made with ❤️ for Punjabi learners and typists.
