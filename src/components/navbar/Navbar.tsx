@@ -95,9 +95,8 @@ const Navbar: React.FC = () => {
               {item.label}
             </CustomLink>
           ))}
-          <div className="flex justify-center items-center w-8 h-8 text-sm font-bold rounded-xl border shadow-sm bg-primary-dark/10 text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6">
             <ModeToggle />
-          </div>
+
           <span className="h-4 w-[1px] bg-border mx-2"></span>
         </nav>
 
