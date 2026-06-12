@@ -11,6 +11,7 @@ import { createClient } from "@/supabaseServices/clients/browserClient";
 import { CustomLink } from "../common/Link";
 import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
+import { ModeToggle } from "../theme/toggleTheme";
 
 const navItems = [
   { href: Routes.lessons, label: "Lessons" },
@@ -94,6 +95,8 @@ const Navbar: React.FC = () => {
               {item.label}
             </CustomLink>
           ))}
+            <ModeToggle />
+
           <span className="h-4 w-[1px] bg-border mx-2"></span>
         </nav>
 

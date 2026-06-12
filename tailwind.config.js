@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -21,51 +22,51 @@ module.exports = {
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
-          light: "#dbeafe",
-          dark: "#0369a1",
+          light: "var(--primary-light)",
+          dark: "var(--primary-dark)",
         },
         secondary: {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
-          light: "#e2e8f0",
-          dark: "#334155",
+          light: "var(--secondary-light)",
+          dark: "var(--secondary-dark)",
         },
         muted: {
           DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
         },
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f8fafc",
+          DEFAULT: "var(--surface)",
+          muted: "var(--surface-muted)",
         },
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         text: {
-          DEFAULT: "#0f172a",
-          muted: "#475569",
+          DEFAULT: "var(--text)",
+          muted: "var(--text-muted)",
         },
         accent: {
           DEFAULT: "var(--accent)",
           foreground: "var(--accent-foreground)",
-          light: "#bae6fd",
-          dark: "#0ea5e9",
+          light: "var(--accent-light)",
+          dark: "var(--accent-dark)",
         },
         destructive: {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
         },
-        success: "#16a34a",
-        warning: "#f59e0b",
-        error: "#dc2626",
+        success: "var(--success)",
+        warning: "var(--warning)",
+        error: "var(--error)",
         glass: {
-          bg: "rgba(255, 255, 255, 0.85)",
-          border: "rgba(226, 232, 240, 0.85)",
-          hover: "rgba(226, 232, 240, 0.45)",
-          active: "rgba(219, 234, 254, 0.4)",
+          bg: "var(--glass-bg)",
+          border: "var(--glass-border)",
+          hover: "var(--glass-hover)",
+          active: "var(--glass-active)",
         },
         brand: {
-          white: "#ffffff",
+          white: "var(--brand-white)",
         },
       },
       backgroundImage: {
