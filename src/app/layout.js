@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar/Navbar";
 import AuthProvider from "@/supabaseServices/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/context/theme-provider";
+export { metadata } from "@/metadata/forlayout";
 
 export default function RootLayout({ children }) {
   return (
