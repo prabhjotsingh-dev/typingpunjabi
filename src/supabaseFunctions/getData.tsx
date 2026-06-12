@@ -96,28 +96,6 @@ class GetData {
 
     return data || [];
   }
-
-  static async getProfileTheme() {
-    const supabase = await createServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return "system";
-    }
-
-    const { data, error } = await supabase.rpc("get_profile_theme", {
-      profile_id: user.id,
-    });
-
-    if (error) {
-      console.error("Error fetching profile theme:", error);
-      return "system";
-    }
-
-    return data || "system";
-  }
 }
 
 export const getLessons = GetData.getLessons;
@@ -125,4 +103,3 @@ export const getLessonContent = GetData.getLessonContent;
 export const getLessonResult = GetData.getLessonResult;
 export const getLessonstats = GetData.getLessonstats;
 export const getDashboardData = GetData.getDashboardData;
-export const getProfileTheme = GetData.getProfileTheme;
