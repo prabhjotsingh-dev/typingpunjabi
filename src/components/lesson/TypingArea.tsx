@@ -41,7 +41,7 @@ export function TypingArea({
           )}
         </div>
 
-        <div className="flex justify-between items-center px-8 py-4 font-mono text-sm border-t cursor-default bg-background border-border text-muted-foreground">
+        <div className="flex justify-between items-center px-8 py-4 font-mono text-sm border-t cursor-default bg-border border-border text-muted-foreground">
           <div className="flex gap-6 items-center">
             <span className="flex gap-2 items-center">
               <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground/70">
