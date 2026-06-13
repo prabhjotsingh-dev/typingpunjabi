@@ -47,7 +47,7 @@ export default function DashboardPageUI({
           </h2>
           <p className="text-lg text-text-muted">
             Complete your first lesson to see your personalized dashboard and
-            typing stats here.
+            typing statistics here.
           </p>
         </div>
       </div>
