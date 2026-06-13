@@ -1,189 +1,303 @@
-function Keyboard({className,keyblink}){
-    return (<>
-        {/* <p>{keyblink[0]+"  "+keyblink[1]}</p> */}
-        <div className={`flex flex-wrap justify-between text-[5px] lg:text-sm ${className}`}>
-            <div id="Backquote" className={`key ${"~`".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-                ~<br />` 
-            </div>
-            <div id="Digit1" className={`key ${"!1".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-                !<br />1
-            </div>
-            <div id="Digit2" className={`key ${"@2".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-                @<br />2
-            </div>
-            <div id="Digit3" className={`key ${"#3".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-                #<br />3
-            </div>
-            <div id="Digit4" className={`key ${"$4".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            $<br />4
-            </div>
-            <div id="Digit5" className={`key ${"%5".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            %<br />5
-            </div>
-            <div id="Digit6" className={`key ${"^6".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            ^<br />6
-            </div>
-            <div id="Digit7" className={`key ${"&7".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            &<br />7
-            </div>
-            <div id="Digit8" className={`key ${"*8".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            *<br />8
-            </div>
-            <div id="Digit9" className={`key ${"(9".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            (<br />9
-            </div>
-            <div id="Digit0" className={`key ${")0".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            )<br />0
-            </div>
-            <div id="Minus" className={`key ${"_-".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            _<br />-
-            </div>
-            <div id="Equal" className={`key ${"+=".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
-            +<br />=
-            </div>
-            <div id="Backspace" className={`key ${" ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[13%]`}>
-            &#x2190;
-            </div>
-            
-            <div className={`key ${"    ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[8%]`} id="Tab">
-            Tab<hr />&#x2190;<br />&#x2192;
-            </div>
-            <div className={`key ${"qQੌਔ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyQ">
-            Q
-            </div>
-            <div className={`key ${"ੈਐ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyW">
-            W
-            </div>
-            <div className={`key ${"ਾਆ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyE">
-            E
-            </div>
-            <div className={`key ${"ੀਈ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyR">
-            R
-            </div>
-            <div className={`key ${"ੂਊ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyT">
-            T
-            </div>
-            <div className={`key ${"ਬਭ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyY">
-            Y
-            </div>
-            <div className={`key ${"ਹਙ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyU">
-            U
-            </div>
-            <div className={`key ${"ਗਘ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyI">
-            I
-            </div>
-            <div className={`key ${"ਦਧ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyO">
-            O
-            </div>
-            <div className={`key ${"ਝਜ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyP">
-            P
-            </div>
-            <div className={`key ${"ਡਢ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="BracketLeft">
-            <br />[
-            </div>
-            <div className={`key ${"਼ਞ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="BracketRight">
-            <br />]
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[11%]`} id="Enter">
-            Enter
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[11%]`} id="CapsLock">
-            CapsLock
-            </div>
-            <div className={`key ${"ੋਓ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyA">
-            A
-            </div>
-            <div className={`key ${"ੇਏ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyS">
-            S
-            </div>
-            <div className={`key ${"੍ਅ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyD">
-            D
-            </div>
-            <div className={`key ${"ਿਇ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyF">
-            F
-            </div>
-            <div className={`key ${"ੁਉ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyG">
-            G
-            </div>
-            <div className={`key ${"ਪਫ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyH">
-            H
-            </div>
-            <div className={`key ${"ਰੜ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyJ">
-            J
-            </div>
-            <div className={`key ${"ਖਕ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyK">
-            K
-            </div>
-            <div className={`key ${"ਤਥ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyL">
-            L
-            </div>
-            <div className={`key ${"ਛਚ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Semicolon">
-            :<br />;
-            </div>
-            <div className={`key ${"ਟਠ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Quote">
-            "<br />'
-            </div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Backslash">
-            |<br />\
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[8.5%]`} id="key13_1">
-            &#9166;
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[13%]`} id="ShiftLeft">
-            Shift
-            </div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyZ">
-            Z
-            </div>
-            <div className={`key ${"ੰਂ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyX">
-            X
-            </div>
-            <div className={`key ${"ਮਣ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyC">
-            C
-            </div>
-            <div className={`key ${"ਨ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyV">
-            V
-            </div>
-            <div className={`key ${"ਵੲ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyB">
-            B
-            </div>
-            <div className={`key ${"ਲਲ਼".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyN">
-            N
-            </div>
-            <div className={`key ${"ਸਸ਼".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="KeyM">
-            M
-            </div>
-            <div className={`key ${",".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Comma">
-            <br />,
-            </div>
-            <div className={`key ${".।".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Period">
-            <br />.
-            </div>
-            <div className={`key ${"ਯ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`} id="Slash">
-            ?<br />/
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[19.5%]`} id="ShiftRight">
-            Shift
-            </div>
-            
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="ControlLeft">
-            Ctrl
-            </div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="MetaLeft"></div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="AltLeft">
-            Alt
-            </div>
-            <div className={`key ${" ".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[46.5%]`} id="Space"></div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="AltRight">Alt</div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="MetaRight"></div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="ContextMenu"></div>
-            <div className={`key ${"".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "} w-[7.5%]`} id="ControlRight">Ctrl</div>
-</div>
-        </>)
+import { useState, useEffect } from "react";
+
+function Keyboard({ className, keyblink }) {
+  const [pressedKeys, setPressedKeys] = useState(new Set());
+
+  useEffect(() => {
+    const syncModifiers = (e, nextSet) => {
+      if (!e.ctrlKey) { nextSet.delete("ControlLeft"); nextSet.delete("ControlRight"); }
+      if (!e.shiftKey) { nextSet.delete("ShiftLeft"); nextSet.delete("ShiftRight"); }
+      if (!e.altKey) { nextSet.delete("AltLeft"); nextSet.delete("AltRight"); }
+      if (!e.metaKey) { nextSet.delete("MetaLeft"); nextSet.delete("MetaRight"); }
+    };
+
+    const handleKeyDown = (e) => {
+      setPressedKeys((prev) => {
+        const next = new Set(prev);
+        next.add(e.code);
+        syncModifiers(e, next);
+        return next;
+      });
+    };
+
+    const handleKeyUp = (e) => {
+      setPressedKeys((prev) => {
+        const next = new Set(prev);
+        next.delete(e.code);
+        syncModifiers(e, next);
+        return next;
+      });
+    };
+
+    const handleClear = () => {
+      setPressedKeys(new Set());
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) handleClear();
+    };
+
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
+    window.addEventListener("keyup", handleKeyUp, { capture: true });
+    window.addEventListener("blur", handleClear);
+    window.addEventListener("focus", handleClear);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, { capture: true });
+      window.removeEventListener("keyup", handleKeyUp, { capture: true });
+      window.removeEventListener("blur", handleClear);
+      window.removeEventListener("focus", handleClear);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const getKeyClass = (chars, id) => {
+    const isPressed = pressedKeys.has(id);
+    
+    if (keyblink && keyblink[0] && chars) {
+      const isBlinking = Array.isArray(chars) 
+        ? chars.includes(keyblink[0])
+        : chars.includes(keyblink[0]);
+        
+      if (isBlinking) {
+        return keyblink[1] ? " bg-success " : " bg-destructive ";
+      }
+    }
+
+    if (isPressed) {
+      return id === "Backspace" ? " bg-destructive " : " bg-success ";
+    }
+    return " ";
+  };
+
+  return (
+    <>
+      <div
+        className={`flex flex-wrap justify-between text-[5px] lg:text-sm ${className}`}
+      >
+        <div id="Backquote" className={`key ${getKeyClass("~`", "Backquote")}`}>
+          ~<br />`
+        </div>
+        <div id="Digit1" className={`key ${getKeyClass("!1", "Digit1")}`}>
+          !<br />1
+        </div>
+        <div id="Digit2" className={`key ${getKeyClass("@2", "Digit2")}`}>
+          @<br />2
+        </div>
+        <div id="Digit3" className={`key ${getKeyClass("#3", "Digit3")}`}>
+          #<br />3
+        </div>
+        <div id="Digit4" className={`key ${getKeyClass("$4", "Digit4")}`}>
+          $<br />4
+        </div>
+        <div id="Digit5" className={`key ${getKeyClass("%5", "Digit5")}`}>
+          %<br />5
+        </div>
+        <div id="Digit6" className={`key ${getKeyClass("^6", "Digit6")}`}>
+          ^<br />6
+        </div>
+        <div id="Digit7" className={`key ${getKeyClass("&7", "Digit7")}`}>
+          &<br />7
+        </div>
+        <div id="Digit8" className={`key ${getKeyClass("*8", "Digit8")}`}>
+          *<br />8
+        </div>
+        <div id="Digit9" className={`key ${getKeyClass("(9", "Digit9")}`}>
+          (<br />9
+        </div>
+        <div id="Digit0" className={`key ${getKeyClass(")0", "Digit0")}`}>
+          )<br />0
+        </div>
+        <div id="Minus" className={`key ${getKeyClass("_-", "Minus")}`}>
+          _<br />-
+        </div>
+        <div id="Equal" className={`key ${getKeyClass("+=", "Equal")}`}>
+          +<br />=
+        </div>
+        <div
+          id="Backspace"
+          className={`key ${getKeyClass(["Backspace"], "Backspace")} w-[13%]`}
+        >
+          &#x2190;
+        </div>
+
+        <div id="Tab" className={`key ${getKeyClass(["Tab", "\t"], "Tab")} w-[8%]`}>
+          Tab
+          <hr />
+          &#x2190;
+          <br />
+          &#x2192;
+        </div>
+        <div id="KeyQ" className={`key ${getKeyClass("qQੌਔ", "KeyQ")}`}>
+          Q
+        </div>
+        <div id="KeyW" className={`key ${getKeyClass("ੈਐ", "KeyW")}`}>
+          W
+        </div>
+        <div id="KeyE" className={`key ${getKeyClass("ਾਆ", "KeyE")}`}>
+          E
+        </div>
+        <div id="KeyR" className={`key ${getKeyClass("ੀਈ", "KeyR")}`}>
+          R
+        </div>
+        <div id="KeyT" className={`key ${getKeyClass("ੂਊ", "KeyT")}`}>
+          T
+        </div>
+        <div id="KeyY" className={`key ${getKeyClass("ਬਭ", "KeyY")}`}>
+          Y
+        </div>
+        <div id="KeyU" className={`key ${getKeyClass("ਹਙ", "KeyU")}`}>
+          U
+        </div>
+        <div id="KeyI" className={`key ${getKeyClass("ਗਘ", "KeyI")}`}>
+          I
+        </div>
+        <div id="KeyO" className={`key ${getKeyClass("ਦਧ", "KeyO")}`}>
+          O
+        </div>
+        <div id="KeyP" className={`key ${getKeyClass("ਝਜ", "KeyP")}`}>
+          P
+        </div>
+        <div id="BracketLeft" className={`key ${getKeyClass("ਡਢ", "BracketLeft")}`}>
+          <br />[
+        </div>
+        <div id="BracketRight" className={`key ${getKeyClass("਼ਞ", "BracketRight")}`}>
+          <br />]
+        </div>
+
+        <div id="Enter" className={`key ${getKeyClass(["Enter", "\n"], "Enter")} w-[11%]`}>
+          Enter
+        </div>
+
+        <div id="CapsLock" className={`key ${getKeyClass(["CapsLock"], "CapsLock")} w-[11%]`}>
+          CapsLock
+        </div>
+        <div id="KeyA" className={`key ${getKeyClass("ੋਓ", "KeyA")}`}>
+          A
+        </div>
+        <div id="KeyS" className={`key ${getKeyClass("ੇਏ", "KeyS")}`}>
+          S
+        </div>
+        <div id="KeyD" className={`key ${getKeyClass("੍ਅ", "KeyD")}`}>
+          D
+        </div>
+        <div id="KeyF" className={`key ${getKeyClass("ਿਇ", "KeyF")}`}>
+          F
+        </div>
+        <div id="KeyG" className={`key ${getKeyClass("ੁਉ", "KeyG")}`}>
+          G
+        </div>
+        <div id="KeyH" className={`key ${getKeyClass("ਪਫ", "KeyH")}`}>
+          H
+        </div>
+        <div id="KeyJ" className={`key ${getKeyClass("ਰੜ", "KeyJ")}`}>
+          J
+        </div>
+        <div id="KeyK" className={`key ${getKeyClass("ਖਕ", "KeyK")}`}>
+          K
+        </div>
+        <div id="KeyL" className={`key ${getKeyClass("ਤਥ", "KeyL")}`}>
+          L
+        </div>
+        <div id="Semicolon" className={`key ${getKeyClass("ਛਚ", "Semicolon")}`}>
+          :<br />;
+        </div>
+        <div id="Quote" className={`key ${getKeyClass("ਟਠ", "Quote")}`}>
+          "<br />'
+        </div>
+        <div id="Backslash" className={`key ${getKeyClass("|\\", "Backslash")}`}>
+          |<br />\
+        </div>
+
+        <div id="key13_1" className={`key ${getKeyClass(["Enter"], "key13_1")} w-[8.5%]`}>
+          &#9166;
+        </div>
+
+        <div
+          id="ShiftLeft"
+          className={`key ${getKeyClass(["Shift"], "ShiftLeft")} w-[13%]`}
+        >
+          Shift
+        </div>
+        <div id="KeyZ" className={`key ${getKeyClass("Zz", "KeyZ")}`}>
+          Z
+        </div>
+        <div id="KeyX" className={`key ${getKeyClass("ੰਂ", "KeyX")}`}>
+          X
+        </div>
+        <div id="KeyC" className={`key ${getKeyClass("ਮਣ", "KeyC")}`}>
+          C
+        </div>
+        <div id="KeyV" className={`key ${getKeyClass("ਨ", "KeyV")}`}>
+          V
+        </div>
+        <div id="KeyB" className={`key ${getKeyClass("ਵੲ", "KeyB")}`}>
+          B
+        </div>
+        <div id="KeyN" className={`key ${getKeyClass("ਲਲ਼", "KeyN")}`}>
+          N
+        </div>
+        <div id="KeyM" className={`key ${getKeyClass("ਸਸ਼", "KeyM")}`}>
+          M
+        </div>
+        <div id="Comma" className={`key ${getKeyClass(",", "Comma")}`}>
+          <br />,
+        </div>
+        <div id="Period" className={`key ${getKeyClass(".।", "Period")}`}>
+          <br />.
+        </div>
+        <div id="Slash" className={`key ${getKeyClass("ਯ/?", "Slash")}`}>
+          ?<br />/
+        </div>
+
+        <div
+          id="ShiftRight"
+          className={`key ${getKeyClass(["Shift"], "ShiftRight")} w-[19.5%]`}
+        >
+          Shift
+        </div>
+
+        <div
+          id="ControlLeft"
+          className={`key ${getKeyClass(["Control"], "ControlLeft")} w-[7.5%]`}
+        >
+          Ctrl
+        </div>
+        <div
+          id="MetaLeft"
+          className={`key ${getKeyClass(["Meta"], "MetaLeft")} w-[7.5%]`}
+        ></div>
+        <div id="AltLeft" className={`key ${getKeyClass(["Alt"], "AltLeft")} w-[7.5%]`}>
+          Alt
+        </div>
+        <div
+          id="Space"
+          className={`key ${getKeyClass([" "], "Space")} w-[46.5%]`}
+        ></div>
+        <div
+          id="AltRight"
+          className={`key ${getKeyClass(["AltGraph", "Alt"], "AltRight")} w-[7.5%]`}
+        >
+          Alt
+        </div>
+        <div
+          id="MetaRight"
+          className={`key ${getKeyClass(["Meta"], "MetaRight")} w-[7.5%]`}
+        ></div>
+        <div
+          id="ContextMenu"
+          className={`key ${getKeyClass(["ContextMenu"], "ContextMenu")} w-[7.5%]`}
+        ></div>
+        <div
+          id="ControlRight"
+          className={`key ${getKeyClass(["Control"], "ControlRight")} w-[7.5%]`}
+        >
+          Ctrl
+        </div>
+      </div>
+    </>
+  );
 }
-export default Keyboard
+
+export default Keyboard;
