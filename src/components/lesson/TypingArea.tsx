@@ -19,7 +19,7 @@ export function TypingArea({
   return (
     <div className="relative px-4 w-full max-w-5xl md:px-6">
       <Card className="w-full border-border/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] rounded-[2.5rem] bg-card overflow-hidden cursor-text">
-        <div className="p-6 md:p-10 flex flex-wrap content-start min-h-[100px] transition-all">
+        <div className="flex flex-wrap content-start px-6 transition-all md:px-10">
           {allCharacters != null ? (
             allCharacters
               .slice(start, start + 20)

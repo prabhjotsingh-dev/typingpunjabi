@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
-import { LessonHeader } from "@/components/lesson/LessonHeader";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";
 import Keyboard from "@/components/keyboard";
@@ -41,9 +40,8 @@ export default function TypingPageUI({
   return (
     <main
       onClick={handleMainClick}
-      className="h-[calc(100svh-3.5rem)] flex flex-col items-center pt-2 pb-24 bg-background font-sans selection:bg-muted"
+      className="h-[calc(100svh-3.5rem)] flex flex-col items-center justify-between pt-2 pb-24 bg-background font-sans selection:bg-muted"
     >
-      <LessonHeader title={lessonTitle} />
 
       <StatsBar
         noOfCorrectChar={noOfCorrectChar}

@@ -1,6 +1,6 @@
 function Keyboard({className,keyblink}){
     return (<>
-        <p>{keyblink[0]+"  "+keyblink[1]}</p>
+        {/* <p>{keyblink[0]+"  "+keyblink[1]}</p> */}
         <div className={`flex flex-wrap justify-between text-[5px] lg:text-sm ${className}`}>
             <div id="Backquote" className={`key ${"~`".includes(keyblink[0]) ? `${ keyblink[1] ? " bg-green-300" : "bg-red-300" }` : " "}`}>
                 ~<br />` 
