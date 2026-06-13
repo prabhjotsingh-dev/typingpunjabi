@@ -1,83 +1,34 @@
-"use client";
-import React, { useRef } from "react";
-import { useParams } from "next/navigation";
-import { useAuth } from "@/supabaseServices/AuthProvider";
-import { useLesson } from "@/hooks/useLesson";
-import { useTypingEngine } from "@/hooks/useTypingEngine";
-import { LessonHeader } from "@/components/lesson/LessonHeader";
-import { StatsBar } from "@/components/lesson/StatsBar";
-import { TypingArea } from "@/components/lesson/TypingArea";
-import Keyboard from "@/components/keyboard";
+import { getLessonContent } from "@/supabaseFunctions/getData";
+import TypingPageUI from "@/components/pages/typingPageUI";
+import { notFound } from "next/navigation";
 
-function Typing() {
-  const { id } = useParams();
-  const { user, loading } = useAuth();
-  const inputRef = useRef<HTMLInputElement>(null);
+type Params = Promise<{ id: string }>;
 
-  const { lessonTitle, contentCharactersList, isLessonLoading } = useLesson(
-    id,
-    user,
-    loading,
-  );
-  const {
-    typed,
-    input,
-    value,
-    start,
-    keytype,
-    currentCharacterIndex,
-    noOfCorrectChar,
-    noOfIncorrectChar,
-    handleInput,
-    handleBackspace,
-  } = useTypingEngine(contentCharactersList);
+export default async function Typing({ params }: { params: Params }) {
+  const { id } = await params;
+  const data = await getLessonContent(id);
 
-  const handleMainClick = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
+  if (!data) {
+    notFound();
+  }
+
+  let segments: string[];
+  if (typeof Intl !== "undefined" && Intl.Segmenter) {
+    const segmenter = new Intl.Segmenter("pa-IN", {
+      granularity: "grapheme",
+    });
+    segments = Array.from(segmenter.segment(data.content)).map(
+      (s) => s.segment,
+    );
+  } else {
+    segments = data.content.split("");
+  }
 
   return (
-    <main
-      onClick={handleMainClick}
-      className="h-[calc(100svh-3.5rem)] flex flex-col items-center pt-2 pb-24 bg-background font-sans selection:bg-muted"
-    >
-      <LessonHeader title={lessonTitle || "Loading"} />
-
-      <StatsBar
-        noOfCorrectChar={noOfCorrectChar}
-        noOfIncorrectChar={noOfIncorrectChar}
-        id={id}
-        title={lessonTitle as string}
-      />
-
-      <input
-        id="typingText"
-        ref={inputRef}
-        autoFocus
-        className="absolute w-0 h-0 opacity-0"
-        value={value}
-        onChange={handleInput}
-        onKeyDown={(e) => {
-          if (e.key === "Backspace") {
-            e.preventDefault();
-            handleBackspace();
-          }
-        }}
-      />
-
-      <TypingArea
-        allCharacters={contentCharactersList}
-        start={start}
-        currentCharacterIndex={currentCharacterIndex}
-        typed={typed}
-        input={input}
-      />
-
-      <Keyboard className="w-[60vw] h-[16vw] my-10" keyblink={keytype} />
-    </main>
+    <TypingPageUI
+      id={id}
+      lessonTitle={data.title}
+      contentCharactersList={segments}
+    />
   );
 }
-
-export default Typing;
