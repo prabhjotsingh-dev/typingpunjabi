@@ -1,4 +1,4 @@
-import Timer from "@/components/timer";
+import Timer from "@/components/lesson/timer";
 import { Card } from "@/components/ui/card";
 
 interface StatsBarProps {
