@@ -23,7 +23,7 @@ export function useTypingEngine(
   const [input, setInput] = useState<string>("");
   const [value, setValue] = useState("");
   const [start, setStart] = useState(0);
-  const [keytype, setKeytype] = useState<[string, boolean]>([" ", true]);
+  const [keytype, setKeytype] = useState<[string, boolean]>([".... ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
 
   const handleInput = useCallback(

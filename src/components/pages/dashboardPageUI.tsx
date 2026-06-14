@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getDashboardData, getLessonstats } from "@/supabaseFunctions/getData";
 
 import {
   Activity,
@@ -22,47 +21,21 @@ import {
   Trophy,
 } from "lucide-react";
 import DashboardCard from "@/components/common/DashboardCard";
-import { formatTime } from "@/comman/utils";
-import { formatDate } from "@/comman/utils";
+import { formatTime, formatDate } from "@/comman/utils";
 
-export default function DashboardPage() {
-  const [data, setData] = useState<any>(null);
-  const [lessonsHistory, setLessonsHistory] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface DashboardPageUIProps {
+  initialData: any;
+  lessonsHistory: any[];
+}
+
+export default function DashboardPageUI({
+  initialData,
+  lessonsHistory,
+}: DashboardPageUIProps) {
+  const [data, setData] = useState<any>(initialData);
 
   const recentLesson = lessonsHistory[0];
   const pastLessons = lessonsHistory.slice(1);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [dashData, lessonsData] = await Promise.all([
-          getDashboardData(),
-          getLessonstats(),
-        ]);
-        if (dashData) setData(dashData);
-        if (lessonsData) setLessonsHistory(lessonsData);
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadData();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-[100dvh] bg-surface-muted p-8 flex items-center justify-center">
-        <div className="flex flex-col gap-4 items-center animate-pulse">
-          <div className="w-12 h-12 rounded-full border-4 animate-spin border-primary border-t-transparent" />
-          <p className="font-medium tracking-tight text-text-muted">
-            Loading Dashboard...
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (!data?.average_accuracy) {
     return (
@@ -74,7 +47,7 @@ export default function DashboardPage() {
           </h2>
           <p className="text-lg text-text-muted">
             Complete your first lesson to see your personalized dashboard and
-            typing stats here.
+            typing statistics here.
           </p>
         </div>
       </div>
