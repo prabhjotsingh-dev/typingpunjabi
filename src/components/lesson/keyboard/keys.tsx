@@ -14,7 +14,6 @@ interface KeyConfig {
   show: React.ReactNode;
 }
 
-// Dual-legend: English in top-right corner, Punjabi centered
 const DualKey = ({
   en,
   pb1,
@@ -40,8 +39,6 @@ const DualKey = ({
     </div>
   </div>
 );
-
-// Number/symbol keys — symbol on top, digit below
 const NumKey = ({ top, bottom }: { top: string; bottom: string }) => (
   <div
     className="flex flex-col justify-center items-center font-sans text-text"
@@ -55,13 +52,12 @@ const NumKey = ({ top, bottom }: { top: string; bottom: string }) => (
 // Modifier keys — icon stacked above label
 const ModKey = ({ text, icon }: { text?: string; icon?: React.ReactNode }) => (
   <div
-    className="flex flex-col justify-center items-center font-sans text-text"
+    className="flex justify-around items-center font-sans text-text"
     style={{ gap: "5cqh" }}
   >
     {icon && (
       <span style={{ display: "flex", width: "40cqh", height: "40cqh" }}>
         {React.cloneElement(icon as React.ReactElement, {
-          style: { width: "100%", height: "100%" },
         })}
       </span>
     )}

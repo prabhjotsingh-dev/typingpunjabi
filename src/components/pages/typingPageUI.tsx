@@ -40,7 +40,7 @@ export default function TypingPageUI({
   return (
     <main
       onClick={handleMainClick}
-      className="h-[calc(100svh-3.5rem)] flex flex-col items-center justify-between pt-2 pb-24 bg-background font-sans selection:bg-muted"
+      className="h-[calc(100svh-3.5rem)] flex flex-col items-center justify-between gap-4 pt-2 pb-4 bg-background font-sans selection:bg-muted"
     >
 
       <StatsBar
@@ -73,7 +73,7 @@ export default function TypingPageUI({
         input={input}
       />
 
-      <Keyboard className="w-[60vw] h-[16vw] my-10" keyblink={keytype} />
+      <Keyboard className="w-[60vw] h-[30vw] mx-10" keyblink={keytype} />
     </main>
   );
 }
