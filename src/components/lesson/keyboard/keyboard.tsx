@@ -91,7 +91,7 @@ function Keyboard({ className = "", keyblink }: KeyboardProps) {
 
   return (
     <div
-      className={`flex flex-wrap justify-between text-[5px] lg:text-sm ${className}`}
+      className={`flex flex-wrap justify-between ${className}`}
     >
       {KEYBOARD_KEYS.map(({ id, chars, className: keyClassName, show }) => (
         <div
