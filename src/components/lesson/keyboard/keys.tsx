@@ -35,7 +35,7 @@ const DualKey = ({
       style={{ lineHeight: 1, gap: "5cqh", marginTop: "10cqh" }}
     >
       {pb2 && <span className="mr-[38%]" style={{ fontSize: "22cqh", opacity: 0.8 }}>{pb2}</span>}
-      <span className="ml-[30%]" style={{ fontSize: "38cqh" }}>{pb1}</span>
+      <span className="ml-[30%]" style={{ fontSize: "30cqh" }}>{pb1}</span>
     </div>
   </div>
 );
@@ -45,7 +45,7 @@ const NumKey = ({ top, bottom }: { top: string; bottom: string }) => (
     className="flex flex-col justify-center items-center font-sans text-text"
     style={{ lineHeight: 1, gap: "8cqh" }}
   >
-    <span style={{ fontSize: "25cqh", opacity: 0.6 }}>{top}</span>
+    <span style={{ fontSize: "25cqh", opacity: 0.8 }}>{top}</span>
     <span style={{ fontSize: "38cqh" }}>{bottom}</span>
   </div>
 );
