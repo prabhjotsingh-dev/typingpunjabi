@@ -31,14 +31,15 @@ const DualKey = ({
       {en}
     </span>
     <div
-      className="flex flex-col items-center"
+      className="flex flex-col items-center w-full"
       style={{ lineHeight: 1, gap: "5cqh", marginTop: "10cqh" }}
     >
-      {pb2 && <span style={{ fontSize: "22cqh", opacity: 0.6 }}>{pb2}</span>}
-      <span style={{ fontSize: "38cqh" }}>{pb1}</span>
+      {pb2 && <span className="mr-[38%]" style={{ fontSize: "22cqh", opacity: 0.8 }}>{pb2}</span>}
+      <span className="ml-[30%]" style={{ fontSize: "38cqh" }}>{pb1}</span>
     </div>
   </div>
 );
+
 const NumKey = ({ top, bottom }: { top: string; bottom: string }) => (
   <div
     className="flex flex-col justify-center items-center font-sans text-text"
@@ -49,22 +50,16 @@ const NumKey = ({ top, bottom }: { top: string; bottom: string }) => (
   </div>
 );
 
-// Modifier keys — icon stacked above label
 const ModKey = ({ text, icon }: { text?: string; icon?: React.ReactNode }) => (
   <div
-    className="flex justify-around items-center font-sans text-text"
-    style={{ gap: "5cqh" }}
+    className="flex justify-center items-center font-sans text-text"
+    style={{ gap: "4cqh" }}
   >
-    {icon && (
-      <span style={{ display: "flex", width: "40cqh", height: "40cqh" }}>
-        {React.cloneElement(icon as React.ReactElement, {
-        })}
-      </span>
-    )}
+    {icon && <span className="flex">{icon}</span>}
     {text && (
       <span
         style={{
-          fontSize: text.length > 4 ? "22cqh" : "28cqh",
+          fontSize: text.length > 4 ? "20cqh" : "26cqh",
           lineHeight: 1,
           fontWeight: 500,
         }}
@@ -159,7 +154,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "Backspace",
     chars: ["Backspace"],
     className: "w-[13%]",
-    show: <ModKey text="Back" icon={<Delete />} />,
+    show: <ModKey text="Back" icon={<Delete size={10} />} />,
   },
 
   // Row 1
@@ -167,7 +162,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "Tab",
     chars: ["Tab", "\t"],
     className: "w-[8%]",
-    show: <ModKey text="Tab" icon={<ArrowLeftRight />} />,
+    show: <ModKey text="Tab" icon={<ArrowLeftRight size={10} />} />,
   },
   {
     id: "KeyQ",
@@ -245,7 +240,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "Enter",
     chars: ["Enter", "\n"],
     className: "w-[11%]",
-    show: <ModKey text="Enter" icon={<CornerDownLeft />} />,
+    show: <ModKey text="Enter" icon={<CornerDownLeft size={10} />} />,
   },
 
   // Row 2
@@ -253,7 +248,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "CapsLock",
     chars: ["CapsLock"],
     className: "w-[11%]",
-    show: <ModKey text="Caps" icon={<MonitorUp />} />,
+    show: <ModKey text="Caps" icon={<MonitorUp size={10} />} />,
   },
   {
     id: "KeyA",
@@ -331,7 +326,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "key13_1",
     chars: ["Enter"],
     className: "w-[8.5%]",
-    show: <ModKey icon={<CornerDownLeft />} />,
+    show: <ModKey icon={<CornerDownLeft size={10} />} />,
   },
 
   // Row 3
@@ -339,7 +334,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "ShiftLeft",
     chars: ["Shift"],
     className: "w-[13%]",
-    show: <ModKey text="Shift" icon={<ArrowBigUp />} />,
+    show: <ModKey text="Shift" icon={<ArrowBigUp size={10} />} />,
   },
   { id: "KeyZ", chars: "Zz", className: "", show: <DualKey en="Z" pb1="z" /> },
   {
@@ -395,7 +390,7 @@ export const KEYBOARD_KEYS: KeyConfig[] = [
     id: "ShiftRight",
     chars: ["Shift"],
     className: "w-[19.5%]",
-    show: <ModKey text="Shift" icon={<ArrowBigUp />} />,
+    show: <ModKey text="Shift" icon={<ArrowBigUp size={10} />} />,
   },
 
   // Bottom row
