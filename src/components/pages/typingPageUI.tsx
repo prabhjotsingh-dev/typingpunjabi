@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";
-import Keyboard from "@/components/lesson/keyboard";
+import Keyboard from "@/components/lesson/keyboard/keyboard";
 
 interface TypingPageUIProps {
   id: string;
