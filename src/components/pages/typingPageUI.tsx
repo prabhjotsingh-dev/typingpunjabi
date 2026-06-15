@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";
@@ -36,6 +36,12 @@ export default function TypingPageUI({
       inputRef.current.focus();
     }
   };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [start]);
 
   return (
     <main

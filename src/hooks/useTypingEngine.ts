@@ -22,9 +22,10 @@ export function useTypingEngine(
   const [typed, setTyped] = useState<Record<number, boolean | null>>({});
   const [input, setInput] = useState<string>("");
   const [value, setValue] = useState("");
-  const [start, setStart] = useState(0);
   const [keytype, setKeytype] = useState<[string, boolean]>([".... ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
+
+  const start = Math.floor(currentCharacterIndex / 25) * 25;
 
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +66,7 @@ export function useTypingEngine(
 
           if (nextIndex >= allCharacters.length) {
             setTyped({});
-            setStart(0);
             return 0;
-          }
-          if (nextIndex >= start + 20) {
-            setStart((old) => old + 20);
           }
           return nextIndex;
         });
@@ -82,7 +79,7 @@ export function useTypingEngine(
       const expectedChar = currentTarget[punjabi_input.length - 1];
       setKeytype([lastTypedPunjabi, lastTypedPunjabi === expectedChar]);
     },
-    [allCharacters, currentCharacterIndex, start],
+    [allCharacters, currentCharacterIndex],
   );
 
   const handleBackspace = useCallback(() => {

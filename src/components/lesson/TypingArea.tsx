@@ -22,7 +22,7 @@ export function TypingArea({
         <div className="flex flex-wrap content-start px-6 transition-all md:px-10">
           {allCharacters != null ? (
             allCharacters
-              .slice(start, start + 20)
+              .slice(start, start + 25)
               .map((Char, i) => (
                 <Character
                   key={start + i}
