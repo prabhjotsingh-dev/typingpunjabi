@@ -7,6 +7,7 @@ interface UseTypingEngineReturn {
   input: string;
   value: string;
   start: number;
+  end: number;
   keytype: [string, boolean];
   noOfCorrectChar: number;
   noOfIncorrectChar: number;
@@ -16,6 +17,7 @@ interface UseTypingEngineReturn {
 
 export function useTypingEngine(
   allCharacters: string[],
+  pageStarts: number[]
 ): UseTypingEngineReturn {
   const [noOfCorrectChar, setNoOfCorrectChar] = useState(0);
   const [noOfIncorrectChar, setNoOfIncorrectChar] = useState(0);
@@ -25,7 +27,15 @@ export function useTypingEngine(
   const [keytype, setKeytype] = useState<[string, boolean]>([".... ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
 
-  const start = Math.floor(currentCharacterIndex / 25) * 25;
+  let start = 0;
+  let end = allCharacters.length;
+  for (let i = pageStarts.length - 1; i >= 0; i--) {
+    if (currentCharacterIndex >= pageStarts[i]) {
+      start = pageStarts[i];
+      end = pageStarts[i + 1] ?? allCharacters.length;
+      break;
+    }
+  }
 
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +135,7 @@ export function useTypingEngine(
     input,
     value,
     start,
+    end,
     keytype,
     noOfCorrectChar,
     noOfIncorrectChar,

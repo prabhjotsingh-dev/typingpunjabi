@@ -9,12 +9,14 @@ interface TypingPageUIProps {
   id: string;
   lessonTitle: string;
   contentCharactersList: string[];
+  pageStarts: number[];
 }
 
 export default function TypingPageUI({
   id,
   lessonTitle,
   contentCharactersList,
+  pageStarts,
 }: TypingPageUIProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,13 +25,14 @@ export default function TypingPageUI({
     input,
     value,
     start,
+    end,
     keytype,
     currentCharacterIndex,
     noOfCorrectChar,
     noOfIncorrectChar,
     handleInput,
     handleBackspace,
-  } = useTypingEngine(contentCharactersList);
+  } = useTypingEngine(contentCharactersList, pageStarts);
 
   const handleMainClick = () => {
     if (inputRef.current) {
@@ -74,6 +77,7 @@ export default function TypingPageUI({
       <TypingArea
         allCharacters={contentCharactersList}
         start={start}
+        end={end}
         currentCharacterIndex={currentCharacterIndex}
         typed={typed}
         input={input}

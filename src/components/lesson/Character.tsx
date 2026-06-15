@@ -36,7 +36,7 @@ const Character = React.memo(function Character({
   }
 
   let textStyles = "text-muted-foreground/60 h-[3.5rem]";
-  if (correctTyped === true) textStyles = "text-success font-medium";
+  if (correctTyped === true) textStyles = "text-success";
   if (correctTyped === false) {
     textStyles = "text-destructive bg-destructive/10 rounded-sm";
     if (text === " ") textStyles += " border-b-[3px] border-destructive pb-0.5";
