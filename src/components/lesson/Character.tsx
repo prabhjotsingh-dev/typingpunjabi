@@ -17,8 +17,10 @@ const Character = React.memo(function Character({
     let boxStyles = "bg-card border border-border text-muted-foreground";
     if (correctTyped === true)
       boxStyles = "bg-success text-white border-success shadow-sm";
-    if (correctTyped === false)
+    if (correctTyped === false) {
       boxStyles = "bg-destructive/10 border-destructive/20 text-destructive";
+      if (text === " ") boxStyles += " border-b-[3px] border-b-destructive";
+    }
 
     let currentStyles = currentCharacter
       ? "ring-2 ring-foreground/20 ring-offset-2 border-border scale-[1.02]"
@@ -35,8 +37,10 @@ const Character = React.memo(function Character({
 
   let textStyles = "text-muted-foreground/60 h-[3.5rem]";
   if (correctTyped === true) textStyles = "text-success font-medium";
-  if (correctTyped === false)
+  if (correctTyped === false) {
     textStyles = "text-destructive bg-destructive/10 rounded-sm";
+    if (text === " ") textStyles += " border-b-[3px] border-destructive pb-0.5";
+  }
 
   let currentStyles = currentCharacter
     ? "border-b-[3px] border-foreground pb-0.5"
