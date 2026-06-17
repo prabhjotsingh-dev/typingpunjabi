@@ -7,6 +7,7 @@ interface UseTypingEngineReturn {
   input: string;
   value: string;
   start: number;
+  end: number;
   keytype: [string, boolean];
   noOfCorrectChar: number;
   noOfIncorrectChar: number;
@@ -16,15 +17,25 @@ interface UseTypingEngineReturn {
 
 export function useTypingEngine(
   allCharacters: string[],
+  pageStarts: number[]
 ): UseTypingEngineReturn {
   const [noOfCorrectChar, setNoOfCorrectChar] = useState(0);
   const [noOfIncorrectChar, setNoOfIncorrectChar] = useState(0);
   const [typed, setTyped] = useState<Record<number, boolean | null>>({});
   const [input, setInput] = useState<string>("");
   const [value, setValue] = useState("");
-  const [start, setStart] = useState(0);
   const [keytype, setKeytype] = useState<[string, boolean]>([".... ", true]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
+
+  let start = 0;
+  let end = allCharacters.length;
+  for (let i = pageStarts.length - 1; i >= 0; i--) {
+    if (currentCharacterIndex >= pageStarts[i]) {
+      start = pageStarts[i];
+      end = pageStarts[i + 1] ?? allCharacters.length;
+      break;
+    }
+  }
 
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +76,7 @@ export function useTypingEngine(
 
           if (nextIndex >= allCharacters.length) {
             setTyped({});
-            setStart(0);
             return 0;
-          }
-          if (nextIndex >= start + 20) {
-            setStart((old) => old + 20);
           }
           return nextIndex;
         });
@@ -82,7 +89,7 @@ export function useTypingEngine(
       const expectedChar = currentTarget[punjabi_input.length - 1];
       setKeytype([lastTypedPunjabi, lastTypedPunjabi === expectedChar]);
     },
-    [allCharacters, currentCharacterIndex, start],
+    [allCharacters, currentCharacterIndex],
   );
 
   const handleBackspace = useCallback(() => {
@@ -128,6 +135,7 @@ export function useTypingEngine(
     input,
     value,
     start,
+    end,
     keytype,
     noOfCorrectChar,
     noOfIncorrectChar,
