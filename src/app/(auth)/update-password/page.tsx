@@ -5,18 +5,103 @@ import { Input } from "@/components/common/Input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUpdatePasswordSteps } from "@/hooks/useUpdatePasswordSteps";
+import Routes from "@/comman/routes";
 
-type ForgetPasswordForm = {
-  email: string;
+const EmailForm = ({ onSubmit, isPending }: { onSubmit: (email: string) => void; isPending: boolean }) => {
+  const { register, handleSubmit, formState: { errors } } = useForm<{ email: string }>();
+  return (
+    <form className="space-y-4" onSubmit={handleSubmit((data) => onSubmit(data.email))} noValidate>
+      <Input
+        id="email"
+        variant="email"
+        label="Email"
+        placeholder="Enter your email"
+        autoComplete="email"
+        error={errors.email?.message}
+        {...register("email", {
+          required: "Email is required",
+          pattern: {
+            value: /^\S+@\S+\.\S+$/,
+            message: "Please enter a valid email",
+          },
+        })}
+      />
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? "Sending code..." : "Send Reset Code"}
+      </Button>
+      <div className="pt-2 text-sm text-center">
+        <span className="text-muted-foreground">Remember your password? </span>
+        <Link href={Routes.login} className="text-primary hover:underline">Sign in</Link>
+      </div>
+    </form>
+  );
 };
 
-type OtpForm = {
-  token: string;
+const OtpForm = ({ onSubmit, isPending, successMessage, onUseDifferentEmail }: { onSubmit: (token: string) => void; isPending: boolean; successMessage: string; onUseDifferentEmail: () => void }) => {
+  const { register, handleSubmit, formState: { errors } } = useForm<{ token: string }>();
+  return (
+    <form className="space-y-4" onSubmit={handleSubmit((data) => onSubmit(data.token))} noValidate>
+      <Input
+        id="token"
+        variant="text"
+        label="6-Digit Code"
+        placeholder="000000"
+        autoComplete="off"
+        error={errors.token?.message}
+        {...register("token", {
+          required: "Code is required",
+          minLength: { value: 6, message: "Code must be at least 6 characters" },
+        })}
+      />
+      <Button type="submit" className="w-full" disabled={isPending || successMessage.includes("verified")}>
+        {isPending ? "Verifying..." : "Verify Code"}
+      </Button>
+      <div className="flex flex-col mt-2 space-y-2 text-center">
+        <button type="button" onClick={onUseDifferentEmail} className="text-sm italic font-medium text-primary hover:underline">
+          Use a different email
+        </button>
+        <div className="text-sm">
+          <span className="text-muted-foreground">Remember your password? </span>
+          <Link href={Routes.login} className="text-primary hover:underline">Sign in</Link>
+        </div>
+      </div>
+    </form>
+  );
 };
 
-type UpdatePasswordForm = {
-  password: string;
-  confirmPassword: string;
+const PasswordForm = ({ onSubmit, isPending, successMessage }: { onSubmit: (password: string) => void; isPending: boolean; successMessage: string }) => {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<{ password: string; confirmPassword: string }>();
+  return (
+    <form className="space-y-4" onSubmit={handleSubmit((data) => onSubmit(data.password))} noValidate>
+      <Input
+        id="password"
+        variant="password"
+        label="New Password"
+        placeholder="••••••••"
+        autoComplete="new-password"
+        error={errors.password?.message}
+        {...register("password", {
+          required: "Password is required",
+          minLength: { value: 6, message: "Password must be at least 6 characters" },
+        })}
+      />
+      <Input
+        id="confirmPassword"
+        variant="password"
+        label="Confirm Password"
+        placeholder="••••••••"
+        autoComplete="new-password"
+        error={errors.confirmPassword?.message}
+        {...register("confirmPassword", {
+          required: "Please confirm your password",
+          validate: (value) => value === watch("password") || "Passwords do not match",
+        })}
+      />
+      <Button type="submit" className="w-full" disabled={isPending || successMessage !== ""}>
+        {isPending ? "Updating..." : "Update Password"}
+      </Button>
+    </form>
+  );
 };
 
 const UpdatePassword = () => {
@@ -31,37 +116,6 @@ const UpdatePassword = () => {
     updatePassword,
     setStepEmail,
   } = useUpdatePasswordSteps();
-
-  const {
-    register: registerEmail,
-    handleSubmit: handleEmailSubmit,
-    formState: { errors: emailErrors },
-  } = useForm<ForgetPasswordForm>();
-
-  const {
-    register: registerOtp,
-    handleSubmit: handleOtpSubmit,
-    formState: { errors: otpErrors },
-  } = useForm<OtpForm>();
-
-  const {
-    register: registerPassword,
-    handleSubmit: handlePasswordSubmit,
-    watch: watchPassword,
-    formState: { errors: passwordErrors },
-  } = useForm<UpdatePasswordForm>();
-
-  const onEmailSubmit = (data: ForgetPasswordForm) => {
-    sendResetCode(data.email);
-  };
-
-  const onOtpSubmit = (data: OtpForm) => {
-    verifyResetCode(data.token);
-  };
-
-  const onPasswordSubmit = (data: UpdatePasswordForm) => {
-    updatePassword(data.password);
-  };
 
   if (isCheckingAuth) {
     return (
@@ -100,138 +154,23 @@ const UpdatePassword = () => {
           </div>
         )}
 
-        {step === "email" && (
-          <form
-            className="space-y-4"
-            onSubmit={handleEmailSubmit(onEmailSubmit)}
-            noValidate
-          >
-            <Input
-              id="email"
-              variant="email"
-              label="Email"
-              placeholder="Enter your email"
-              autoComplete="email"
-              error={emailErrors.email?.message}
-              {...registerEmail("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+\.\S+$/,
-                  message: "Please enter a valid email",
-                },
-              })}
-            />
-
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Sending code..." : "Send Reset Code"}
-            </Button>
-
-            <div className="pt-2 text-sm text-center">
-              <span className="text-muted-foreground">
-                Remember your password?{" "}
-              </span>
-              <Link href="/login" className="text-primary hover:underline">
-                Sign in
-              </Link>
-            </div>
-          </form>
-        )}
+        {step === "email" && <EmailForm onSubmit={sendResetCode} isPending={isPending} />}
 
         {step === "otp" && (
-          <form
-            className="space-y-4"
-            onSubmit={handleOtpSubmit(onOtpSubmit)}
-            noValidate
-          >
-            <Input
-              id="token"
-              variant="text"
-              label="6-Digit Code"
-              placeholder="000000"
-              autoComplete="off"
-              error={otpErrors.token?.message}
-              {...registerOtp("token", {
-                required: "Code is required",
-                minLength: {
-                  value: 6,
-                  message: "Code must be at least 6 characters",
-                },
-              })}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isPending || successMessage.includes("verified")}
-            >
-              {isPending ? "Verifying..." : "Verify Code"}
-            </Button>
-
-            <div className="flex flex-col mt-2 space-y-2 text-center">
-              <button
-                type="button"
-                onClick={setStepEmail}
-                className="text-sm italic font-medium text-primary hover:underline"
-              >
-                Use a different email
-              </button>
-              <div className="text-sm">
-                <span className="text-muted-foreground">
-                  Remember your password?{" "}
-                </span>
-                <Link href="/login" className="text-primary hover:underline">
-                  Sign in
-                </Link>
-              </div>
-            </div>
-          </form>
+          <OtpForm
+            onSubmit={verifyResetCode}
+            isPending={isPending}
+            successMessage={successMessage}
+            onUseDifferentEmail={setStepEmail}
+          />
         )}
 
         {step === "password" && (
-          <form
-            className="space-y-4"
-            onSubmit={handlePasswordSubmit(onPasswordSubmit)}
-            noValidate
-          >
-            <Input
-              id="password"
-              variant="password"
-              label="New Password"
-              placeholder="••••••••"
-              autoComplete="new-password"
-              error={passwordErrors.password?.message}
-              {...registerPassword("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-            />
-
-            <Input
-              id="confirmPassword"
-              variant="password"
-              label="Confirm Password"
-              placeholder="••••••••"
-              autoComplete="new-password"
-              error={passwordErrors.confirmPassword?.message}
-              {...registerPassword("confirmPassword", {
-                required: "Please confirm your password",
-                validate: (value) =>
-                  value === watchPassword("password") ||
-                  "Passwords do not match",
-              })}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isPending || successMessage !== ""}
-            >
-              {isPending ? "Updating..." : "Update Password"}
-            </Button>
-          </form>
+          <PasswordForm
+            onSubmit={updatePassword}
+            isPending={isPending}
+            successMessage={successMessage}
+          />
         )}
       </div>
     </div>

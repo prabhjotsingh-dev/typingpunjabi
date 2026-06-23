@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabaseServices/clients/browserClient";
 
@@ -13,31 +13,65 @@ export function useUpdatePasswordSteps() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session && !session.user.is_anonymous) {
-        setStep("password");
-      } else {
+    let active = true;
+
+    const timeoutId = setTimeout(() => {
+      if (active) {
+        console.warn("Auth check timed out, falling back to email step.");
         setStep("email");
+        setIsCheckingAuth(false);
       }
-      setIsCheckingAuth(false);
+    }, 1500);
+
+    const checkAuth = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+        if (!active) return;
+
+        if (error) {
+          console.error("Session check error:", error);
+          setStep("email");
+        } else if (session && !session.user.is_anonymous) {
+          setStep("password");
+        } else {
+          setStep("email");
+        }
+      } catch (err) {
+        console.error("Session check exception:", err);
+        if (active) {
+          setStep("email");
+        }
+      } finally {
+        if (active) {
+          clearTimeout(timeoutId);
+          setIsCheckingAuth(false);
+        }
+      }
     };
+
     checkAuth();
+
+    return () => {
+      active = false;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  const sendResetCode = (email: string) => {
+  const sendResetCode = async (email: string) => {
     setServerError("");
     setSuccessMessage("");
     setUserEmail(email);
+    setIsPending(true);
 
-    startTransition(async () => {
+    try {
       const { error } = await supabase.auth.resetPasswordForEmail(email);
       if (error) {
         setServerError(error.message);
@@ -45,14 +79,17 @@ export function useUpdatePasswordSteps() {
         setSuccessMessage("Code sent! Please check your email.");
         setStep("otp");
       }
-    });
+    } finally {
+      setIsPending(false);
+    }
   };
 
-  const verifyResetCode = (token: string) => {
+  const verifyResetCode = async (token: string) => {
     setServerError("");
     setSuccessMessage("");
+    setIsPending(true);
 
-    startTransition(async () => {
+    try {
       const { error } = await supabase.auth.verifyOtp({
         email: userEmail,
         token,
@@ -68,14 +105,17 @@ export function useUpdatePasswordSteps() {
           setSuccessMessage("");
         }, 1000);
       }
-    });
+    } finally {
+      setIsPending(false);
+    }
   };
 
-  const updatePassword = (password: string) => {
+  const updatePassword = async (password: string) => {
     setServerError("");
     setSuccessMessage("");
+    setIsPending(true);
 
-    startTransition(async () => {
+    try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) {
         setServerError(error.message);
@@ -90,7 +130,9 @@ export function useUpdatePasswordSteps() {
           router.push("/lesson");
         }, 2000);
       }
-    });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const setStepEmail = () => {
