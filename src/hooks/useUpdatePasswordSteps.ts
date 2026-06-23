@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabaseServices/clients/browserClient";
+import Routes from "@/comman/routes";
 
 export type Step = "email" | "otp" | "password";
 
@@ -121,15 +122,13 @@ export function useUpdatePasswordSteps() {
         setServerError(error.message);
       } else {
         setSuccessMessage("Password successfully updated!");
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
-        );
         setTimeout(() => {
-          router.push("/lesson");
-        }, 2000);
+          router.push(Routes.lessons);
+        }, 1500);
       }
+    } catch (err: any) {
+      console.error("Update password error:", err);
+      setServerError(err?.message || "An unexpected error occurred.");
     } finally {
       setIsPending(false);
     }

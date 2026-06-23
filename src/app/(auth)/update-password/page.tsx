@@ -17,6 +17,7 @@ const EmailForm = ({ onSubmit, isPending }: { onSubmit: (email: string) => void;
         label="Email"
         placeholder="Enter your email"
         autoComplete="email"
+        disabled={isPending}
         error={errors.email?.message}
         {...register("email", {
           required: "Email is required",
@@ -47,6 +48,7 @@ const OtpForm = ({ onSubmit, isPending, successMessage, onUseDifferentEmail }: {
         label="6-Digit Code"
         placeholder="000000"
         autoComplete="off"
+        disabled={isPending || successMessage.includes("verified")}
         error={errors.token?.message}
         {...register("token", {
           required: "Code is required",
@@ -79,6 +81,7 @@ const PasswordForm = ({ onSubmit, isPending, successMessage }: { onSubmit: (pass
         label="New Password"
         placeholder="••••••••"
         autoComplete="new-password"
+        disabled={isPending || successMessage !== ""}
         error={errors.password?.message}
         {...register("password", {
           required: "Password is required",
@@ -91,6 +94,7 @@ const PasswordForm = ({ onSubmit, isPending, successMessage }: { onSubmit: (pass
         label="Confirm Password"
         placeholder="••••••••"
         autoComplete="new-password"
+        disabled={isPending || successMessage !== ""}
         error={errors.confirmPassword?.message}
         {...register("confirmPassword", {
           required: "Please confirm your password",
