@@ -1,17 +1,20 @@
-import { getLessonResult } from "@/supabaseFunctions/getData";
 import { Loader2 } from "lucide-react";
 import Routes from "@/comman/routes";
 import ResultPageUI from "@/components/pages/resultPageUI";
+// TODO: Replace with specific speed test data fetching function if necessary
+import { getLessonResult } from "@/supabaseFunctions/getData";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-async function Result({ params }: PageProps) {
+async function TypingSpeedTestResult({ params }: PageProps) {
   const id = (await params).id;
   let data;
 
   try {
+    // NOTE: Using getLessonResult as a placeholder. 
+    // You might want to create a specific getSpeedTestResult function in getData.tsx
     data = await getLessonResult(id);
   } catch (error) {
     return (
@@ -33,13 +36,12 @@ async function Result({ params }: PageProps) {
     <ResultPageUI
       speed={speed}
       accuracy={accuracy}
-      lesson_title={data.lesson_title}
-      listLink={Routes.lessons}
-      againLink={Routes.toLesson(id)}
-      nextLink={Routes.nextLesson(id)}
-      listLabel="Lessons"
+      lesson_title={`Speed Test: ${data.lesson_title}`}
+      listLink={Routes.typingSpeedTest}
+      againLink={Routes.toTypingSpeedTest(id)}
+      listLabel="Tests"
     />
   );
 }
 
-export default Result;
+export default TypingSpeedTestResult;
