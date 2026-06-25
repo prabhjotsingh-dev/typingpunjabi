@@ -5,11 +5,25 @@ import { processTypingContent } from "@/comman/utils";
 import { getLessonContent } from "@/supabaseFunctions/getData";
 
 type Params = Promise<{ id: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function TypingSpeedTest({ params }: { params: Params }) {
+export default async function TypingSpeedTest({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { id } = await params;
-  
-  // NOTE: Using getLessonContent as a placeholder. 
+  const resolvedSearchParams = await searchParams;
+
+  const timeParam =
+    typeof resolvedSearchParams.time === "string"
+      ? parseInt(resolvedSearchParams.time)
+      : 60;
+  const timeLimit = isNaN(timeParam) ? 60 : timeParam;
+
+  // NOTE: Using getLessonContent as a placeholder.
   // You might want to create a specific getSpeedTestContent function in getData.tsx
   const data = await getLessonContent(id);
 
@@ -25,6 +39,7 @@ export default async function TypingSpeedTest({ params }: { params: Params }) {
       lessonTitle={`Speed Test: ${data.title}`}
       contentCharactersList={segments}
       pageStarts={pageStarts}
+      timeLimit={timeLimit}
     />
   );
 }

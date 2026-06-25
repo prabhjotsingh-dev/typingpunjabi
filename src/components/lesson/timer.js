@@ -1,12 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { addTypingResult } from "@/supabaseFunctions/addOrUpdateData";
 
 function Timer(data) {
   const router = useRouter();
+  const pathname = usePathname();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+
+  const limit = data.timeLimit || 30;
+
   useEffect(() => {
     if (data.start && !isFinished) {
       const id = setInterval(() => {
@@ -17,7 +21,7 @@ function Timer(data) {
   }, [data.start, isFinished]);
 
   useEffect(() => {
-    if (time >= 30 && !isFinished) {
+    if (time >= limit && !isFinished) {
       setIsFinished(true);
       const putdata = async () => {
         const totalChars = data.correct + data.incorrect;
@@ -41,11 +45,21 @@ function Timer(data) {
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
-        router.push(`/lesson/${data.id}/result`);
+        // Redirect to the result page dynamically based on current path
+        router.push(`${pathname}/result`);
       };
       putdata();
     }
-  }, [time, isFinished, data.id, data.correct, data.incorrect, router]);
+  }, [
+    time,
+    isFinished,
+    data.id,
+    data.correct,
+    data.incorrect,
+    router,
+    pathname,
+    limit,
+  ]);
 
   return (
     <>
