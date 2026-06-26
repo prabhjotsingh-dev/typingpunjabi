@@ -1,8 +1,8 @@
 import TypingPageUI from "@/components/pages/typingPageUI";
 import { notFound } from "next/navigation";
 import { processTypingContent } from "@/comman/utils";
-// TODO: Replace with specific speed test data fetching function if necessary
 import { getLessonContent } from "@/supabaseFunctions/getData";
+import { generatePunjabiParagraph } from "@/serverActions/generateParagraph";
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -23,9 +23,21 @@ export default async function TypingSpeedTest({
       : 60;
   const timeLimit = isNaN(timeParam) ? 60 : timeParam;
 
-  // NOTE: Using getLessonContent as a placeholder.
-  // You might want to create a specific getSpeedTestContent function in getData.tsx
-  const data = await getLessonContent(id);
+  const getLessonContentAndTitle = async (id: string) => {
+    const aiGeneratedText = await generatePunjabiParagraph(timeLimit);
+    if (aiGeneratedText) {
+      return {
+        content: aiGeneratedText,
+        title: "AI Generated",
+      };
+    }
+    
+    // Fallback if AI fails or returns null
+    const data = await getLessonContent(id);
+    return data;
+  };
+
+  const data = await getLessonContentAndTitle(id);
 
   if (!data) {
     notFound();
