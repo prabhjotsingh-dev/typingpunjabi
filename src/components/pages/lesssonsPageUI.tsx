@@ -1,28 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { LessonData, Stage } from "@/comman/types";
 import { Star } from "lucide-react";
 import { GetStart } from "@/comman/utils";
 
-export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData[] }) {
-  const searchParams = useSearchParams();
-  const initialLevel = (searchParams.get("level") as Stage) || "beginner";
-  const [level, setLevel] = useState<Stage>(initialLevel);
-
-  useEffect(() => {
-    const levelParam = searchParams.get("level") as Stage;
-    if (levelParam && levelParam !== level) {
-      setLevel(levelParam);
-    }
-  }, [searchParams]);
-  
+export default function LessonsPageUI({ lessonsData, stage }: { lessonsData: LessonData[], stage: Stage }) {
   function getLessonsByStage():LessonData[] {
     if (!lessonsData) return [];
     
     const stageLessons = lessonsData
-    .filter((obj) => obj.stage === level)
+    .filter((obj) => obj.stage === stage)
     .sort((a, b) => a.sequence_number - b.sequence_number);
     return stageLessons; 
   };
@@ -39,7 +26,7 @@ export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData
             <>
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight capitalize md:text-4xl text-foreground">
-                  {level} Lessons
+                  {stage} Lessons
                 </h1>
                 <p className="mt-2 text-sm text-muted-foreground md:text-base">
                   Master your typing skills with these curated exercises.

@@ -13,9 +13,7 @@ async function TypingSpeedTestResult({ params }: PageProps) {
   let data;
 
   try {
-    // NOTE: Using getLessonResult as a placeholder. 
-    // You might want to create a specific getSpeedTestResult function in getData.tsx
-    data = await getLessonResult(id);
+   data = await getLessonResult(id);
   } catch (error) {
     return (
       <div className="h-[calc(100svh-3.5rem)] flex items-center justify-center bg-background text-muted-foreground font-sans overflow-hidden">
@@ -36,7 +34,7 @@ async function TypingSpeedTestResult({ params }: PageProps) {
     <ResultPageUI
       speed={speed}
       accuracy={accuracy}
-      lesson_title={`Speed Test: ${data.lesson_title}`}
+      lesson_title={`${data.lesson_title}`}
       listLink={Routes.typingSpeedTest}
       againLink={Routes.toTypingSpeedTest(id)}
       listLabel="Tests"

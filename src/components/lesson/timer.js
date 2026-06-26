@@ -45,7 +45,6 @@ function Timer(data) {
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
-        // Redirect to the result page dynamically based on current path
         router.push(`${pathname}/result`);
       };
       putdata();
@@ -61,16 +60,21 @@ function Timer(data) {
     limit,
   ]);
 
+  const remainingTime = Math.max(0, limit - time);
+
   return (
     <>
       <p className={`${data.timeClass} h-[1lh]`}>
-        Time:
-        {time >= 60
-          ? Math.trunc(time / 60) + ":" + (time % 60) + "m"
-          : time + "s"}
+        Time:{" "}
+        {remainingTime >= 60
+          ? Math.trunc(remainingTime / 60) +
+            ":" +
+            String(remainingTime % 60).padStart(2, "0") +
+            "m"
+          : remainingTime + "s"}
       </p>
       <p className={` ${data.speedClass} h-[1lh]`}>
-        speed:{((data.correct + data.incorrect) / (time / 60) || 0).toFixed(1)}{" "}
+        speed: {((data.correct + data.incorrect) / (time / 60) || 0).toFixed(1)}{" "}
         cpm
       </p>
     </>
