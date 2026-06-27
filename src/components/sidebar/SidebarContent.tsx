@@ -39,7 +39,7 @@ const menuItems = [
     label: "Practice",
     Icon: Target,
     children: [
-      { id: "Practice", label: "Practice", Icon: Target, route: Routes.typingSpeedTest },
+      { id: "typing-practice", label: "Typing Practice", Icon: Target, route: Routes.typingPractice },
       { id: "typing-speed-test", label: "Speed Test", Icon: Gauge, route: Routes.typingSpeedTest },
     ],
   },
@@ -82,6 +82,8 @@ export function SidebarContent({
   let selectedValue = "beginner";
   if (pathname === Routes.typingSpeedTest) {
     selectedValue = "typing-speed-test";
+  } else if (pathname === Routes.typingPractice) {
+    selectedValue = "typing-practice";
   } else if (pathname === Routes.lessons) {
     const level = searchParams.get("level");
     if (level) selectedValue = level;
