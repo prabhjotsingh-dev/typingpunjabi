@@ -54,7 +54,7 @@ export function SpeedTestConfigurator({
   };
 
   return (
-    <div className="p-4 md:p-6 bg-card border border-border/50 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col md:flex-row gap-6 md:items-stretch max-w-4xl mx-auto w-full">
+    <div className="p-4 lg:p-6 bg-card border border-border/50 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col lg:flex-row gap-6 lg:items-stretch w-full">
       <div className="flex flex-col flex-1 justify-center space-y-4">
         <div className="space-y-1">
           <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
@@ -66,7 +66,7 @@ export function SpeedTestConfigurator({
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          {[1, 2, 3, 5].map((min) => (
+          {[1, 2, 5].map((min) => (
             <button
               key={min}
               onClick={() => setSelectedMinutes(min)}
@@ -88,7 +88,7 @@ export function SpeedTestConfigurator({
             tabIndex={0}
             onClick={() => setSelectedMinutes(0)}
             onKeyDown={(e) => e.key === "Enter" && setSelectedMinutes(0)}
-            className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 cursor-pointer col-span-3 md:col-span-1 ${
+            className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 cursor-pointer col-span-3 ${
               selectedMinutes === 0
                 ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
                 : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground active:scale-[0.98]"
@@ -116,7 +116,7 @@ export function SpeedTestConfigurator({
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center p-5 bg-muted/20 rounded-2xl border border-border/30 w-full md:w-[260px]">
+      <div className="flex flex-col justify-center items-center p-5 bg-muted/20 rounded-2xl border border-border/30 w-full lg:w-[260px]">
         <div className="flex justify-center items-center mb-4 w-12 h-12 rounded-full border shadow-sm bg-background border-border/50">
           <Timer className="w-6 h-6 text-primary stroke-[1.5]" />
         </div>
