@@ -3,7 +3,7 @@
 import Groq from "groq-sdk";
 
 const groq = new Groq({
-  apiKey: process.env.groq_api_key,
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function generatePunjabiParagraph(
