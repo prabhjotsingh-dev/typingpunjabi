@@ -1,6 +1,6 @@
 "use server";
 import { createServerClient } from "@/supabaseServices/clients/serverClient";
-import { LessonData } from "@/comman/types";
+import { LessonData, Stage } from "@/comman/types";
 import { redirect } from "next/navigation";
 
 class GetData {
@@ -18,11 +18,12 @@ class GetData {
     return { supabase, user };
   }
 
-  static async getLessons(): Promise<LessonData[]> {
+  static async getLessons(stage?: Stage): Promise<LessonData[]> {
     const { supabase, user } = await GetData.getAuth();
 
     const { data, error } = await supabase.rpc("get_lessons", {
-      profile: user.id,
+      p_profile: user.id,
+      p_stage: stage,
     });
 
     if (error) {

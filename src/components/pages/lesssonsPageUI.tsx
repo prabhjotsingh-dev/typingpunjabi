@@ -1,19 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import { LessonData, Stage } from "@/comman/types";
-import { Sidebar, SidebarProvider } from "@/components/sidebar/Sidebar";
 import { Star } from "lucide-react";
 import { GetStart } from "@/comman/utils";
 
-export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData[] }) {
-  const [plan, setPlan] = useState<Stage>("beginner");
-  
+export default function LessonsPageUI({ lessonsData, stage }: { lessonsData: LessonData[], stage: Stage }) {
   function getLessonsByStage():LessonData[] {
     if (!lessonsData) return [];
     
     const stageLessons = lessonsData
-    .filter((obj) => obj.stage === plan)
+    .filter((obj) => obj.stage === stage)
     .sort((a, b) => a.sequence_number - b.sequence_number);
     return stageLessons; 
   };
@@ -24,21 +20,13 @@ export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData
   const uniqueGroups = lessonsData && [...new Set(getLessonsByStage().map((item) => item.group))];
  
 
-  function handleStageChange(value: string) {
-    setPlan(value as Stage);
-  }
-
   return (
-    <SidebarProvider>
-      <main className="flex w-full min-h-[calc(100svh-4rem)] bg-background font-sans">
-        <Sidebar selectedValue={plan} onValueChange={handleStageChange} />
-
-        <section className="flex flex-col flex-1 gap-6 p-6 w-full md:p-10 hide-scrollbar">
+    <section className="flex flex-col gap-6 p-6 w-full md:p-10">
           {lessonsData && (
             <>
               <div>
                 <h1 className="text-3xl font-semibold tracking-tight capitalize md:text-4xl text-foreground">
-                  {plan} Lessons
+                  {stage} Lessons
                 </h1>
                 <p className="mt-2 text-sm text-muted-foreground md:text-base">
                   Master your typing skills with these curated exercises.
@@ -102,8 +90,6 @@ export default function LessonsPageUI({ lessonsData }: { lessonsData: LessonData
               </div>
             </>
           )}
-        </section>
-      </main>
-    </SidebarProvider>
+    </section>
   );
 }

@@ -10,6 +10,7 @@ interface TypingPageUIProps {
   lessonTitle: string;
   contentCharactersList: string[];
   pageStarts: number[];
+  timeLimit?: number;
 }
 
 export default function TypingPageUI({
@@ -17,6 +18,7 @@ export default function TypingPageUI({
   lessonTitle,
   contentCharactersList,
   pageStarts,
+  timeLimit,
 }: TypingPageUIProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,6 +59,7 @@ export default function TypingPageUI({
         noOfIncorrectChar={noOfIncorrectChar}
         id={id}
         title={lessonTitle}
+        timeLimit={timeLimit}
       />
 
       <input

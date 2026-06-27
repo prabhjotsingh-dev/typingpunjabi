@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -20,6 +21,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import Routes from "@/comman/routes";
 
 const menuItems = [
   {
@@ -27,9 +29,9 @@ const menuItems = [
     label: "Learn",
     Icon: BookOpen,
     children: [
-      { id: "beginner", label: "Beginner", Icon: User },
-      { id: "intermediate", label: "Intermediate", Icon: GraduationCap },
-      { id: "advance", label: "Advanced", Icon: Trophy },
+      { id: "beginner", label: "Beginner", Icon: User, route: Routes.lessons },
+      { id: "intermediate", label: "Intermediate", Icon: GraduationCap, route: Routes.lessons },
+      { id: "advance", label: "Advanced", Icon: Trophy, route: Routes.lessons },
     ],
   },
   {
@@ -37,36 +39,53 @@ const menuItems = [
     label: "Practice",
     Icon: Target,
     children: [
-      { id: "Practice", label: "Practice", Icon: Target },
-      { id: "test", label: "Speed Test", Icon: Gauge },
+      { id: "Practice", label: "Practice", Icon: Target, route: Routes.typingSpeedTest },
+      { id: "typing-speed-test", label: "Speed Test", Icon: Gauge, route: Routes.typingSpeedTest },
     ],
   },
 ];
 
 interface SidebarContentProps {
-  selectedValue: string;
-  onValueChange: (value: string) => void;
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
 }
 
 export function SidebarContent({
-  selectedValue,
-  onValueChange,
   isCollapsed,
   setIsCollapsed,
 }: SidebarContentProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [expandedSections, setExpandedSections] = useState<string[]>([
     "learn",
     "practice",
   ]);
 
-  const handleSelect = (value: string) => {
-    onValueChange(value);
+  const handleSelect = (value: string, route?: string) => {
+    if (route) {
+      let targetRoute = route;
+      if (route === Routes.lessons && value !== "learn" && value !== "practice") {
+        targetRoute = `${route}?level=${value}`;
+      }
+      
+      if (pathname !== route || (route === Routes.lessons && searchParams.get("plan") !== value)) {
+        router.push(targetRoute);
+      }
+    }
+    
     if (window.innerWidth < 768) {
       setIsCollapsed(true);
     }
   };
+
+  let selectedValue = "beginner";
+  if (pathname === Routes.typingSpeedTest) {
+    selectedValue = "typing-speed-test";
+  } else if (pathname === Routes.lessons) {
+    const level = searchParams.get("level");
+    if (level) selectedValue = level;
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -149,7 +168,7 @@ export function SidebarContent({
                   return (
                     <button
                       key={item.id}
-                      onClick={() => handleSelect(item.id)}
+                      onClick={() => handleSelect(item.id, item.route)}
                       className={cn(
                         "flex gap-3 items-center py-2 w-full text-left rounded-xl transition-all duration-200",
                         isSelected
