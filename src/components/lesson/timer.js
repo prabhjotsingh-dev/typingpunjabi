@@ -1,12 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { addTypingResult } from "@/supabaseFunctions/addOrUpdateData";
 
 function Timer(data) {
   const router = useRouter();
+  const pathname = usePathname();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+
+  const limit = data.timeLimit || 30;
+
   useEffect(() => {
     if (data.start && !isFinished) {
       const id = setInterval(() => {
@@ -17,7 +21,7 @@ function Timer(data) {
   }, [data.start, isFinished]);
 
   useEffect(() => {
-    if (time >= 30 && !isFinished) {
+    if (time >= limit && !isFinished) {
       setIsFinished(true);
       const putdata = async () => {
         const totalChars = data.correct + data.incorrect;
@@ -41,22 +45,36 @@ function Timer(data) {
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
-        router.push(`/lesson/${data.id}/result`);
+        router.push(`${pathname}/result`);
       };
       putdata();
     }
-  }, [time, isFinished, data.id, data.correct, data.incorrect, router]);
+  }, [
+    time,
+    isFinished,
+    data.id,
+    data.correct,
+    data.incorrect,
+    router,
+    pathname,
+    limit,
+  ]);
+
+  const remainingTime = Math.max(0, limit - time);
 
   return (
     <>
       <p className={`${data.timeClass} h-[1lh]`}>
-        Time:
-        {time >= 60
-          ? Math.trunc(time / 60) + ":" + (time % 60) + "m"
-          : time + "s"}
+        Time:{" "}
+        {remainingTime >= 60
+          ? Math.trunc(remainingTime / 60) +
+            ":" +
+            String(remainingTime % 60).padStart(2, "0") +
+            "m"
+          : remainingTime + "s"}
       </p>
       <p className={` ${data.speedClass} h-[1lh]`}>
-        speed:{((data.correct + data.incorrect) / (time / 60) || 0).toFixed(1)}{" "}
+        speed: {((data.correct + data.incorrect) / (time / 60) || 0).toFixed(1)}{" "}
         cpm
       </p>
     </>

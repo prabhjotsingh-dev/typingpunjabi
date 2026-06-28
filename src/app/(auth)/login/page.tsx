@@ -1,11 +1,13 @@
 "use client";
+
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/Input";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabaseServices/clients/browserClient";
+import Routes from "@/comman/routes";
 
 type LoginForm = {
   email: string;
@@ -42,17 +44,19 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 via-sky-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="flex justify-center items-center min-h-screen via-sky-50 to-indigo-100 bg-linear-to-br from-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md p-8 space-y-6 bg-glass-bg backdrop-blur-md rounded-2xl border border-glass-border shadow-[0_8px_32px_rgba(3,105,161,0.10)]">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Welcome back</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl italic font-bold tracking-tight">
+            Welcome back
+          </h1>
+          <p className="italic text-muted-foreground">
             Enter your credentials to access your account
           </p>
         </div>
 
         {serverError && (
-          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm text-center">
+          <div className="p-3 text-sm italic text-center rounded-lg border text-error bg-error/10 border-error/20">
             {serverError}
           </div>
         )}
@@ -62,67 +66,45 @@ const Login = () => {
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              autoComplete="email"
-              className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+\.\S+$/,
-                  message: "Please enter a valid email",
-                },
-              })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">
-                {errors.email.message as string}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              className={errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}
-              {...register("password", {
-                required: `Password is required`,
-                pattern: {
-                  value: /^.{8,}$/,
-                  message: "Password should contain at least 8 characters",
-                },
-              })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm">
-                {errors.password.message as string}
-              </p>
-            )}
-          </div>
+          <Input
+            id="email"
+            variant="email"
+            label="Email"
+            placeholder="Enter your email"
+            autoComplete="email"
+            error={errors.email?.message}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^\S+@\S+\.\S+$/,
+                message: "Please enter a valid email",
+              },
+            })}
+          />
 
-          <div className="flex items-center justify-between">
+          <Input
+            id="password"
+            variant="password"
+            label="Password"
+            placeholder="••••••••"
+            autoComplete="current-password"
+            error={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+              pattern: {
+                value: /^.{8,}$/,
+                message: "Password should contain at least 8 characters",
+              },
+            })}
+          />
+
+          <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <input
                 id="remember"
                 type="checkbox"
                 name="remember"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                 defaultChecked
               />
               <label
@@ -133,7 +115,7 @@ const Login = () => {
               </label>
             </div>
             <Link
-              href="/forgetpassword"
+              href={`${Routes.forgetPassword}`}
               className="text-sm text-primary hover:underline"
             >
               Forgot password?
@@ -145,7 +127,7 @@ const Login = () => {
           </Button>
         </form>
 
-        <div className="text-center text-sm">
+        <div className="text-sm text-center">
           <span className="text-muted-foreground">Don't have an account? </span>
           <Link href="/signup" className="text-primary hover:underline">
             Sign up

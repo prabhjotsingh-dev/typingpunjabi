@@ -48,12 +48,7 @@ export function SidebarProvider({
   );
 }
 
-interface SidebarProps {
-  selectedValue: string;
-  onValueChange: (value: string) => void;
-}
-
-export function Sidebar({ selectedValue, onValueChange }: SidebarProps) {
+export function Sidebar() {
   const { isCollapsed, setIsCollapsed } = useSidebar();
 
   return (
@@ -79,8 +74,6 @@ export function Sidebar({ selectedValue, onValueChange }: SidebarProps) {
         )}
       >
         <SidebarContent
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
         />
@@ -95,8 +88,6 @@ export function Sidebar({ selectedValue, onValueChange }: SidebarProps) {
         )}
       >
         <SidebarContent
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
         />

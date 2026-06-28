@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";
@@ -9,12 +9,16 @@ interface TypingPageUIProps {
   id: string;
   lessonTitle: string;
   contentCharactersList: string[];
+  pageStarts: number[];
+  timeLimit?: number;
 }
 
 export default function TypingPageUI({
   id,
   lessonTitle,
   contentCharactersList,
+  pageStarts,
+  timeLimit,
 }: TypingPageUIProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,19 +27,26 @@ export default function TypingPageUI({
     input,
     value,
     start,
+    end,
     keytype,
     currentCharacterIndex,
     noOfCorrectChar,
     noOfIncorrectChar,
     handleInput,
     handleBackspace,
-  } = useTypingEngine(contentCharactersList);
+  } = useTypingEngine(contentCharactersList, pageStarts);
 
   const handleMainClick = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   };
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [start]);
 
   return (
     <main
@@ -48,6 +59,7 @@ export default function TypingPageUI({
         noOfIncorrectChar={noOfIncorrectChar}
         id={id}
         title={lessonTitle}
+        timeLimit={timeLimit}
       />
 
       <input
@@ -68,6 +80,7 @@ export default function TypingPageUI({
       <TypingArea
         allCharacters={contentCharactersList}
         start={start}
+        end={end}
         currentCharacterIndex={currentCharacterIndex}
         typed={typed}
         input={input}

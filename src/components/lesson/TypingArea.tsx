@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 interface TypingAreaProps {
   allCharacters: string[];
   start: number;
+  end: number;
   currentCharacterIndex: number;
   typed: Record<number, boolean | null>;
   input: string;
@@ -12,6 +13,7 @@ interface TypingAreaProps {
 export function TypingArea({
   allCharacters,
   start,
+  end,
   currentCharacterIndex,
   typed,
   input,
@@ -22,7 +24,7 @@ export function TypingArea({
         <div className="flex flex-wrap content-start px-6 transition-all md:px-10">
           {allCharacters != null ? (
             allCharacters
-              .slice(start, start + 20)
+              .slice(start, end)
               .map((Char, i) => (
                 <Character
                   key={start + i}

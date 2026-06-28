@@ -8,7 +8,7 @@ export { metadata } from "@/metadata/forlayout";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="hide-scrollbar">
       <body className="italic hide-scrollbar">
         <AuthProvider>
           <ThemeProvider

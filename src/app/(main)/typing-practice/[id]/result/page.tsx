@@ -1,18 +1,18 @@
-import { getLessonResult } from "@/supabaseFunctions/getData";
 import { Loader2 } from "lucide-react";
 import Routes from "@/comman/routes";
 import ResultPageUI from "@/components/pages/resultPageUI";
+import { getLessonResult } from "@/supabaseFunctions/getData";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-async function Result({ params }: PageProps) {
+async function TypingPracticeResult({ params }: PageProps) {
   const id = (await params).id;
   let data;
 
   try {
-    data = await getLessonResult(id);
+   data = await getLessonResult(id);
   } catch (error) {
     return (
       <div className="h-[calc(100svh-3.5rem)] flex items-center justify-center bg-background text-muted-foreground font-sans overflow-hidden">
@@ -33,13 +33,12 @@ async function Result({ params }: PageProps) {
     <ResultPageUI
       speed={speed}
       accuracy={accuracy}
-      lesson_title={data.lesson_title}
-      listLink={Routes.lessons}
-      againLink={Routes.toLesson(id)}
-      nextLink={Routes.nextLesson(id)}
-      listLabel="Lessons"
+      lesson_title={`${data.lesson_title}`}
+      listLink={Routes.typingPractice}
+      againLink={Routes.toTypingPractice(id)}
+      listLabel="Practice Mode"
     />
   );
 }
 
-export default Result;
+export default TypingPracticeResult;

@@ -1,6 +1,7 @@
 import { getLessonContent } from "@/supabaseFunctions/getData";
 import TypingPageUI from "@/components/pages/typingPageUI";
 import { notFound } from "next/navigation";
+import { processTypingContent } from "@/comman/utils";
 
 type Params = Promise<{ id: string }>;
 
@@ -12,23 +13,14 @@ export default async function Typing({ params }: { params: Params }) {
     notFound();
   }
 
-  let segments: string[];
-  if (typeof Intl !== "undefined" && Intl.Segmenter) {
-    const segmenter = new Intl.Segmenter("pa-IN", {
-      granularity: "grapheme",
-    });
-    segments = Array.from(segmenter.segment(data.content)).map(
-      (s) => s.segment,
-    );
-  } else {
-    segments = data.content.split("");
-  }
+  const { segments, pageStarts } = processTypingContent(data.content);
 
   return (
     <TypingPageUI
       id={id}
       lessonTitle={data.title}
       contentCharactersList={segments}
+      pageStarts={pageStarts}
     />
   );
 }
