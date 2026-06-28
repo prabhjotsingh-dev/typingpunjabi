@@ -2,7 +2,6 @@
 
 import Groq from "groq-sdk";
 
-// 1. Move Groq instance outside to reuse connections and improve performance
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
@@ -40,8 +39,6 @@ Rules:
 
     console.log("Sending request to Groq...");
 
-    // 2. Explicitly check the string value to prevent bugs if practiceType is "test" or "homerow"
-    // Update "homerow" below to whatever string you use in your frontend to trigger practice
     const isPracticeMode = practiceType !== "test" && customLetters !== undefined;
 
     const completion = await groq.chat.completions.create({
@@ -71,31 +68,25 @@ Rules:
       return null;
     }
 
-    // 3. Clean up formatting: Remove English letters, and turn multiple spaces/newlines into a single space
     let cleanedOutput = output
-      .replace(/[A-Za-z]/g, "") // Remove English
-      .replace(/[.,?!'"()]/g, "") // Remove stray punctuation just in case
-      .replace(/\s+/g, " ") // Collapse multiple spaces and newlines into one
+      .replace(/[A-Za-z]/g, "")
+      .replace(/[.,?!'"()]/g, "")
+      .replace(/\s+/g, " ")
       .trim();
 
-    // 4. THE SILVER BULLET: JS Post-processing filter for practice mode
     if (isPracticeMode && customLetters) {
-      // Convert "ਪ,ਰ,ਕ" into a single string "ਪਰਕ" for easy checking
       const allowedCharsString = customLetters.split(',').map(c => c.trim()).join('');
       
       cleanedOutput = cleanedOutput
-        .split(' ') // Split into an array of words
+        .split(' ')
         .filter((word) => {
           if (!word) return false;
-          // Break the word into individual characters and matras
           const chars = Array.from(word);
-          // Only keep the word if EVERY character exists in the allowed list
           return chars.every((char) => allowedCharsString.includes(char));
         })
-        .join(' '); // Put it back into a string
+        .join(' ');
     }
 
-    // Check if filtering removed all words (extreme edge case)
     if (!cleanedOutput) {
        console.warn("JS filter removed all words due to strict constraints.");
        return null; 

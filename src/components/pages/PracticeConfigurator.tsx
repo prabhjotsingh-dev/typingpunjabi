@@ -8,7 +8,12 @@ import {
   Clock,
   ArrowDown,
 } from "lucide-react";
-import { englishToPunjabiMap } from "@/lib/transliteration/languages/punjabi";
+import { 
+  topRowLetters,
+  homeRowLetters,
+  bottomRowLetters,
+} from "@/lib/transliteration/languages/punjabi";
+import { CustomLettersPanel } from "@/components/practice/CustomLettersPanel";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -25,37 +30,7 @@ const PRACTICE_TYPES = [
   { id: "custom", label: "Custom Config" },
 ];
 
-const allChars = Array.from(new Set(Object.values(englishToPunjabiMap)));
-const isNormalLetter = (char: string) =>
-  /[\u0A05\u0A13\u0A15-\u0A32\u0A35\u0A38-\u0A39\u0A5C\u0A72\u0A73]/.test(char);
-const isNuktaLetter = (char: string) =>
-  /[\u0A33\u0A36\u0A59-\u0A5B\u0A5E]/.test(char);
-const isMatra = (char: string) =>
-  /[\u0A01-\u0A04\u0A06-\u0A12\u0A14\u0A3E-\u0A4C\u0A4D\u0A51\u0A70\u0A71\u0A3C]/.test(
-    char,
-  );
 
-const PUNJABI_LETTERS = [
-  ...allChars.filter(isNormalLetter).sort((a, b) => a.localeCompare(b, "pa")),
-  ...allChars.filter(isNuktaLetter).sort((a, b) => a.localeCompare(b, "pa")),
-];
-const PUNJABI_MATRAS = allChars
-  .filter(isMatra)
-  .sort((a, b) => a.localeCompare(b, "pa"));
-
-const topRowEnglish = "qwertyuiop[]QWERTYUIOP{}";
-const homeRowEnglish = "asdfghjkl;'ASDFGHJKL:\"";
-const bottomRowEnglish = "zxcvbnm,./ZXCVBNM<>?";
-
-const getRowLetters = (englishChars: string) => {
-  return Array.from(new Set(
-    englishChars.split("").map(c => englishToPunjabiMap[c]).filter(Boolean)
-  ));
-};
-
-const topRowLetters = getRowLetters(topRowEnglish);
-const homeRowLetters = getRowLetters(homeRowEnglish);
-const bottomRowLetters = getRowLetters(bottomRowEnglish);
 
 export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
   const router = useRouter();
@@ -169,75 +144,11 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
           </div>
 
           {/* Custom Letters Expansion Panel */}
-          <div
-            className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${practiceType === "custom" ? "opacity-100" : "max-h-0 opacity-0"}`}
-          >
-            <div className="rounded-2xl border border-border/50 bg-card shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] p-6 md:p-10 flex flex-col gap-12">
-              {/* Consonants */}
-              <div className="flex flex-col gap-8">
-                <div className="flex justify-between items-center border-b border-border/30">
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
-                    Letters
-                  </h3>
-                  <span className="text-[10px] mb-2 font-mono px-3 py-1.5 bg-muted/50 rounded-2xl border border-border/50 text-foreground font-medium uppercase tracking-wider">
-                    {
-                      selectedLetters.filter(
-                        (l) => isNormalLetter(l) || isNuktaLetter(l),
-                      ).length
-                    }{" "}
-                    Active
-                  </span>
-                </div>
-                {/* 5 CHARACTERS IN A ROW EXACTLY */}
-                <div className="flex justify-center">
-                  <div className="grid grid-cols-5 gap-3 justify-items-center items-center w-full md:gap-4">
-                    {PUNJABI_LETTERS.map((letter) => (
-                      <button
-                        key={letter}
-                        onClick={() => toggleLetter(letter)}
-                        className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-xl md:text-2xl font-medium rounded-2xl transition-all duration-300 active:scale-[0.92] border ${
-                          selectedLetters.includes(letter)
-                            ? "bg-foreground text-background border-foreground shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)] -translate-y-0.5"
-                            : "bg-background text-foreground border-border/50 shadow-sm hover:border-foreground/30 hover:bg-muted/40 hover:-translate-y-px"
-                        }`}
-                      >
-                        {letter}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Matras & Symbols */}
-              <div className="flex flex-col gap-8">
-                <div className="flex justify-between items-center pb-4 border-b border-border/30">
-                  <h3 className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
-                    Matras & Symbols
-                  </h3>
-                  <span className="text-[10px] font-mono px-3 py-1.5 bg-muted/50 rounded-2xl border border-border/50 text-foreground font-medium uppercase tracking-wider">
-                    {selectedLetters.filter(isMatra).length} Active
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-3 justify-center mx-auto max-w-2xl md:gap-4">
-                  {PUNJABI_MATRAS.map((matra) => {
-                    return (
-                      <button
-                        key={matra}
-                        onClick={() => toggleLetter(matra)}
-                        className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-medium rounded-2xl transition-all duration-300 active:scale-[0.92] border ${
-                          selectedLetters.includes(matra)
-                            ? "bg-foreground text-background border-foreground shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)] -translate-y-0.5"
-                            : "bg-background text-foreground border-border/50 shadow-sm hover:border-foreground/30 hover:bg-muted/40 hover:-translate-y-px"
-                        }`}
-                      >
-                        {matra}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+          <CustomLettersPanel
+            practiceType={practiceType}
+            selectedLetters={selectedLetters}
+            toggleLetter={toggleLetter}
+          />
         </div>
       </div>
 
