@@ -26,45 +26,30 @@ export default async function TypingPractice({
   const practiceType = typeof resolvedSearchParams.type === "string" ? resolvedSearchParams.type : "all";
   const customLetters = typeof resolvedSearchParams.letters === "string" ? resolvedSearchParams.letters : undefined;
 
-  const getLessonContentAndTitle = async (id: string) => {
-    const aiGeneratedText = await generatePunjabiParagraph(timeLimit, "custom", customLetters);
-    
-    let title = "Practice";
-    if (practiceType === "homerow") title = "Practice: Home Row";
-    if (practiceType === "toprow") title = "Practice: Top Row";
-    if (practiceType === "bottomrow") title = "Practice: Bottom Row";
-    if (practiceType === "custom") title = "Practice: Custom Letters";
+  let title = "Practice";
+  if (practiceType === "homerow") title = "Practice: Home Row";
+  else if (practiceType === "toprow") title = "Practice: Top Row";
+  else if (practiceType === "bottomrow") title = "Practice: Bottom Row";
+  else if (practiceType === "custom") title = "Practice: Custom Letters";
 
-    if (aiGeneratedText) {
-      return {
-        content: aiGeneratedText,
-        title,
-      };
-    }
-    
-    // Fallback if AI fails or returns null
+  let content = await generatePunjabiParagraph(timeLimit, "practice", customLetters);
+
+  // Fallback if AI fails or returns null
+  if (!content) {
     const data = await getLessonContent(id);
-    if (data) {
-       return {
-           content: data.content,
-           title: `${title} (Fallback)`,
-       }
+    if (!data) {
+      notFound();
     }
-    return null;
-  };
-
-  const data = await getLessonContentAndTitle(id);
-
-  if (!data) {
-    notFound();
+    content = data.content;
+    title = `${title} (Fallback)`;
   }
 
-  const { segments, pageStarts } = processTypingContent(data.content);
+  const { segments, pageStarts } = processTypingContent(content);
 
   return (
     <TypingPageUI
       id={id}
-      lessonTitle={data.title}
+      lessonTitle={title}
       contentCharactersList={segments}
       pageStarts={pageStarts}
       timeLimit={timeLimit}

@@ -8,7 +8,7 @@ const groq = new Groq({
 
 export async function generatePunjabiParagraph(
   timeLimitInSeconds: number,
-  practiceType?: string,
+  lessonType = "test" as "practice" | "test",
   customLetters?: string,
 ): Promise<string | null> {
   try {
@@ -39,7 +39,7 @@ Rules:
 
     console.log("Sending request to Groq...");
 
-    const isPracticeMode = practiceType !== "test" && customLetters !== undefined;
+    const isPracticeMode = lessonType === "practice" && customLetters !== undefined;
 
     const completion = await groq.chat.completions.create({
       messages: [
