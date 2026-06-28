@@ -2,92 +2,46 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
-  Timer,
   ArrowRight,
+  Settings2,
   Clock,
-  Keyboard,
-  LayoutGrid,
-  Check,
+  ArrowDown,
 } from "lucide-react";
+import { englishToPunjabiMap } from "@/lib/transliteration/languages/punjabi";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface PracticeConfiguratorProps {
   lessonId: string;
 }
 
 const PRACTICE_TYPES = [
-  { id: "homerow", label: "Home Row", desc: "Middle row keys (A S D F...)" },
-  { id: "toprow", label: "Top Row", desc: "Top row keys (Q W E R...)" },
-  {
-    id: "bottomrow",
-    label: "Bottom Row",
-    desc: "Bottom row keys (Z X C V...)",
-  },
-  { id: "all", label: "All Letters", desc: "Full keyboard practice" },
-  { id: "custom", label: "Custom Letters", desc: "Select specific letters" },
+  { id: "homerow", label: "Home Row" },
+  { id: "toprow", label: "Top Row" },
+  { id: "bottomrow", label: "Bottom Row" },
+  { id: "all", label: "All Letters" },
+  { id: "custom", label: "Custom Config" },
 ];
+
+const allChars = Array.from(new Set(Object.values(englishToPunjabiMap)));
+const isNormalLetter = (char: string) =>
+  /[\u0A05\u0A13\u0A15-\u0A32\u0A35\u0A38-\u0A39\u0A5C\u0A72\u0A73]/.test(char);
+const isNuktaLetter = (char: string) =>
+  /[\u0A33\u0A36\u0A59-\u0A5B\u0A5E]/.test(char);
+const isMatra = (char: string) =>
+  /[\u0A01-\u0A04\u0A06-\u0A12\u0A14\u0A3E-\u0A4C\u0A4D\u0A51\u0A70\u0A71\u0A3C]/.test(
+    char,
+  );
 
 const PUNJABI_LETTERS = [
-  "ੳ",
-  "ਅ",
-  "ੲ",
-  "ਸ",
-  "ਹ",
-  "ਕ",
-  "ਖ",
-  "ਗ",
-  "ਘ",
-  "ਙ",
-  "ਚ",
-  "ਛ",
-  "ਜ",
-  "ਝ",
-  "ਞ",
-  "ਟ",
-  "ਠ",
-  "ਡ",
-  "ਢ",
-  "ਣ",
-  "ਤ",
-  "ਥ",
-  "ਦ",
-  "ਧ",
-  "ਨ",
-  "ਪ",
-  "ਫ",
-  "ਬ",
-  "ਭ",
-  "ਮ",
-  "ਯ",
-  "ਰ",
-  "ਲ",
-  "ਵ",
-  "ੜ",
-  "ਸ਼",
-  "ਖ਼",
-  "ਗ਼",
-  "ਜ਼",
-  "ਫ਼",
-  "ਲ਼",
+  ...allChars.filter(isNormalLetter).sort((a, b) => a.localeCompare(b, "pa")),
+  ...allChars.filter(isNuktaLetter).sort((a, b) => a.localeCompare(b, "pa")),
 ];
-
-const PUNJABI_MATRAS = [
-  "ਾ",
-  "ਿ",
-  "ੀ",
-  "ੁ",
-  "ੂ",
-  "ੇ",
-  "ੈ",
-  "ੋ",
-  "ੌ",
-  "ਂ",
-  "ੰ",
-  "ੱ",
-  "੍",
-];
+const PUNJABI_MATRAS = allChars
+  .filter(isMatra)
+  .sort((a, b) => a.localeCompare(b, "pa"));
 
 export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
   const router = useRouter();
@@ -126,7 +80,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
     }
 
     if (practiceType === "custom" && selectedLetters.length === 0) {
-      alert("Please select at least one letter for custom practice.");
+      toast.error("Please select at least one letter for custom practice.");
       return;
     }
 
@@ -156,178 +110,198 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
   };
 
   return (
-    <div className="flex flex-col gap-8 mx-auto w-full max-w-5xl">
-      <div className="p-4 lg:p-6 bg-card border border-border/50 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col lg:flex-row gap-6 lg:items-stretch w-full">
-        <div className="flex flex-col flex-1 justify-center space-y-4">
-          <div className="space-y-1">
-            <h2 className="flex gap-2 items-center text-xl font-semibold tracking-tight md:text-2xl">
-              <Timer className="w-6 h-6 text-primary" />
-              Duration
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Choose how long you want to run the practice session.
-            </p>
-          </div>
+    <div className="flex overflow-hidden gap-6 p-6 h-full md:gap-8 md:p-8">
+      {/* Left Column: Practice Mode & Custom Expansion */}
+      <div className="flex flex-col w-[65%] h-full overflow-y-auto hide-scrollbar pb-10">
+        <div className="flex flex-col gap-6 md:gap-8 h-max shrink-0">
+          {/* Mode Architecture Card */}
+          <div className="rounded-2xl border border-border/50 bg-card shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
+            <div className="px-5 py-6 border-b border-border/30 bg-muted/10">
+              <h2 className="flex gap-2 items-center text-xl font-semibold tracking-tight md:text-2xl">
+                <Settings2 className="w-4 h-4" /> Select Practice Mode
+              </h2>
+            </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 5].map((min) => (
-              <button
-                key={min}
-                onClick={() => setSelectedMinutes(min)}
-                className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
-                  selectedMinutes === min
-                    ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
-                    : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground"
-                }`}
-              >
-                <span className="text-2xl font-bold tracking-tight">{min}</span>
-                <span className="text-xs font-medium mt-0.5 text-muted-foreground">
-                  {min === 1 ? "Minute" : "Minutes"}
-                </span>
-              </button>
-            ))}
-
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelectedMinutes(0)}
-              onKeyDown={(e) => e.key === "Enter" && setSelectedMinutes(0)}
-              className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 cursor-pointer col-span-3 ${
-                selectedMinutes === 0
-                  ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
-                  : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground active:scale-[0.98]"
-              }`}
-            >
-              {selectedMinutes === 0 ? (
-                <Input
-                  id="custom-time"
-                  type="text"
-                  autoFocus
-                  placeholder="MM:SS"
-                  value={customMinutes}
-                  onChange={(e) => setCustomMinutes(e.target.value)}
-                  className="h-8 w-full max-w-[100px] text-center font-bold text-base bg-background/80 border-primary/30 text-primary placeholder:text-primary/40 focus-visible:ring-1 focus-visible:ring-primary/50 rounded-lg shadow-inner transition-all"
-                />
-              ) : (
-                <Clock className="w-6 h-6 mb-1.5 stroke-[1.5] text-muted-foreground" />
-              )}
-              <span
-                className={`text-xs font-medium ${selectedMinutes === 0 ? "text-primary/80" : "text-muted-foreground"}`}
-              >
-                Custom
-              </span>
+            <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2">
+              {PRACTICE_TYPES.map((type) => (
+                <button
+                  key={type.id}
+                  onClick={() => setPracticeType(type.id)}
+                  className={`flex flex-row gap-2 items-center justify-center px-3 py-6 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+                    practiceType === type.id
+                      ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
+                      : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground"
+                  }`}
+                >
+                  {type.label}
+                  {type.id === "custom" &&
+                    (practiceType === type.id ? (
+                      <ArrowDown className="ml-1 w-4 h-4" />
+                    ) : (
+                      <ArrowRight className="mt-1 ml-1 w-4 h-4" />
+                    ))}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col justify-center items-center p-5 bg-muted/20 rounded-2xl border border-border/30 w-full lg:w-[260px]">
-          <div className="flex justify-center items-center mb-4 w-12 h-12 rounded-full border shadow-sm bg-background border-border/50">
-            <Keyboard className="w-6 h-6 text-primary stroke-[1.5]" />
-          </div>
-
-          <div className="mb-6 text-center">
-            <p className="mb-1 text-xs font-medium tracking-widest uppercase text-muted-foreground">
-              Total Time
-            </p>
-            <p className="font-mono text-4xl font-semibold tracking-tighter text-foreground">
-              {formatDisplayTime()}
-            </p>
-          </div>
-
-          <Button
-            onClick={handleStart}
-            size="lg"
-            className="w-full h-12 rounded-xl text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
+          {/* Custom Letters Expansion Panel */}
+          <div
+            className={`transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${practiceType === "custom" ? "opacity-100" : "max-h-0 opacity-0"}`}
           >
-            Start Practice
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
+            <div className="rounded-2xl border border-border/50 bg-card shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] p-6 md:p-10 flex flex-col gap-12">
+              {/* Consonants */}
+              <div className="flex flex-col gap-8">
+                <div className="flex justify-between items-center border-b border-border/30">
+                  <h3 className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
+                    Letters
+                  </h3>
+                  <span className="text-[10px] mb-2 font-mono px-3 py-1.5 bg-muted/50 rounded-2xl border border-border/50 text-foreground font-medium uppercase tracking-wider">
+                    {
+                      selectedLetters.filter(
+                        (l) => isNormalLetter(l) || isNuktaLetter(l),
+                      ).length
+                    }{" "}
+                    Active
+                  </span>
+                </div>
+                {/* 5 CHARACTERS IN A ROW EXACTLY */}
+                <div className="flex justify-center">
+                  <div className="grid grid-cols-5 gap-3 justify-items-center items-center w-full md:gap-4">
+                    {PUNJABI_LETTERS.map((letter) => (
+                      <button
+                        key={letter}
+                        onClick={() => toggleLetter(letter)}
+                        className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-xl md:text-2xl font-medium rounded-2xl transition-all duration-300 active:scale-[0.92] border ${
+                          selectedLetters.includes(letter)
+                            ? "bg-foreground text-background border-foreground shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)] -translate-y-0.5"
+                            : "bg-background text-foreground border-border/50 shadow-sm hover:border-foreground/30 hover:bg-muted/40 hover:-translate-y-px"
+                        }`}
+                      >
+                        {letter}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Matras & Symbols */}
+              <div className="flex flex-col gap-8">
+                <div className="flex justify-between items-center pb-4 border-b border-border/30">
+                  <h3 className="text-xs uppercase tracking-[0.2em] font-semibold text-muted-foreground">
+                    Matras & Symbols
+                  </h3>
+                  <span className="text-[10px] font-mono px-3 py-1.5 bg-muted/50 rounded-2xl border border-border/50 text-foreground font-medium uppercase tracking-wider">
+                    {selectedLetters.filter(isMatra).length} Active
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center mx-auto max-w-2xl md:gap-4">
+                  {PUNJABI_MATRAS.map((matra) => {
+                    return (
+                      <button
+                        key={matra}
+                        onClick={() => toggleLetter(matra)}
+                        className={`w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-medium rounded-2xl transition-all duration-300 active:scale-[0.92] border ${
+                          selectedLetters.includes(matra)
+                            ? "bg-foreground text-background border-foreground shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)] -translate-y-0.5"
+                            : "bg-background text-foreground border-border/50 shadow-sm hover:border-foreground/30 hover:bg-muted/40 hover:-translate-y-px"
+                        }`}
+                      >
+                        {matra}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="p-4 lg:p-6 bg-card border border-border/50 rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] w-full">
-        <div className="mb-6 space-y-1">
-          <h2 className="flex gap-2 items-center text-xl font-semibold tracking-tight md:text-2xl">
-            <LayoutGrid className="w-6 h-6 text-primary" />
-            Practice Mode
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Choose what you want to practice.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {PRACTICE_TYPES.map((type) => (
-            <button
-              key={type.id}
-              onClick={() => setPracticeType(type.id)}
-              className={`flex flex-col items-start p-4 rounded-2xl border transition-all duration-300 text-left ${
-                practiceType === type.id
-                  ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
-                  : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground"
-              }`}
+      {/* Right Column: Time & Launch */}
+      <div className="flex flex-col gap-6 w-[35%] overflow-y-auto h-full hide-scrollbar">
+        <div className="p-4 bg-card border border-border/50 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] flex flex-col gap-6 w-full">
+          <div className="flex flex-col flex-1 gap-2 justify-center">
+            <h2 className="text-xl font-semibold tracking-tight md:text-2xl">
+              Select Duration
+            </h2>
+            <div className="grid grid-cols-3 gap-3">
+              {[1, 2, 5].map((min) => (
+                <button
+                  key={min}
+                  onClick={() => setSelectedMinutes(min)}
+                  className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 active:scale-[0.98] ${
+                    selectedMinutes === min
+                      ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
+                      : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground"
+                  }`}
+                >
+                  <span className="text-2xl font-bold tracking-tight">
+                    {min}
+                  </span>
+                  <span className="text-xs font-medium mt-0.5 text-muted-foreground">
+                    {min === 1 ? "Minute" : "Minutes"}
+                  </span>
+                </button>
+              ))}
+
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedMinutes(0)}
+                onKeyDown={(e) => e.key === "Enter" && setSelectedMinutes(0)}
+                className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 cursor-pointer col-span-3 ${
+                  selectedMinutes === 0
+                    ? "bg-primary/5 border-primary text-primary shadow-sm ring-1 ring-primary/20"
+                    : "bg-background border-border/40 hover:bg-card hover:border-border/80 text-foreground active:scale-[0.98]"
+                }`}
+              >
+                {selectedMinutes === 0 ? (
+                  <Input
+                    id="custom-time"
+                    type="text"
+                    autoFocus
+                    placeholder="MM:SS"
+                    value={customMinutes}
+                    onChange={(e) => setCustomMinutes(e.target.value)}
+                    className="h-8 w-full max-w-[200px] text-center font-bold text-base bg-background/80 border-primary/30 text-primary placeholder:text-primary/40 focus-visible:ring-1 focus-visible:ring-primary/50 rounded-2xl shadow-inner transition-all"
+                  />
+                ) : (
+                  <Clock className="w-6 h-6 mb-1.5 stroke-[1.5] text-muted-foreground" />
+                )}
+                <span
+                  className={`text-xs font-medium ${selectedMinutes === 0 ? "text-primary/80" : "text-muted-foreground"}`}
+                >
+                  Custom
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center items-center p-5 w-full rounded-2xl border bg-muted/20 border-border/30">
+            <div className="flex flex-col gap-4 justify-center items-center w-full lg:flex-row">
+              {/* <div className="flex justify-center items-center mb-4 w-12 h-12 rounded-full border shadow-sm bg-background border-border/50">
+                  <Timer className="w-6 h-6 text-primary stroke-[1.5]" />
+                </div> */}
+
+              <div className="text-center">
+                <p className="mb-1 text-xs font-medium tracking-widest uppercase text-muted-foreground">
+                  Total Time
+                </p>
+                <p className="font-mono text-4xl font-semibold tracking-tighter text-foreground">
+                  {formatDisplayTime()}
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={handleStart}
+              size="lg"
+              className="w-full h-12 rounded-2xl text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
             >
-              <span className="font-semibold">{type.label}</span>
-              <span className="mt-1 text-xs text-muted-foreground">
-                {type.desc}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {/* Custom Letters Grid */}
-        <div
-          className={`mt-6 overflow-hidden transition-all duration-500 ease-in-out ${practiceType === "custom" ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}
-        >
-          <div className="p-4 space-y-6 rounded-2xl border bg-muted/20 border-border/40">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-foreground">
-                  Select Letters
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {selectedLetters.length} selected
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {PUNJABI_LETTERS.map((letter) => (
-                  <button
-                    key={letter}
-                    onClick={() => toggleLetter(letter)}
-                    className={`w-10 h-10 flex items-center justify-center text-lg font-medium rounded-xl border transition-all duration-200 ${
-                      selectedLetters.includes(letter)
-                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                        : "bg-background border-border/50 text-foreground hover:border-primary/50"
-                    }`}
-                  >
-                    {letter}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-foreground">
-                  Select Matras (Vowels/Symbols)
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {PUNJABI_MATRAS.map((matra) => (
-                  <button
-                    key={matra}
-                    onClick={() => toggleLetter(matra)}
-                    className={`w-10 h-10 flex items-center justify-center text-2xl font-medium rounded-xl border transition-all duration-200 ${
-                      selectedLetters.includes(matra)
-                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                        : "bg-background border-border/50 text-foreground hover:border-primary/50"
-                    }`}
-                  >
-                    <span className="opacity-30">◌</span>
-                    {matra}
-                  </button>
-                ))}
-              </div>
-            </div>
+              Start Test
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
           </div>
         </div>
       </div>

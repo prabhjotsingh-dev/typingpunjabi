@@ -6,9 +6,7 @@ export default async function TypingPracticePage() {
   const testLesson = lessons?.[0];
 
   return (
-    <section className="flex flex-col gap-2 p-4 mx-auto w-full min-h-full md:gap-4 md:p-8">
-      <div className="flex flex-col pb-4 w-full">
-        <div className="flex flex-col gap-4 mt-6 w-full">
+    <>
           {testLesson ? (
             <PracticeConfigurator lessonId={testLesson.id} />
           ) : (
@@ -18,8 +16,6 @@ export default async function TypingPracticePage() {
               </p>
             </div>
           )}
-        </div>
-      </div>
-    </section>
+    </>
   );
 }
