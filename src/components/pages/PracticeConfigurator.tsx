@@ -43,6 +43,20 @@ const PUNJABI_MATRAS = allChars
   .filter(isMatra)
   .sort((a, b) => a.localeCompare(b, "pa"));
 
+const topRowEnglish = "qwertyuiop[]QWERTYUIOP{}";
+const homeRowEnglish = "asdfghjkl;'ASDFGHJKL:\"";
+const bottomRowEnglish = "zxcvbnm,./ZXCVBNM<>?";
+
+const getRowLetters = (englishChars: string) => {
+  return Array.from(new Set(
+    englishChars.split("").map(c => englishToPunjabiMap[c]).filter(Boolean)
+  ));
+};
+
+const topRowLetters = getRowLetters(topRowEnglish);
+const homeRowLetters = getRowLetters(homeRowEnglish);
+const bottomRowLetters = getRowLetters(bottomRowEnglish);
+
 export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
   const router = useRouter();
   const [selectedMinutes, setSelectedMinutes] = useState<number>(1);
@@ -89,8 +103,17 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
       type: practiceType,
     });
 
-    if (practiceType === "custom") {
-      searchParams.set("letters", selectedLetters.join(","));
+    let lettersToPractice = selectedLetters;
+    if (practiceType === "homerow") {
+      lettersToPractice = homeRowLetters;
+    } else if (practiceType === "toprow") {
+      lettersToPractice = topRowLetters;
+    } else if (practiceType === "bottomrow") {
+      lettersToPractice = bottomRowLetters;
+    }
+
+    if (practiceType !== "all") {
+      searchParams.set("letters", lettersToPractice.join(","));
     }
 
     router.push(`/typing-practice/${lessonId}?${searchParams.toString()}`);
@@ -280,9 +303,6 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
 
           <div className="flex flex-col justify-center items-center p-5 w-full rounded-2xl border bg-muted/20 border-border/30">
             <div className="flex flex-col gap-4 justify-center items-center w-full lg:flex-row">
-              {/* <div className="flex justify-center items-center mb-4 w-12 h-12 rounded-full border shadow-sm bg-background border-border/50">
-                  <Timer className="w-6 h-6 text-primary stroke-[1.5]" />
-                </div> */}
 
               <div className="text-center">
                 <p className="mb-1 text-xs font-medium tracking-widest uppercase text-muted-foreground">

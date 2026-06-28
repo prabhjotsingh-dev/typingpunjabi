@@ -27,7 +27,7 @@ export default async function TypingPractice({
   const customLetters = typeof resolvedSearchParams.letters === "string" ? resolvedSearchParams.letters : undefined;
 
   const getLessonContentAndTitle = async (id: string) => {
-    const aiGeneratedText = await generatePunjabiParagraph(timeLimit, practiceType, customLetters);
+    const aiGeneratedText = await generatePunjabiParagraph(timeLimit, "custom", customLetters);
     
     let title = "Practice";
     if (practiceType === "homerow") title = "Practice: Home Row";
