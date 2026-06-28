@@ -42,7 +42,7 @@ export function CustomLettersPanel({
           {/* 5 CHARACTERS IN A ROW EXACTLY */}
           <div className="flex justify-center">
             <div className="grid grid-cols-5 gap-3 justify-items-center items-center w-full md:gap-4">
-              {PUNJABI_LETTERS.map((letter) => (
+              {[...PUNJABI_LETTERS,"ਜ਼","ਖ਼","ਗ਼","ਫ਼"].map((letter) => (
                 <button
                   key={letter}
                   onClick={() => toggleLetter(letter)}

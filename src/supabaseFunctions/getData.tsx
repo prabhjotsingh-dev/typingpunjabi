@@ -119,6 +119,29 @@ class GetData {
 
     return data || "system";
   }
+
+  static async getLearnedAlphabets(): Promise<string | null> {
+    const { supabase, user } = await GetData.getAuth();
+
+    const { data, error } = await supabase.rpc("get_learned_alphabets", {
+      p_profile_id: user.id,
+    });
+
+    if (error || !data) {
+      console.error("Error fetching learned alphabets:", error);
+      return null;
+    }
+
+    const allChars = new Set<string>();
+    for (const d of (data as { alphabets: string }[])) {
+      if (!d.alphabets) continue;
+      for (const ch of d.alphabets.trim().split(/\s+/)) {
+        if (ch) allChars.add(ch);
+      }
+    }
+
+    return allChars.size > 0 ? [...allChars].join(",") : null;
+  }
 }
 
 export const getLessons = GetData.getLessons;
@@ -127,3 +150,4 @@ export const getLessonResult = GetData.getLessonResult;
 export const getLessonstats = GetData.getLessonstats;
 export const getDashboardData = GetData.getDashboardData;
 export const getProfileTheme = GetData.getProfileTheme;
+export const getLearnedAlphabets = GetData.getLearnedAlphabets;
