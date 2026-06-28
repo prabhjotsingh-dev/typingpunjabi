@@ -39,7 +39,7 @@ const menuItems = [
     label: "Practice",
     Icon: Target,
     children: [
-      { id: "Practice", label: "Practice", Icon: Target, route: Routes.typingSpeedTest },
+      { id: "typing-practice", label: "Typing Practice", Icon: Target, route: Routes.typingPractice },
       { id: "typing-speed-test", label: "Speed Test", Icon: Gauge, route: Routes.typingSpeedTest },
     ],
   },
@@ -66,7 +66,7 @@ export function SidebarContent({
     if (route) {
       let targetRoute = route;
       if (route === Routes.lessons && value !== "learn" && value !== "practice") {
-        targetRoute = `${route}?level=${value}`;
+        targetRoute = `${route}?stage=${value}`;
       }
       
       if (pathname !== route || (route === Routes.lessons && searchParams.get("plan") !== value)) {
@@ -82,9 +82,11 @@ export function SidebarContent({
   let selectedValue = "beginner";
   if (pathname === Routes.typingSpeedTest) {
     selectedValue = "typing-speed-test";
+  } else if (pathname === Routes.typingPractice) {
+    selectedValue = "typing-practice";
   } else if (pathname === Routes.lessons) {
-    const level = searchParams.get("level");
-    if (level) selectedValue = level;
+    const stage = searchParams.get("stage");
+    if (stage) selectedValue = stage;
   }
 
   return (

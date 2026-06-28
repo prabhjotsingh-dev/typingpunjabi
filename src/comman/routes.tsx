@@ -9,6 +9,7 @@ export default class Routes {
   static contact = "/contact";
   static dashboard = "/dashboard";
   static typingSpeedTest = "/typing-speed-test";
+  static typingPractice = "/typing-practice";
   static toLesson(id: string) {
     return `/lesson/${id}`;
   }
@@ -23,5 +24,11 @@ export default class Routes {
   }
   static typingSpeedTestResult(id: string) {
     return `/typing-speed-test/${id}/result`;
+  }
+  static toTypingPractice(id: string) {
+    return `/typing-practice/${id}`;
+  }
+  static typingPracticeResult(id: string) {
+    return `/typing-practice/${id}/result`;
   }
 }
