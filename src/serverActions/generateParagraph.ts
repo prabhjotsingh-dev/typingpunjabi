@@ -21,12 +21,14 @@ export async function generatePunjabiParagraph(
 Your task is to generate a sequence of valid Punjabi words using ONLY the characters from this list: ${customLetters || "none provided"}.
 
 CRITICAL RULES:
-1. Strict Character Set: You MUST NOT use any letter, matra (vowel sign), bindi, tippi, addak, or half-character that is not in the list.
-2. No Grammar Required: Do NOT try to form cohesive sentences or stories. Do NOT use words like "ਹੈ", "ਦਾ", or "ਦੀ" unless those exact letters are in the list. 
-3. Word Variety: Generate a random sequence of distinct, dictionary-valid words. Mix short (2-letter) and long (3-4 letter) words. 
-4. DO NOT REPEAT the same word or sequence of letters over and over. Keep the words varied.
+1. NO SINGLE LETTERS (IMPORTANT): You MUST NOT output isolated single characters separated by spaces. Every word MUST be a combination of 2 to 5 characters. 
+   - WRONG OUTPUT: ਪ ਰ ਕ ਤ ਚ ਟ
+   - CORRECT OUTPUT: ਪਰ ਕਤ ਚਟਕ ਰੁਕ ਕੋਟ
+2. Strict Character Set: You MUST NOT use any letter, matra (vowel sign), bindi, tippi, addak, or half-character that is not in the list.
+3. No Grammar Required: Do NOT try to form cohesive sentences. Just generate a random sequence of distinct, dictionary-valid words.
+4. Word Variety: Mix 2-letter, 3-letter, and 4-letter words. DO NOT REPEAT the same word over and over. Keep the vocabulary varied.
 5. No Punctuation: Separate words only with a single space.
-6. Generate roughly ${estimatedWords} words in total.`;
+6. Generate exactly ${estimatedWords} valid words in total.`;
 
     const TestLessonPrompt = `You are a strict Punjabi language generator for a typing speed test. 
 Your ONLY job is to output a single paragraph in the Punjabi language (Gurmukhi script).
