@@ -23,6 +23,7 @@ interface PracticeConfiguratorProps {
 }
 
 const PRACTICE_TYPES = [
+  { id: "learned", label: "Learned Letters" },
   { id: "homerow", label: "Home Row" },
   { id: "toprow", label: "Top Row" },
   { id: "bottomrow", label: "Bottom Row" },
@@ -87,7 +88,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
       lettersToPractice = bottomRowLetters;
     }
 
-    if (practiceType !== "all") {
+    if (practiceType !== "all" && practiceType !== "learned") {
       searchParams.set("letters", lettersToPractice.join(","));
     }
 

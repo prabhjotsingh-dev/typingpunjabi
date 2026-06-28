@@ -1,7 +1,7 @@
 import TypingPageUI from "@/components/pages/typingPageUI";
 import { notFound } from "next/navigation";
 import { processTypingContent } from "@/comman/utils";
-import { getLessonContent } from "@/supabaseFunctions/getData";
+import { getLessonContent, getLearnedAlphabets } from "@/supabaseFunctions/getData";
 import { generatePunjabiParagraph } from "@/serverActions/generateParagraph";
 
 type Params = Promise<{ id: string }>;
@@ -24,13 +24,21 @@ export default async function TypingPractice({
   const timeLimit = isNaN(timeParam) ? 60 : timeParam;
 
   const practiceType = typeof resolvedSearchParams.type === "string" ? resolvedSearchParams.type : "all";
-  const customLetters = typeof resolvedSearchParams.letters === "string" ? resolvedSearchParams.letters : undefined;
+  let customLetters = typeof resolvedSearchParams.letters === "string" ? resolvedSearchParams.letters : undefined;
 
   let title = "Practice";
   if (practiceType === "homerow") title = "Practice: Home Row";
   else if (practiceType === "toprow") title = "Practice: Top Row";
   else if (practiceType === "bottomrow") title = "Practice: Bottom Row";
   else if (practiceType === "custom") title = "Practice: Custom Letters";
+  else if (practiceType === "learned") title = "Practice: Learned Alphabets";
+
+  if (practiceType === "learned") {
+    const learnedLetters = await getLearnedAlphabets();
+    if (learnedLetters) {
+      customLetters = learnedLetters;
+    }
+  }
 
   let content = await generatePunjabiParagraph(timeLimit, "practice", customLetters);
 

@@ -64,10 +64,10 @@ export type Database = {
       }
       lessons: {
         Row: {
+          alphabets: string | null
           content: string
           created_at: string
-          estimated_duration_seconds: number | null
-          group: string | null
+          group: Database["public"]["Enums"]["lesson_group"]
           id: string
           is_published: boolean
           sequence_number: number
@@ -76,10 +76,10 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          alphabets?: string | null
           content: string
           created_at?: string
-          estimated_duration_seconds?: number | null
-          group?: string | null
+          group: Database["public"]["Enums"]["lesson_group"]
           id?: string
           is_published?: boolean
           sequence_number: number
@@ -88,10 +88,10 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          alphabets?: string | null
           content?: string
           created_at?: string
-          estimated_duration_seconds?: number | null
-          group?: string | null
+          group?: Database["public"]["Enums"]["lesson_group"]
           id?: string
           is_published?: boolean
           sequence_number?: number
@@ -341,6 +341,12 @@ export type Database = {
           wpm: number
         }[]
       }
+      get_learned_alphabets: {
+        Args: { p_min_accuracy?: number; p_profile_id: string }
+        Returns: {
+          alphabets: string
+        }[]
+      }
       get_lesson_stats: {
         Args: { profile_id: string }
         Returns: {
@@ -356,6 +362,7 @@ export type Database = {
       }
       get_lessons: {
         Args: {
+          p_group?: Database["public"]["Enums"]["lesson_group"]
           p_profile: string
           p_stage?: Database["public"]["Enums"]["lesson_stage"]
         }
@@ -403,6 +410,13 @@ export type Database = {
       }
     }
     Enums: {
+      lesson_group:
+        | "all-alphabets"
+        | "top row"
+        | "home row"
+        | "bottom row"
+        | "custom"
+        | "from-completed-lessons"
       lesson_stage:
         | "beginner"
         | "intermediate"
@@ -538,6 +552,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      lesson_group: [
+        "all-alphabets",
+        "top row",
+        "home row",
+        "bottom row",
+        "custom",
+        "from-completed-lessons",
+      ],
       lesson_stage: ["beginner", "intermediate", "advance", "test", "practice"],
       profile_theme: ["dark", "light", "system"],
       profile_type: ["registered", "guest"],
