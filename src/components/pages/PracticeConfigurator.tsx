@@ -170,6 +170,7 @@ export function PracticeConfigurator({ lessons }: PracticeConfiguratorProps) {
             practiceType={practiceType}
             selectedLetters={selectedLetters}
             toggleLetter={toggleLetter}
+            setSelectedLetters={setSelectedLetters}
           />
         </div>
       </div>
