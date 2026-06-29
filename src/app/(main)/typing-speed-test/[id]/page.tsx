@@ -52,6 +52,9 @@ export default async function TypingSpeedTest({
       contentCharactersList={segments}
       pageStarts={pageStarts}
       timeLimit={timeLimit}
+      mode="speed-test"
+      contentSource="ai"
+      customText={data.content}
     />
   );
 }

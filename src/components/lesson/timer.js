@@ -10,6 +10,9 @@ function Timer(data) {
   const [isFinished, setIsFinished] = useState(false);
 
   const limit = data.timeLimit || 30;
+  const mode = data.mode || "lesson";
+  const contentSource = data.contentSource || "lesson";
+  const customText = data.customText || null;
 
   useEffect(() => {
     if (data.start && !isFinished) {
@@ -30,15 +33,16 @@ function Timer(data) {
         try {
           await addTypingResult({
             p_accuracy: accuracy,
-            p_content_source: "lesson",
+            p_content_source: contentSource,
             p_correct_chars: data.correct,
             p_cpm: totalChars,
+            p_custom_text: customText,
             p_duration_seconds: time,
             p_incorrect_chars: data.incorrect,
             p_is_completed: true,
             p_lesson_id: data.id,
             p_lesson_title: data.title || "",
-            p_mode: "lesson",
+            p_mode: mode,
             p_total_chars: totalChars,
             p_wpm: wpm,
           });
@@ -56,6 +60,9 @@ function Timer(data) {
     data.title,
     data.correct,
     data.incorrect,
+    data.mode,
+    data.contentSource,
+    data.customText,
     router,
     pathname,
     limit,

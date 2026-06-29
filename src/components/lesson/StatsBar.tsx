@@ -7,6 +7,9 @@ interface StatsBarProps {
   id: string | string[] | undefined;
   title?: string;
   timeLimit?: number;
+  mode?: string;
+  contentSource?: string;
+  customText?: string | null;
 }
 
 export function StatsBar({
@@ -15,6 +18,9 @@ export function StatsBar({
   id,
   title,
   timeLimit,
+  mode,
+  contentSource,
+  customText,
 }: StatsBarProps) {
   return (
     <Card className="flex flex-row flex-nowrap gap-4 items-center px-5 py-2.5 mb-6 whitespace-nowrap rounded-full shadow-sm backdrop-blur-md cursor-default border-border/60 bg-card/80">
@@ -28,6 +34,9 @@ export function StatsBar({
         id={id}
         title={title}
         timeLimit={timeLimit}
+        mode={mode}
+        contentSource={contentSource}
+        customText={customText}
         timeClass="font-mono text-sm md:text-base font-medium text-foreground/80 flex items-center border-l border-border pl-4 capitalize m-0"
         speedClass="font-mono text-sm md:text-base font-medium text-foreground/80 flex items-center border-l border-border pl-4 capitalize m-0"
       />
