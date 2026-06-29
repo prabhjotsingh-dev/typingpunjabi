@@ -18,10 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-interface PracticeConfiguratorProps {
-  lessonId: string;
-}
-
+import Routes from "@/comman/routes";
+import { PracticeConfiguratorProps } from "@/comman/types";
 const PRACTICE_TYPES = [
   { id: "learned", label: "Learned Letters" },
   { id: "homerow", label: "Home Row" },
@@ -92,7 +90,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
       searchParams.set("letters", lettersToPractice.join(","));
     }
 
-    router.push(`/typing-practice/${lessonId}?${searchParams.toString()}`);
+    router.push(`${Routes.toTypingPractice(lessonId)}?${searchParams.toString()}`);
   };
 
   const formatDisplayTime = () => {

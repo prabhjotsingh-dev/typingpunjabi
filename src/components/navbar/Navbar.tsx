@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     setIsMobileMenuOpen(false);
-    router.push("/");
+    router.push(Routes.home);
     router.refresh();
   };
 
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 w-full not-italic border-b-1 backdrop-blur-md transition duration-200 h-[calc(3.5rem-1px)] font-outfit border-b-glass-border bg-glass-bg">
       <div className="relative z-20 flex justify-between items-center py-2.5 px-4 mx-auto bg-glass-bg">
         <Link
-          href="/"
+          href={Routes.home}
           onClick={() => setIsMobileMenuOpen(false)}
           className="flex gap-3 items-center rounded-2xl group cubic-transition hover:opacity-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-dark/40"
         >
@@ -103,10 +103,10 @@ const Navbar: React.FC = () => {
         <div className="hidden gap-2 items-center ml-auto sm:flex md:ml-0">
           {!loading && !isLoggedInRegisteredUser ? (
             <>
-              <CustomLink href="/signup" variant="authLink">
+              <CustomLink href={Routes.signup} variant="authLink">
                 Sign Up
               </CustomLink>
-              <CustomLink href="/login" variant="authLink">
+              <CustomLink href={Routes.login} variant="authLink">
                 Log In
               </CustomLink>
             </>
@@ -139,6 +139,9 @@ const Navbar: React.FC = () => {
       </div>
 
       <div
+        role="dialog"
+        aria-label="Navigation menu"
+        aria-hidden={!isMobileMenuOpen}
         className={`absolute top-full rounded-b-xl right-4 w-64 bg-glass-bg/95 backdrop-blur-xl border-b border-glass-border shadow-lg md:hidden flex flex-col overflow-hidden transition-all duration-300 ease-in-out origin-top ${
           isMobileMenuOpen
             ? "opacity-100 scale-y-100 max-h-[500px]"
@@ -164,7 +167,7 @@ const Navbar: React.FC = () => {
             {!loading && !isLoggedInRegisteredUser ? (
               <>
                 <CustomLink
-                  href="/signup"
+                  href={Routes.signup}
                   variant="authLink"
                   className="flex-1 text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -172,7 +175,7 @@ const Navbar: React.FC = () => {
                   Sign Up
                 </CustomLink>
                 <CustomLink
-                  href="/login"
+                  href={Routes.login}
                   variant="authLink"
                   className="flex-1 text-center"
                   onClick={() => setIsMobileMenuOpen(false)}

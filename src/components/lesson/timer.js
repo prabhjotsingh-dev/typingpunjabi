@@ -53,6 +53,7 @@ function Timer(data) {
     time,
     isFinished,
     data.id,
+    data.title,
     data.correct,
     data.incorrect,
     router,

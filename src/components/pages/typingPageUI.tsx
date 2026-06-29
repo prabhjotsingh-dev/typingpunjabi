@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";

@@ -14,3 +14,24 @@ export type LessonData = {
   title: string;
   highest_accuracy: number;
 };
+
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
+export type SignUpForm = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export interface PracticeConfiguratorProps {
+  lessonId: string;
+}
+
+export interface SpeedTestConfiguratorProps {
+  lessonId: string;
+}
+

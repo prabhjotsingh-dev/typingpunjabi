@@ -9,10 +9,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/supabaseServices/clients/browserClient";
 import Routes from "@/comman/routes";
 
-type LoginForm = {
-  email: string;
-  password: string;
-};
+import { LoginForm } from "@/comman/types";
 
 const Login = () => {
   const router = useRouter();
@@ -37,7 +34,7 @@ const Login = () => {
       if (error) {
         setServerError(error.message);
       } else {
-        router.push("/");
+        router.push(Routes.home);
         router.refresh();
       }
     });
@@ -115,7 +112,7 @@ const Login = () => {
               </label>
             </div>
             <Link
-              href={`${Routes.forgetPassword}`}
+              href={`${Routes.forgotPassword}`}
               className="text-sm text-primary hover:underline"
             >
               Forgot password?
@@ -129,7 +126,7 @@ const Login = () => {
 
         <div className="text-sm text-center">
           <span className="text-muted-foreground">Don't have an account? </span>
-          <Link href="/signup" className="text-primary hover:underline">
+          <Link href={Routes.signup} className="text-primary hover:underline">
             Sign up
           </Link>
         </div>
