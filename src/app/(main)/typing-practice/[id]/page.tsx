@@ -1,5 +1,5 @@
 import TypingPageUI from "@/components/pages/typingPageUI";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { processTypingContent } from "@/comman/utils";
 import { getLessonContent, getLearnedAlphabets } from "@/supabaseFunctions/getData";
 import { generatePunjabiParagraph } from "@/serverActions/generateParagraph";
@@ -37,6 +37,8 @@ export default async function TypingPractice({
     const learnedLetters = await getLearnedAlphabets();
     if (learnedLetters) {
       customLetters = learnedLetters;
+    } else {
+      redirect("/typing-practice");
     }
   }
 

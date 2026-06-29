@@ -27,11 +27,12 @@ export type SignUpForm = {
   confirmPassword: string;
 };
 
+
 export interface PracticeConfiguratorProps {
-  lessonId: string;
+  lessons: LessonData[];
 }
 
 export interface SpeedTestConfiguratorProps {
   lessonId: string;
 }
-
+
