@@ -63,6 +63,9 @@ export default async function TypingPractice({
       contentCharactersList={segments}
       pageStarts={pageStarts}
       timeLimit={timeLimit}
+      mode="practice"
+      contentSource="ai"
+      customText={content}
     />
   );
 }

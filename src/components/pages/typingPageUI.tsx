@@ -11,6 +11,9 @@ interface TypingPageUIProps {
   contentCharactersList: string[];
   pageStarts: number[];
   timeLimit?: number;
+  mode?: string;
+  contentSource?: string;
+  customText?: string | null;
 }
 
 export default function TypingPageUI({
@@ -19,6 +22,9 @@ export default function TypingPageUI({
   contentCharactersList,
   pageStarts,
   timeLimit,
+  mode,
+  contentSource,
+  customText,
 }: TypingPageUIProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +66,9 @@ export default function TypingPageUI({
         id={id}
         title={lessonTitle}
         timeLimit={timeLimit}
+        mode={mode}
+        contentSource={contentSource}
+        customText={customText}
       />
 
       <input
