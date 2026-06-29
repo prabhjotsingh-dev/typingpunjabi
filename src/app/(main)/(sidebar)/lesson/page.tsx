@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLessons } from "@/supabaseFunctions/getData";
-import LessonsPageUI from "@/components/pages/lesssonsPageUI";
+import LessonsPageUI from "@/components/pages/lessonsPageUI";
 import { Constants } from "@/supabaseServices/database.types";
 
 import { Stage } from "@/comman/types";

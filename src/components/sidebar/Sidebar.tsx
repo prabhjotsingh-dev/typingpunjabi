@@ -55,6 +55,7 @@ export function Sidebar() {
     <>
       {/* Mobile Overlay */}
       <div
+        aria-hidden={isCollapsed}
         className={cn(
           "fixed inset-x-0 bottom-0 top-14 z-40 backdrop-blur-sm transition-opacity duration-300 bg-black/50 md:hidden",
           !isCollapsed ? "opacity-100" : "opacity-0 pointer-events-none",

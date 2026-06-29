@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { LessonData, Stage } from "@/comman/types";
 import { Star } from "lucide-react";
-import { GetStart } from "@/comman/utils";
+import { GetStars } from "@/comman/utils";
 
 export default function LessonsPageUI({ lessonsData, stage }: { lessonsData: LessonData[], stage: Stage }) {
   function getLessonsByStage():LessonData[] {
@@ -46,7 +46,7 @@ export default function LessonsPageUI({ lessonsData, stage }: { lessonsData: Les
                     <div className="bg-card border border-border shadow-sm rounded-[1.5rem] p-2.5 space-y-2">
                       {getLessonsByGroup(getLessonsByStage(), groupName)
                         .map((lesson) => {
-                          const stars = GetStart(lesson.highest_accuracy);
+                          const stars = GetStars(lesson.highest_accuracy);
                           const isCompleted = stars > 0;
 
                           return (

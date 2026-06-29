@@ -112,7 +112,7 @@ const Login = () => {
               </label>
             </div>
             <Link
-              href={`${Routes.forgetPassword}`}
+              href={`${Routes.forgotPassword}`}
               className="text-sm text-primary hover:underline"
             >
               Forgot password?

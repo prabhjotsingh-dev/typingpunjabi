@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import DashboardCard from "@/components/common/DashboardCard";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { GetStart } from "@/comman/utils";
+import { GetStars } from "@/comman/utils";
 
 interface ResultPageUIProps {
   speed: number;
@@ -32,7 +32,7 @@ export default function ResultPageUI({
   nextLink,
   listLabel = "Lessons"
 }: ResultPageUIProps) {
-  const stars = GetStart(accuracy);
+  const stars = GetStars(accuracy);
 
   const titleText =
     stars === 3 ? "Outstanding!" : stars === 2 ? "Great Job!" : "Good Effort!";

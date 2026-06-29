@@ -139,6 +139,9 @@ const Navbar: React.FC = () => {
       </div>
 
       <div
+        role="dialog"
+        aria-label="Navigation menu"
+        aria-hidden={!isMobileMenuOpen}
         className={`absolute top-full rounded-b-xl right-4 w-64 bg-glass-bg/95 backdrop-blur-xl border-b border-glass-border shadow-lg md:hidden flex flex-col overflow-hidden transition-all duration-300 ease-in-out origin-top ${
           isMobileMenuOpen
             ? "opacity-100 scale-y-100 max-h-[500px]"
