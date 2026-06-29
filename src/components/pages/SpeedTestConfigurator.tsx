@@ -6,9 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Timer, ArrowRight, Clock } from "lucide-react";
 
-interface SpeedTestConfiguratorProps {
-  lessonId: string;
-}
+import Routes from "@/comman/routes";
+import { SpeedTestConfiguratorProps } from "@/comman/types";
 
 export function SpeedTestConfigurator({
   lessonId,
@@ -37,7 +36,7 @@ export function SpeedTestConfigurator({
     } else {
       timeInSeconds = selectedMinutes * 60;
     }
-    router.push(`/typing-speed-test/${lessonId}?time=${timeInSeconds}`);
+    router.push(`${Routes.toTypingSpeedTest(lessonId)}?time=${timeInSeconds}`);
   };
 
   const formatDisplayTime = () => {

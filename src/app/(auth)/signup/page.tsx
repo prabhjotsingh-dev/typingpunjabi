@@ -10,12 +10,8 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { signupAction } from "@/supabaseServices/actions/signupService";
 
-type SignUpForm = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import { SignUpForm } from "@/comman/types";
+import Routes from "@/comman/routes";
 
 const fields = [
   {
@@ -157,7 +153,7 @@ export default function Signup() {
           <span className="text-muted-foreground">
             Already have an account?
           </span>{" "}
-          <Link href="/login" className="text-primary hover:underline">
+          <Link href={Routes.login} className="text-primary hover:underline">
             Sign in
           </Link>
         </div>
