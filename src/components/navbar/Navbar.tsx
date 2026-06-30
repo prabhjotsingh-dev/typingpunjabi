@@ -25,11 +25,15 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false);
+      }
+      if (window.innerWidth < 768) {
+        setIsProfileOpen(false);
       }
     };
     window.addEventListener("resize", handleResize);
@@ -117,6 +121,8 @@ const Navbar: React.FC = () => {
               email={user?.email}
               handleLogout={handleLogout}
               variant="desktop"
+              open={isProfileOpen}
+              onOpenChange={setIsProfileOpen}
             />
           ) : (
             <div className="w-24 h-8"></div>
@@ -138,11 +144,19 @@ const Navbar: React.FC = () => {
         </Button>
       </div>
 
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <div
         role="dialog"
         aria-label="Navigation menu"
         aria-hidden={!isMobileMenuOpen}
-        className={`absolute top-full rounded-b-xl right-4 w-64 bg-glass-bg/95 backdrop-blur-xl border-b border-glass-border shadow-lg md:hidden flex flex-col overflow-hidden transition-all duration-300 ease-in-out origin-top ${
+        className={`fixed top-[3.5rem] right-4 z-50 w-64 rounded-xl bg-glass-bg backdrop-blur-md border border-glass-border shadow-lg md:hidden flex flex-col transition-all duration-300 ease-in-out origin-top ${
           isMobileMenuOpen
             ? "opacity-100 scale-y-100 max-h-[500px]"
             : "max-h-0 opacity-0 scale-y-0"
@@ -163,7 +177,12 @@ const Navbar: React.FC = () => {
             ))}
           </nav>
 
-          <div className="flex flex-row gap-3 pt-4 border-t sm:hidden border-glass-border/50">
+          <div className="flex items-center justify-between pt-4 border-t border-border/50">
+            <span className="text-xs font-medium text-text-muted">Theme</span>
+            <ModeToggle />
+          </div>
+
+          <div className="flex flex-row gap-3 pt-4 border-t sm:hidden border-border/50">
             {!loading && !isLoggedInRegisteredUser ? (
               <>
                 <CustomLink
