@@ -1,9 +1,10 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTypingEngine } from "@/hooks/useTypingEngine";
 import { StatsBar } from "@/components/lesson/StatsBar";
 import { TypingArea } from "@/components/lesson/TypingArea";
 import Keyboard from "@/components/lesson/keyboard/keyboard";
+import FullPageLoader from "@/components/common/FullPageLoader";
 
 interface TypingPageUIProps {
   id: string;
@@ -27,6 +28,7 @@ export default function TypingPageUI({
   customText,
 }: TypingPageUIProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isFinished, setIsFinished] = useState(false);
 
   const {
     typed,
@@ -55,10 +57,12 @@ export default function TypingPageUI({
   }, [start]);
 
   return (
-    <main
-      onClick={handleMainClick}
-      className="h-[calc(100svh-3.5rem)] flex flex-col items-center justify-between gap-4 pt-2 pb-4 bg-background font-sans selection:bg-muted"
-    >
+    <>
+      {isFinished && <FullPageLoader message="Saving your results..." />}
+      <main
+        onClick={handleMainClick}
+        className="h-[calc(100svh-3.5rem)] flex flex-col items-center justify-between gap-4 pt-2 pb-4 bg-background font-sans selection:bg-muted"
+      >
 
       <StatsBar
         noOfCorrectChar={noOfCorrectChar}
@@ -69,12 +73,14 @@ export default function TypingPageUI({
         mode={mode}
         contentSource={contentSource}
         customText={customText}
+        onFinish={() => setIsFinished(true)}
       />
 
       <input
         id="typingText"
         ref={inputRef}
         autoFocus
+        disabled={isFinished}
         className="absolute w-0 h-0 opacity-0"
         value={value}
         onChange={handleInput}
@@ -96,6 +102,7 @@ export default function TypingPageUI({
       />
 
       <Keyboard className="w-[60vw] h-[30vw] mx-10" keyblink={keytype} />
-    </main>
+      </main>
+    </>
   );
 }
