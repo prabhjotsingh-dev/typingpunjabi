@@ -21,6 +21,7 @@ interface ResultPageUIProps {
   againLink: string;
   nextLink?: string;
   listLabel?: string;
+  againLabel?: string;
 }
 
 export default function ResultPageUI({
@@ -30,7 +31,8 @@ export default function ResultPageUI({
   listLink,
   againLink,
   nextLink,
-  listLabel = "Lessons"
+  listLabel = "Lessons",
+  againLabel = "Play Again"
 }: ResultPageUIProps) {
   const stars = GetStars(accuracy);
 
@@ -75,7 +77,7 @@ export default function ResultPageUI({
             >
               <Link href={againLink} className="flex gap-2">
                 <RotateCcw className="w-4 h-4 md:mx-1.5 opacity-50" />
-                Again
+                {againLabel}
               </Link>
             </Button>
             {nextLink && (

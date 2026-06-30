@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { addTypingResult } from "@/supabaseFunctions/addOrUpdateData";
 
 function Timer(data) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
@@ -13,6 +14,7 @@ function Timer(data) {
   const mode = data.mode || "lesson";
   const contentSource = data.contentSource || "lesson";
   const customText = data.customText || null;
+  const onFinish = data.onFinish;
 
   useEffect(() => {
     if (data.start && !isFinished) {
@@ -26,6 +28,8 @@ function Timer(data) {
   useEffect(() => {
     if (time >= limit && !isFinished) {
       setIsFinished(true);
+      const paramsString = searchParams.toString();
+      onFinish?.();
       const putdata = async () => {
         const totalChars = data.correct + data.incorrect;
         const wpm = Math.round(totalChars / (time / 60)) || 0;
@@ -49,7 +53,7 @@ function Timer(data) {
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
-        router.push(`${pathname}/result`);
+        router.push(`${pathname}/result${paramsString ? `?${paramsString}` : ''}`);
       };
       putdata();
     }
