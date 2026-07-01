@@ -31,15 +31,17 @@ function Timer(data) {
       const paramsString = searchParams.toString();
       onFinish?.();
       const putdata = async () => {
+        const typedWords = data.value?.trim() ? data.value.trim().split(/\s+/).length : 0;
         const totalChars = data.correct + data.incorrect;
-        const wpm = Math.round(totalChars / (time / 60)) || 0;
+        const cpm = Math.round(totalChars / (time / 60)) || 0;
+        const wpm = Math.round(typedWords / (time / 60)) || 0;
         const accuracy = totalChars > 0 ? (data.correct / totalChars) * 100 : 0;
         try {
           await addTypingResult({
             p_accuracy: accuracy,
             p_content_source: contentSource,
             p_correct_chars: data.correct,
-            p_cpm: totalChars,
+            p_cpm: cpm,
             p_custom_text: customText,
             p_duration_seconds: time,
             p_incorrect_chars: data.incorrect,

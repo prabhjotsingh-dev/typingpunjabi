@@ -31,7 +31,7 @@ class GetData {
       return [];
     }
 
-    return data as LessonData[];
+    return (data as LessonData[]) || [];
   }
 
   static async getLessonContent(lesson_id: string) {
