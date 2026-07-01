@@ -73,6 +73,7 @@ export default function TypingPageUI({
         mode={mode}
         contentSource={contentSource}
         customText={customText}
+        value={value}
         onFinish={() => setIsFinished(true)}
       />
 

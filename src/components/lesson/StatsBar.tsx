@@ -10,6 +10,7 @@ interface StatsBarProps {
   mode?: string;
   contentSource?: string;
   customText?: string | null;
+  value: string;
   onFinish?: () => void;
 }
 
@@ -22,6 +23,7 @@ export function StatsBar({
   mode,
   contentSource,
   customText,
+  value,
   onFinish,
 }: StatsBarProps) {
   return (
@@ -39,6 +41,7 @@ export function StatsBar({
         mode={mode}
         contentSource={contentSource}
         customText={customText}
+        value={value}
         onFinish={onFinish}
         timeClass="font-mono text-sm md:text-base font-medium text-foreground/80 flex items-center border-l border-border pl-4 capitalize m-0"
         speedClass="font-mono text-sm md:text-base font-medium text-foreground/80 flex items-center border-l border-border pl-4 capitalize m-0"
