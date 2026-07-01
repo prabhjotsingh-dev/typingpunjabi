@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUpdatePasswordSteps } from "@/hooks/useUpdatePasswordSteps";
 import Routes from "@/comman/routes";
+import { VALIDATION } from "@/comman/validation";
 
 const EmailForm = ({ onSubmit, isPending }: { onSubmit: (email: string) => void; isPending: boolean }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<{ email: string }>();
@@ -21,10 +22,7 @@ const EmailForm = ({ onSubmit, isPending }: { onSubmit: (email: string) => void;
         error={errors.email?.message}
         {...register("email", {
           required: "Email is required",
-          pattern: {
-            value: /^\S+@\S+\.\S+$/,
-            message: "Please enter a valid email",
-          },
+          ...VALIDATION.email,
         })}
       />
       <Button type="submit" className="w-full" disabled={isPending}>
@@ -59,9 +57,9 @@ const OtpForm = ({ onSubmit, isPending, successMessage, onUseDifferentEmail }: {
         {isPending ? "Verifying..." : "Verify Code"}
       </Button>
       <div className="flex flex-col mt-2 space-y-2 text-center">
-        <button type="button" onClick={onUseDifferentEmail} className="text-sm italic font-medium text-primary hover:underline">
+        <Button type="button" variant="link" onClick={onUseDifferentEmail} className="text-sm italic font-medium">
           Use a different email
-        </button>
+        </Button>
         <div className="text-sm">
           <span className="text-muted-foreground">Remember your password? </span>
           <Link href={Routes.login} className="text-primary hover:underline">Sign in</Link>
@@ -85,7 +83,7 @@ const PasswordForm = ({ onSubmit, isPending, successMessage }: { onSubmit: (pass
         error={errors.password?.message}
         {...register("password", {
           required: "Password is required",
-          minLength: { value: 6, message: "Password must be at least 6 characters" },
+          ...VALIDATION.password,
         })}
       />
       <Input
@@ -98,7 +96,7 @@ const PasswordForm = ({ onSubmit, isPending, successMessage }: { onSubmit: (pass
         error={errors.confirmPassword?.message}
         {...register("confirmPassword", {
           required: "Please confirm your password",
-          validate: (value) => value === watch("password") || "Passwords do not match",
+          ...VALIDATION.confirmPassword(watch("password")),
         })}
       />
       <Button type="submit" className="w-full" disabled={isPending || successMessage !== ""}>

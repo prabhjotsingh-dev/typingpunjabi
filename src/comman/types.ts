@@ -18,6 +18,7 @@ export type LessonData = {
 export type LoginForm = {
   email: string;
   password: string;
+  remember?: boolean;
 };
 
 export type SignUpForm = {
