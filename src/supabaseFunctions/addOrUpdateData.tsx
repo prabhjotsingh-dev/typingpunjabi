@@ -2,6 +2,7 @@
 import { createServerClient } from "@/supabaseServices/clients/serverClient";
 import { redirect } from "next/navigation";
 import { AddTypingResultArgs, ThemePreference } from "@/comman/types";
+import type { Json } from "@/supabaseServices/database.types";
 class AddOrUpdateData {
   private static async getAuth() {
     const supabase = await createServerClient();
@@ -50,17 +51,21 @@ class AddOrUpdateData {
       throw new Error(error.message || 'RPC call failed');
     }
 
-    const result = data as any;
-    if (result && result.success === false) {
-      throw new Error(result.error || 'Profile update failed');
+    const result = data as Json;
+    if (!result || typeof result !== "object" || Array.isArray(result)) return null;
+
+    if (result.success === false) {
+      throw new Error((result.error as string) || "Profile update failed");
     }
 
-  return result.updated as Partial<{
-    username: string;
-    theme_preference: ThemePreference;
-    is_profile_public: boolean;
-    show_on_leaderboard: boolean;
-  }>;
+    if (!result.updated) return null;
+
+    return result.updated as Partial<{
+      username: string;
+      theme_preference: ThemePreference;
+      is_profile_public: boolean;
+      show_on_leaderboard: boolean;
+    }>;
 }}
 export const addTypingResult = AddOrUpdateData.addTypingResult;
 export const updateProfileFields = AddOrUpdateData.updateProfileFields;

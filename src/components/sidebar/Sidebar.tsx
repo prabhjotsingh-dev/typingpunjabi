@@ -83,7 +83,7 @@ export function Sidebar() {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden sticky flex-col border-r backdrop-blur-xl top-16 md:flex h-[calc(100svh-3.5rem)] bg-glass-bg/95 border-glass-border",
+          "hidden sticky flex-col border-r backdrop-blur-xl top-14 md:flex h-[calc(100svh-3.5rem)] bg-glass-bg/95 border-glass-border",
           "transition-all duration-300 ease-out",
           isCollapsed ? "w-12" : "w-64",
         )}
