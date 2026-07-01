@@ -29,7 +29,7 @@ const fields = [
     variant: "email",
     placeholder: "m@example.com",
     label: "Email",
-    autoComplete: "usern email",
+    autoComplete: "user email",
   },
   {
     id: "password",
@@ -142,7 +142,8 @@ export default function Signup() {
               error={errors[id]?.message}
               {...register(id, {
                 required: `${label} is required`,
-                ...(id === "confirmPassword" && VALIDATION.confirmPassword(password)),
+                ...(id === "confirmPassword" &&
+                  VALIDATION.confirmPassword(password)),
                 ...(id === "email" && VALIDATION.email),
                 ...(id === "password" && VALIDATION.password),
               })}
