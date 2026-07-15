@@ -22,6 +22,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import Routes from "@/comman/routes";
+import { AnimateNavigation } from "@/components/common/AnimateNavigation";
 
 const menuItems = [
   {
@@ -165,33 +166,30 @@ export function SidebarContent({
               <div
                 className={`${isCollapsed ? "pl-0" : "pl-2"} mt-1 space-y-0.5`}
               >
-                {section.children.map((item) => {
-                  const isSelected = selectedValue === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSelect(item.id, item.route)}
-                      className={cn(
-                        "flex gap-3 items-center py-2 w-full text-left rounded-xl transition-all duration-200",
-                        isSelected
-                          ? "font-medium bg-primary-dark/10 text-primary-dark"
-                          : "text-text-muted hover:text-text hover:bg-glass-hover",
-                        isCollapsed ? "px-2" : "px-3",
-                      )}
-                    >
-                      <item.Icon
-                        className={cn(
-                          "w-4 h-4 flex-shrink-0",
-                          isSelected && "text-primary-dark",
-                        )}
-                      />
-                      <span className="text-sm">{item.label}</span>
-                      {isSelected && (
-                        <ArrowRight className="ml-auto w-4 h-4 text-primary-dark" />
-                      )}
-                    </button>
-                  );
-                })}
+                <AnimateNavigation
+                  items={section.children.map((item) => ({
+                    id: item.id,
+                    label: isCollapsed ? null : item.label,
+                    icon: item.Icon,
+                    suffix: (active: boolean) =>
+                      active && !isCollapsed ? (
+                        <ArrowRight className="w-4 h-4 text-primary-dark transition-transform motion-preset-slide-left motion-duration-200" />
+                      ) : null,
+                    onClick: () => handleSelect(item.id, item.route),
+                  }))}
+                  orientation="vertical"
+                  activeIdOrHref={selectedValue}
+                  enableIndicator={!isCollapsed}
+                  indicatorClassName="bg-primary-dark/10 border border-primary-light/40 shadow-sm"
+                  itemClassName={cn(
+                    "py-2 rounded-xl transition-colors duration-200",
+                    isCollapsed ? "px-2 justify-center" : "px-3"
+                  )}
+                  activeItemClassName="font-medium text-primary-dark"
+                  inactiveItemClassName="text-text-muted hover:text-text hover:bg-glass-hover/60"
+                  staggerDelayMs={40}
+                  entranceAnimationClass="motion-preset-slide-right motion-duration-200"
+                />
               </div>
             </CollapsibleContent>
           </Collapsible>
