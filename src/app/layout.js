@@ -1,5 +1,6 @@
 import "./globals.css";
 import React from "react";
+import { Analytics } from "@vercel/analytics/react";
 import Navbar from "@/components/navbar/Navbar";
 import AuthProvider from "@/supabaseServices/AuthProvider";
 import { Toaster } from "@/components/ui/sonner";
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
           </ThemeProvider>
         </AuthProvider>
         <Toaster richColors position="top-right" />
+        <Analytics />
       </body>
     </html>
   );
