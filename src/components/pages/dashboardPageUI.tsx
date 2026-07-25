@@ -69,7 +69,7 @@ export default function DashboardPageUI({
                 }
                 className="mt-1 h-6 tracking-wide uppercase rounded-full md:mt-2"
               >
-                {data.account_type === "registered" ? "loged In" : "Guest"}
+                {data.account_type === "registered" ? "Logged In" : "Guest"}
               </Badge>
             </div>
             <p className="text-lg tracking-tight text-text-muted">
@@ -88,7 +88,7 @@ export default function DashboardPageUI({
                   <Settings className="w-4 h-4 text-text-muted" />
                   <Select
                     value={data.theme_preference}
-                    onValueChange={(v: "dark" | "light") =>
+                    onValueChange={(v: "dark" | "light" | "system") =>
                       setData({ ...data, theme_preference: v })
                     }
                   >
@@ -98,6 +98,7 @@ export default function DashboardPageUI({
                     <SelectContent>
                       <SelectItem value="dark">Dark Theme</SelectItem>
                       <SelectItem value="light">Light Theme</SelectItem>
+                      <SelectItem value="system">System</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

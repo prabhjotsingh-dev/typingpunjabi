@@ -55,6 +55,7 @@ export function Sidebar() {
     <>
       {/* Mobile Overlay */}
       <div
+        aria-hidden={isCollapsed}
         className={cn(
           "fixed inset-x-0 bottom-0 top-14 z-40 backdrop-blur-sm transition-opacity duration-300 bg-black/50 md:hidden",
           !isCollapsed ? "opacity-100" : "opacity-0 pointer-events-none",
@@ -82,7 +83,7 @@ export function Sidebar() {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          "hidden sticky flex-col border-r backdrop-blur-xl top-16 md:flex h-[calc(100svh-3.5rem)] bg-glass-bg/95 border-glass-border",
+          "hidden sticky flex-col border-r backdrop-blur-xl top-14 md:flex h-[calc(100svh-3.5rem)] bg-glass-bg/95 border-glass-border",
           "transition-all duration-300 ease-out",
           isCollapsed ? "w-12" : "w-64",
         )}

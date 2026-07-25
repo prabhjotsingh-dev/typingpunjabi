@@ -2,30 +2,59 @@
 
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/common/Input";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabaseServices/clients/browserClient";
+import { useAuth } from "@/supabaseServices/AuthProvider";
+import FullPageLoader from "@/components/common/FullPageLoader";
 import Routes from "@/comman/routes";
 
-type LoginForm = {
-  email: string;
-  password: string;
-};
+import { LoginForm } from "@/comman/types";
+import { VALIDATION } from "@/comman/validation";
+
+const LS_KEY = "typingpunjabi.auth.rememberedEmail";
 
 const Login = () => {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<LoginForm>();
+  } = useForm<LoginForm>({
+    defaultValues: { remember: true },
+  });
+  const remember = watch("remember");
 
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState("");
 
+  useEffect(() => {
+    if (!loading && user && !user.is_anonymous) {
+      router.replace(Routes.home);
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(LS_KEY);
+    if (saved) {
+      setValue("email", saved);
+      setValue("remember", true);
+    }
+  }, [setValue]);
+
   const onSubmit = (data: LoginForm) => {
+    if (data.remember) {
+      localStorage.setItem(LS_KEY, data.email);
+    } else {
+      localStorage.removeItem(LS_KEY);
+    }
+
     setServerError("");
     startTransition(async () => {
       const supabase = createClient();
@@ -37,11 +66,19 @@ const Login = () => {
       if (error) {
         setServerError(error.message);
       } else {
-        router.push("/");
+        router.push(Routes.home);
         router.refresh();
       }
     });
   };
+
+  if (loading) {
+    return <FullPageLoader message="Checking authentication…" />;
+  }
+
+  if (user && !user.is_anonymous) {
+    return <FullPageLoader message="Redirecting…" />;
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen via-sky-50 to-indigo-100 bg-linear-to-br from-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
@@ -65,20 +102,18 @@ const Login = () => {
           className="space-y-4"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
+          {...(remember ? { method: "post", action: "#" } : {})}
         >
           <Input
             id="email"
             variant="email"
             label="Email"
             placeholder="Enter your email"
-            autoComplete="email"
+            autoComplete={remember ? "user email" : "off"}
             error={errors.email?.message}
             {...register("email", {
               required: "Email is required",
-              pattern: {
-                value: /^\S+@\S+\.\S+$/,
-                message: "Please enter a valid email",
-              },
+              ...VALIDATION.email,
             })}
           />
 
@@ -87,14 +122,11 @@ const Login = () => {
             variant="password"
             label="Password"
             placeholder="••••••••"
-            autoComplete="current-password"
+            autoComplete={remember ? "user password" : "off"}
             error={errors.password?.message}
             {...register("password", {
               required: "Password is required",
-              pattern: {
-                value: /^.{8,}$/,
-                message: "Password should contain at least 8 characters",
-              },
+              ...VALIDATION.password,
             })}
           />
 
@@ -103,9 +135,8 @@ const Login = () => {
               <input
                 id="remember"
                 type="checkbox"
-                name="remember"
                 className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-                defaultChecked
+                {...register("remember")}
               />
               <label
                 htmlFor="remember"
@@ -115,7 +146,7 @@ const Login = () => {
               </label>
             </div>
             <Link
-              href={`${Routes.forgetPassword}`}
+              href={`${Routes.forgotPassword}`}
               className="text-sm text-primary hover:underline"
             >
               Forgot password?
@@ -129,7 +160,7 @@ const Login = () => {
 
         <div className="text-sm text-center">
           <span className="text-muted-foreground">Don't have an account? </span>
-          <Link href="/signup" className="text-primary hover:underline">
+          <Link href={Routes.signup} className="text-primary hover:underline">
             Sign up
           </Link>
         </div>

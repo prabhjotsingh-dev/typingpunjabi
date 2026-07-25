@@ -4,12 +4,16 @@ import ResultPageUI from "@/components/pages/resultPageUI";
 // TODO: Replace with specific speed test data fetching function if necessary
 import { getLessonResult } from "@/supabaseFunctions/getData";
 
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: SearchParams;
 }
 
-async function TypingSpeedTestResult({ params }: PageProps) {
+async function TypingSpeedTestResult({ params, searchParams }: PageProps) {
   const id = (await params).id;
+  const resolvedSearchParams = await searchParams;
   let data;
 
   try {
@@ -30,14 +34,23 @@ async function TypingSpeedTestResult({ params }: PageProps) {
   const speed = data.wpm ?? 0;
   const accuracy = data.accuracy ?? 0;
 
+  const timeParam =
+    typeof resolvedSearchParams.time === "string"
+      ? resolvedSearchParams.time
+      : null;
+  const againLink = timeParam
+    ? `${Routes.toTypingSpeedTest(id)}?time=${timeParam}`
+    : Routes.toTypingSpeedTest(id);
+
   return (
     <ResultPageUI
       speed={speed}
       accuracy={accuracy}
       lesson_title={`${data.lesson_title}`}
       listLink={Routes.typingSpeedTest}
-      againLink={Routes.toTypingSpeedTest(id)}
+      againLink={againLink}
       listLabel="Tests"
+      againLabel="Play Again"
     />
   );
 }

@@ -69,7 +69,7 @@ export function SidebarContent({
         targetRoute = `${route}?stage=${value}`;
       }
       
-      if (pathname !== route || (route === Routes.lessons && searchParams.get("plan") !== value)) {
+      if (pathname !== route || (route === Routes.lessons && searchParams.get("stage") !== value)) {
         router.push(targetRoute);
       }
     }

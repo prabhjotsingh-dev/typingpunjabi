@@ -1,15 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { addTypingResult } from "@/supabaseFunctions/addOrUpdateData";
 
 function Timer(data) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [time, setTime] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   const limit = data.timeLimit || 30;
+  const mode = data.mode || "lesson";
+  const contentSource = data.contentSource || "lesson";
+  const customText = data.customText || null;
+  const onFinish = data.onFinish;
 
   useEffect(() => {
     if (data.start && !isFinished) {
@@ -23,29 +28,34 @@ function Timer(data) {
   useEffect(() => {
     if (time >= limit && !isFinished) {
       setIsFinished(true);
+      const paramsString = searchParams.toString();
+      onFinish?.();
       const putdata = async () => {
+        const typedWords = data.value?.trim() ? data.value.trim().split(/\s+/).length : 0;
         const totalChars = data.correct + data.incorrect;
-        const wpm = Math.round(totalChars / (time / 60)) || 0;
+        const cpm = Math.round(totalChars / (time / 60)) || 0;
+        const wpm = Math.round(typedWords / (time / 60)) || 0;
         const accuracy = totalChars > 0 ? (data.correct / totalChars) * 100 : 0;
         try {
           await addTypingResult({
             p_accuracy: accuracy,
-            p_content_source: "lesson",
+            p_content_source: contentSource,
             p_correct_chars: data.correct,
-            p_cpm: totalChars,
+            p_cpm: cpm,
+            p_custom_text: customText,
             p_duration_seconds: time,
             p_incorrect_chars: data.incorrect,
             p_is_completed: true,
             p_lesson_id: data.id,
             p_lesson_title: data.title || "",
-            p_mode: "lesson",
+            p_mode: mode,
             p_total_chars: totalChars,
             p_wpm: wpm,
           });
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
-        router.push(`${pathname}/result`);
+        router.push(`${pathname}/result${paramsString ? `?${paramsString}` : ''}`);
       };
       putdata();
     }
@@ -53,8 +63,12 @@ function Timer(data) {
     time,
     isFinished,
     data.id,
+    data.title,
     data.correct,
     data.incorrect,
+    data.mode,
+    data.contentSource,
+    data.customText,
     router,
     pathname,
     limit,

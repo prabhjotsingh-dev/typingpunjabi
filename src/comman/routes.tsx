@@ -3,7 +3,7 @@ export default class Routes {
   static home = "/";
   static login = "/login";
   static signup = "/signup";
-  static forgetPassword = "/update-password";
+  static forgotPassword = "/update-password";
   static updatePassword = "/update-password";
   static about = "/about";
   static contact = "/contact";

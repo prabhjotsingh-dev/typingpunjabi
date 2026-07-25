@@ -18,10 +18,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-interface PracticeConfiguratorProps {
-  lessonId: string;
-}
-
+import Routes from "@/comman/routes";
+import { PracticeConfiguratorProps } from "@/comman/types";
+import { getLearnedAlphabets } from "@/supabaseFunctions/getData";
 const PRACTICE_TYPES = [
   { id: "learned", label: "Learned Letters" },
   { id: "homerow", label: "Home Row" },
@@ -33,7 +32,16 @@ const PRACTICE_TYPES = [
 
 
 
-export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
+const PRACTICE_TYPE_TO_GROUP: Record<string, string> = {
+  homerow: "home row",
+  toprow: "top row",
+  bottomrow: "bottom row",
+  all: "all-alphabets",
+  learned: "from-completed-lessons",
+  custom: "custom",
+};
+
+export function PracticeConfigurator({ lessons }: PracticeConfiguratorProps) {
   const router = useRouter();
   const [selectedMinutes, setSelectedMinutes] = useState<number>(1);
   const [customMinutes, setCustomMinutes] = useState<string>("");
@@ -61,7 +69,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
     return Math.floor(parsed * 60);
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
     let timeInSeconds = 60;
     if (selectedMinutes === 0) {
       timeInSeconds = parseTime(customMinutes);
@@ -72,6 +80,14 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
     if (practiceType === "custom" && selectedLetters.length === 0) {
       toast.error("Please select at least one letter for custom practice.");
       return;
+    }
+
+    if (practiceType === "learned") {
+      const learnedLetters = await getLearnedAlphabets();
+      if (!learnedLetters) {
+        toast.error("No learned alphabets found. Complete some lessons first and try again.");
+        return;
+      }
     }
 
     const searchParams = new URLSearchParams({
@@ -92,7 +108,12 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
       searchParams.set("letters", lettersToPractice.join(","));
     }
 
-    router.push(`/typing-practice/${lessonId}?${searchParams.toString()}`);
+    const targetGroup = PRACTICE_TYPE_TO_GROUP[practiceType];
+    const matchingLesson = targetGroup
+      ? lessons.find((l) => l.group === targetGroup)
+      : null;
+    const lessonId = matchingLesson?.id || lessons[0]?.id;
+    router.push(`${Routes.toTypingPractice(lessonId)}?${searchParams.toString()}`);
   };
 
   const formatDisplayTime = () => {
@@ -149,6 +170,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
             practiceType={practiceType}
             selectedLetters={selectedLetters}
             toggleLetter={toggleLetter}
+            setSelectedLetters={setSelectedLetters}
           />
         </div>
       </div>
@@ -229,7 +251,7 @@ export function PracticeConfigurator({ lessonId }: PracticeConfiguratorProps) {
             <Button
               onClick={handleStart}
               size="lg"
-              className="w-full h-12 rounded-2xl text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
+              className="mt-2 w-full h-12 rounded-2xl text-sm font-medium transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
             >
               Start Test
               <ArrowRight className="ml-2 w-4 h-4" />

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import DashboardCard from "@/components/common/DashboardCard";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { GetStart } from "@/comman/utils";
+import { GetStars } from "@/comman/utils";
 
 interface ResultPageUIProps {
   speed: number;
@@ -21,6 +21,7 @@ interface ResultPageUIProps {
   againLink: string;
   nextLink?: string;
   listLabel?: string;
+  againLabel?: string;
 }
 
 export default function ResultPageUI({
@@ -30,9 +31,10 @@ export default function ResultPageUI({
   listLink,
   againLink,
   nextLink,
-  listLabel = "Lessons"
+  listLabel = "Lessons",
+  againLabel = "Play Again"
 }: ResultPageUIProps) {
-  const stars = GetStart(accuracy);
+  const stars = GetStars(accuracy);
 
   const titleText =
     stars === 3 ? "Outstanding!" : stars === 2 ? "Great Job!" : "Good Effort!";
@@ -75,7 +77,7 @@ export default function ResultPageUI({
             >
               <Link href={againLink} className="flex gap-2">
                 <RotateCcw className="w-4 h-4 md:mx-1.5 opacity-50" />
-                Again
+                {againLabel}
               </Link>
             </Button>
             {nextLink && (

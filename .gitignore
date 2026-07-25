@@ -9,3 +9,7 @@ supabase
 commanUseCommands.txt
 tsconfig.tsbuildinfo
 opencode.json
+issuesinapp.txt
+.opencode
+.mcp-output
+.playwright-mcp

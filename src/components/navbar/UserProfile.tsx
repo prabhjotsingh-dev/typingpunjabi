@@ -7,6 +7,8 @@ interface UserProfileProps {
   email: string | undefined;
   handleLogout: () => void;
   variant?: "desktop" | "mobile";
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({
@@ -14,7 +16,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
   userDisplayName,
   email,
   handleLogout,
-  variant = "desktop"
+  variant = "desktop",
+  open,
+  onOpenChange,
 }) => {
   if (variant === "mobile") {
     return (
@@ -39,7 +43,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger className="relative group pl-1.5 focus-visible:outline-none cursor-pointer">
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-dark/10 to-accent-light/10 rounded-xl blur-[1px] opacity-0 group-hover:opacity-90 cubic-transition"></div>
         <div className="flex relative justify-center items-center w-8 h-8 text-sm font-bold rounded-xl border shadow-sm bg-primary-dark/10 text-primary-dark border-glass-border cubic-transition group-hover:scale-105 group-hover:rotate-6">
