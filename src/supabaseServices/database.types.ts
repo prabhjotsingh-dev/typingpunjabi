@@ -101,6 +101,27 @@ export type Database = {
         }
         Relationships: []
       }
+      paragraph_examples: {
+        Row: {
+          content: string
+          created_at: string
+          description: Database["public"]["Enums"]["lesson_group"]
+          id: number
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          description: Database["public"]["Enums"]["lesson_group"]
+          id?: number
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          description?: Database["public"]["Enums"]["lesson_group"]
+          id?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           account_type: Database["public"]["Enums"]["profile_type"]
@@ -131,6 +152,27 @@ export type Database = {
           theme_preference?: Database["public"]["Enums"]["profile_theme"]
           updated_at?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      stop_db_to_pause: {
+        Row: {
+          created_at: string
+          id: number
+          times_table_updated: number
+          updated_at: string
+        }
+        Insert: {
+          created_at: string
+          id?: number
+          times_table_updated: number
+          updated_at: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          times_table_updated?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -398,6 +440,7 @@ export type Database = {
           wpm: number
         }[]
       }
+      keep_db_alive: { Args: never; Returns: undefined }
       update_profile_fields: {
         Args: {
           p_is_profile_public?: boolean
