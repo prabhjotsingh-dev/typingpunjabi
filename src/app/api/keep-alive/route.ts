@@ -19,5 +19,11 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  const { error: lessonsError } = await supabase.from('lessons').select('id').limit(1)
+
+  if (lessonsError) {
+    return NextResponse.json({ error: lessonsError.message }, { status: 500 })
+  }
+
   return NextResponse.json({ ok: true })
 }
