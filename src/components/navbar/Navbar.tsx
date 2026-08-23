@@ -9,6 +9,7 @@ import { useAuth } from "@/supabaseServices/AuthProvider";
 import { createClient } from "@/supabaseServices/clients/browserClient";
 
 import { CustomLink } from "../common/Link";
+import { AnimateNavigation } from "../common/AnimateNavigation";
 import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
 import { ModeToggle } from "../theme/toggleTheme";
@@ -87,22 +88,15 @@ const Navbar: React.FC = () => {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1.5 text-sm font-medium ml-auto">
-          {navItems.map((item, index) => (
-            <CustomLink
-              key={item.href}
-              href={item.href}
-              variant="navLink"
-              isActive={pathname === item.href}
-              style={{ animationDelay: `${index * 80}ms` }}
-            >
-              {item.label}
-            </CustomLink>
-          ))}
-            <ModeToggle />
-
+        <div className="hidden md:flex items-center gap-1.5 ml-auto">
+          <AnimateNavigation
+            items={navItems}
+            orientation="horizontal"
+            enableIndicator={true}
+          />
+          <ModeToggle />
           <span className="h-4 w-[1px] bg-border mx-2"></span>
-        </nav>
+        </div>
 
         <div className="hidden gap-2 items-center ml-auto sm:flex md:ml-0">
           {!loading && !isLoggedInRegisteredUser ? (
@@ -163,19 +157,18 @@ const Navbar: React.FC = () => {
         }`}
       >
         <div className="flex flex-col gap-4 p-4">
-          <nav className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <CustomLink
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="navLinkMobile"
-                isActive={pathname === item.href}
-              >
-                {item.label}
-              </CustomLink>
-            ))}
-          </nav>
+          <AnimateNavigation
+            items={navItems.map((item) => ({
+              ...item,
+              onClick: () => setIsMobileMenuOpen(false),
+            }))}
+            orientation="vertical"
+            enableIndicator={true}
+            indicatorClassName="bg-primary-dark/10 rounded-xl"
+            itemClassName="px-4 py-3 text-base font-medium"
+            activeItemClassName="font-bold text-primary-dark"
+            inactiveItemClassName="text-text-muted hover:bg-glass-hover hover:text-text"
+          />
 
           <div className="flex items-center justify-between pt-4 border-t border-border/50">
             <span className="text-xs font-medium text-text-muted">Theme</span>

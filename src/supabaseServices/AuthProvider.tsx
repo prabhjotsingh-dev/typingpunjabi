@@ -24,50 +24,15 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
     async function initAuth() {
       const { data: { session } } = await supabase.auth.getSession()
-      if (session) {
-        setUser(session.user)
-        setLoading(false)
-        return
-      }
-
-      const { data, error } = await supabase.auth.signInAnonymously()
-      if (error || !data.user) {
-        console.error('Anonymous sign-in failed:', error?.message)
-        setLoading(false)
-        return
-      }
-      
-      setUser(data.user)
+      setUser(session?.user ?? null)
       setLoading(false)
-      
-      await supabase.from('profiles').upsert({
-        id: data.user.id,
-        account_type: 'guest',
-      }, { onConflict: 'id' })
     }
 
     initAuth()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session) {
-        setUser(session.user)
-        setLoading(false)
-      } else {
-        setUser(null)
-        setLoading(false)
-        if (event === 'SIGNED_OUT') {
-          setLoading(true)
-          const { data, error } = await supabase.auth.signInAnonymously()
-          if (!error && data.user) {
-            setUser(data.user)
-            await supabase.from('profiles').upsert({
-              id: data.user.id,
-              account_type: 'guest',
-            }, { onConflict: 'id' })
-          }
-          setLoading(false)
-        }
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
     })
 
     return () => {
