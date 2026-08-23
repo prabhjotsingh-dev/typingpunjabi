@@ -1,7 +1,7 @@
-import { getLessonResult } from "@/supabaseFunctions/getData";
-import { Loader2 } from "lucide-react";
+import { getLessonResult, getLessons } from "@/supabaseFunctions/getData";
 import Routes from "@/comman/routes";
 import ResultPageUI from "@/components/pages/resultPageUI";
+import GuestResult from "@/components/common/GuestResult";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -10,19 +10,39 @@ interface PageProps {
 async function Result({ params }: PageProps) {
   const id = (await params).id;
   let data;
+  let lessons: Awaited<ReturnType<typeof getLessons>> = [];
 
   try {
-    data = await getLessonResult(id);
+    [data, lessons] = await Promise.all([
+      getLessonResult(id),
+      getLessons(),
+    ]);
   } catch (error) {
+    data = null;
+    lessons = [];
+  }
+
+  const current = lessons?.find((l) => l.id === id);
+  const next = current
+    ? lessons
+        .filter(
+          (l) =>
+            l.stage === current.stage &&
+            l.sequence_number > current.sequence_number
+        )
+        .sort((a, b) => a.sequence_number - b.sequence_number)[0]
+    : undefined;
+  const nextLink = next ? Routes.toLesson(next.id) : undefined;
+
+  if (!data) {
     return (
-      <div className="h-[calc(100svh-3.5rem)] flex items-center justify-center bg-background text-muted-foreground font-sans overflow-hidden">
-        <div className="flex flex-col gap-4 items-center">
-          <Loader2 className="w-8 h-8 opacity-50 animate-spin" />
-          <p className="text-sm font-medium tracking-tight">
-            Error loading result
-          </p>
-        </div>
-      </div>
+      <GuestResult
+        lessonId={id}
+        listLink={Routes.lessons}
+        againLink={Routes.toLesson(id)}
+        nextLink={nextLink}
+        listLabel="Lessons"
+      />
     );
   }
 
@@ -36,7 +56,7 @@ async function Result({ params }: PageProps) {
       lesson_title={data.lesson_title}
       listLink={Routes.lessons}
       againLink={Routes.toLesson(id)}
-      nextLink={Routes.nextLesson(id)}
+      nextLink={nextLink}
       listLabel="Lessons"
     />
   );

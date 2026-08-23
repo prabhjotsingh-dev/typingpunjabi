@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getLessons } from "@/supabaseFunctions/getData";
-import LessonsPageUI from "@/components/pages/lessonsPageUI";
+import LessonsWrapper from "@/components/pages/LessonsWrapper";
 import { Constants } from "@/supabaseServices/database.types";
 
 import { Stage } from "@/comman/types";
@@ -21,7 +21,7 @@ export default async function Lesson({ searchParams }: { searchParams: SearchPar
 
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-[calc(100svh-4rem)]">Loading lessons...</div>}>
-      <LessonsPageUI lessonsData={lessonsData} stage={stage} />
+      <LessonsWrapper lessonsData={lessonsData} stage={stage} />
     </Suspense>
   );
 }

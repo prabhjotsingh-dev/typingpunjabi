@@ -16,9 +16,6 @@ export default class Routes {
   static lessonResult(id: string) {
     return `/lesson/${id}/result`;
   }
-  static nextLesson(id: string) {
-    return `/lesson/${id}/nextlesson`;
-  }
   static toTypingSpeedTest(id: string) {
     return `/typing-speed-test/${id}`;
   }

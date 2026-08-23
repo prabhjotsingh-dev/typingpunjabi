@@ -1,6 +1,5 @@
 "use server";
 import { createServerClient } from "@/supabaseServices/clients/serverClient";
-import { redirect } from "next/navigation";
 import { AddTypingResultArgs, ThemePreference } from "@/comman/types";
 import type { Json } from "@/supabaseServices/database.types";
 class AddOrUpdateData {
@@ -9,9 +8,15 @@ class AddOrUpdateData {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     return { supabase, user, authError };
+    return { supabase, user, authError };
   }
 
   static async addTypingResult(params: AddTypingResultArgs) {
+    const { supabase, user, authError } = await AddOrUpdateData.getAuth();
+
+    if (authError || !user) {
+      return { error: 'UNAUTHORIZED' };
+    }
     const { supabase, user, authError } = await AddOrUpdateData.getAuth();
 
     if (authError || !user) {
@@ -39,7 +44,7 @@ class AddOrUpdateData {
     const { supabase, user, authError } = await AddOrUpdateData.getAuth();
 
     if (authError || !user) {
-      redirect('/login');
+      return null;
     }
 
     const { data, error } = await supabase.rpc('update_profile_fields', {
