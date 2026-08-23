@@ -1,6 +1,6 @@
-import { Loader2 } from "lucide-react";
 import Routes from "@/comman/routes";
 import ResultPageUI from "@/components/pages/resultPageUI";
+import GuestResult from "@/components/common/GuestResult";
 // TODO: Replace with specific speed test data fetching function if necessary
 import { getLessonResult } from "@/supabaseFunctions/getData";
 
@@ -17,22 +17,10 @@ async function TypingSpeedTestResult({ params, searchParams }: PageProps) {
   let data;
 
   try {
-   data = await getLessonResult(id);
+    data = await getLessonResult(id);
   } catch (error) {
-    return (
-      <div className="h-[calc(100svh-3.5rem)] flex items-center justify-center bg-background text-muted-foreground font-sans overflow-hidden">
-        <div className="flex flex-col gap-4 items-center">
-          <Loader2 className="w-8 h-8 opacity-50 animate-spin" />
-          <p className="text-sm font-medium tracking-tight">
-            Error loading result
-          </p>
-        </div>
-      </div>
-    );
+    data = null;
   }
-
-  const speed = data.wpm ?? 0;
-  const accuracy = data.accuracy ?? 0;
 
   const timeParam =
     typeof resolvedSearchParams.time === "string"
@@ -41,6 +29,21 @@ async function TypingSpeedTestResult({ params, searchParams }: PageProps) {
   const againLink = timeParam
     ? `${Routes.toTypingSpeedTest(id)}?time=${timeParam}`
     : Routes.toTypingSpeedTest(id);
+
+  if (!data) {
+    return (
+      <GuestResult
+        lessonId={id}
+        listLink={Routes.typingSpeedTest}
+        againLink={againLink}
+        listLabel="Tests"
+        againLabel="Play Again"
+      />
+    );
+  }
+
+  const speed = data.wpm ?? 0;
+  const accuracy = data.accuracy ?? 0;
 
   return (
     <ResultPageUI

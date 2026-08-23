@@ -1,5 +1,5 @@
 import { getDashboardData, getLessonstats } from "@/supabaseFunctions/getData";
-import DashboardPageUI from "@/components/pages/dashboardPageUI";
+import DashboardWrapper from "@/components/pages/DashboardWrapper";
 
 export { metadata } from '@/metadata/dashboard';
 
@@ -10,8 +10,8 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <DashboardPageUI
-      initialData={dashData || {}}
+    <DashboardWrapper
+      initialData={dashData || null}
       lessonsHistory={lessonsData || []}
     />
   );

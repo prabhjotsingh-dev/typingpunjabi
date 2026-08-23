@@ -1,25 +1,44 @@
 "use server";
 import { createServerClient } from "@/supabaseServices/clients/serverClient";
 import { LessonData, Stage } from "@/comman/types";
-import { redirect } from "next/navigation";
 
 class GetData {
   private static async getAuth() {
     const supabase = await createServerClient();
     const {
       data: { user },
-      error: authError,
     } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      redirect("/login");
-    }
 
     return { supabase, user };
   }
 
   static async getLessons(stage?: Stage): Promise<LessonData[]> {
     const { supabase, user } = await GetData.getAuth();
+
+    if (!user) {
+      const query = supabase
+        .from("lessons")
+        .select("id, title, stage, group, sequence_number")
+        .eq("is_published", true);
+
+      if (stage) {
+        query.eq("stage", stage);
+      }
+
+      const { data, error } = await query.order("sequence_number", {
+        ascending: true,
+      });
+
+      if (error) {
+        console.error("Error fetching lessons:", error);
+        return [];
+      }
+
+      return (data as LessonData[])?.map((lesson) => ({
+        ...lesson,
+        highest_accuracy: 0,
+      })) || [];
+    }
 
     const { data, error } = await supabase.rpc("get_lessons", {
       p_profile: user.id,
@@ -35,7 +54,7 @@ class GetData {
   }
 
   static async getLessonContent(lesson_id: string) {
-    const { supabase, user } = await GetData.getAuth();
+    const { supabase } = await GetData.getAuth();
 
     const { data, error } = await supabase.rpc("get_lessons_content", {
       lesson_id: lesson_id,
@@ -52,6 +71,10 @@ class GetData {
   static async getLessonResult(id: string) {
     const { supabase, user } = await GetData.getAuth();
 
+    if (!user) {
+      return null;
+    }
+
     const { data, error } = await supabase.rpc("get_latest_result", {
       lesson_id: id,
       profile_id: user.id,
@@ -66,6 +89,10 @@ class GetData {
 
   static async getDashboardData() {
     const { supabase, user } = await GetData.getAuth();
+
+    if (!user) {
+      return null;
+    }
 
     const { data, error } = await supabase.rpc("get_dashboard_data", {
       id: user.id,
@@ -85,6 +112,10 @@ class GetData {
 
   static async getLessonstats() {
     const { supabase, user } = await GetData.getAuth();
+
+    if (!user) {
+      return [];
+    }
 
     const { data, error } = await supabase.rpc("get_lesson_stats", {
       profile_id: user.id,
@@ -122,6 +153,10 @@ class GetData {
 
   static async getLearnedAlphabets(): Promise<string | null> {
     const { supabase, user } = await GetData.getAuth();
+
+    if (!user) {
+      return null;
+    }
 
     const { data, error } = await supabase.rpc("get_learned_alphabets", {
       p_profile_id: user.id,
