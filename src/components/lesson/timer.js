@@ -37,7 +37,7 @@ function Timer(data) {
         const wpm = Math.round(typedWords / (time / 60)) || 0;
         const accuracy = totalChars > 0 ? (data.correct / totalChars) * 100 : 0;
         try {
-          await addTypingResult({
+          const result = await addTypingResult({
             p_accuracy: accuracy,
             p_content_source: contentSource,
             p_correct_chars: data.correct,
@@ -52,6 +52,28 @@ function Timer(data) {
             p_total_chars: totalChars,
             p_wpm: wpm,
           });
+
+          if (result && result.error === 'UNAUTHORIZED') {
+            const guestData = {
+              accuracy,
+              content_source: contentSource,
+              correct_chars: data.correct,
+              cpm,
+              custom_text: customText,
+              duration_seconds: time,
+              incorrect_chars: data.incorrect,
+              is_completed: true,
+              lesson_id: data.id,
+              lesson_title: data.title || "",
+              mode,
+              total_chars: totalChars,
+              wpm,
+              created_at: new Date().toISOString(),
+            };
+            const guestResults = JSON.parse(localStorage.getItem('guest_typing_results') || '[]');
+            guestResults.push(guestData);
+            localStorage.setItem('guest_typing_results', JSON.stringify(guestResults));
+          }
         } catch (err) {
           console.error("Error submitting typing results:", err);
         }
