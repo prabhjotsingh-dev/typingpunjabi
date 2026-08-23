@@ -8,9 +8,15 @@ class AddOrUpdateData {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     return { supabase, user, authError };
+    return { supabase, user, authError };
   }
 
   static async addTypingResult(params: AddTypingResultArgs) {
+    const { supabase, user, authError } = await AddOrUpdateData.getAuth();
+
+    if (authError || !user) {
+      return { error: 'UNAUTHORIZED' };
+    }
     const { supabase, user, authError } = await AddOrUpdateData.getAuth();
 
     if (authError || !user) {
