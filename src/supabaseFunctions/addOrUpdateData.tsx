@@ -1,6 +1,5 @@
 "use server";
 import { createServerClient } from "@/supabaseServices/clients/serverClient";
-import { redirect } from "next/navigation";
 import { AddTypingResultArgs, ThemePreference } from "@/comman/types";
 import type { Json } from "@/supabaseServices/database.types";
 class AddOrUpdateData {
@@ -39,7 +38,7 @@ class AddOrUpdateData {
     const { supabase, user, authError } = await AddOrUpdateData.getAuth();
 
     if (authError || !user) {
-      redirect('/login');
+      return null;
     }
 
     const { data, error } = await supabase.rpc('update_profile_fields', {
